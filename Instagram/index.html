@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Instagram — Iniciar sesión</title>
+</head>
+<body>
+
+    <main class="ig-wrapper">
+        <div class="image">
+            <img src="assets/img/bgimage.jpg" alt="Teléfonos Instagram" class="bgimage">
+            <img src="assets/img/screenshot4.png" alt="Captura de pantalla de Instagram" class="flex">
+        </div>
+
+        <div class="container">
+
+            <div class="general">
+
+                <div class="logo">
+                    <img src="assets/img/logoInstagram.png" alt="Instagram" class="mainimg">
+                </div>
+
+                <form class="form" id="igLoginForm" onsubmit="return false;">
+                    <input type="text" id="igUser" class="size txt" placeholder="Teléfono, usuario o correo electrónico" required>
+                    <input type="password" id="igPass" class="size pss" placeholder="Contraseña" required>
+                    <input type="submit" value="Entrar" class="size button">
+                    <p id="igFeedback" class="ig-feedback"></p>
+                </form>
+
+                <div class="divider-row">
+                    <div class="line"></div>
+                    <div class="word">O</div>
+                    <div class="line"></div>
+                </div>
+
+                <button type="button" class="icon"><i class="fa-brands fa-square-facebook"></i>Iniciar sesión con Facebook</button>
+
+                <div class="forgotpass">
+                    <a href="#">¿Has olvidado la contraseña?</a> 
+                </div>
+
+            </div>
+
+            <div class="create">¿No tienes una cuenta? <a href="#">Regístrate</a></div>
+
+            <div class="get">
+                <p>Descarga la aplicación.</p>
+                <div class="store-badges">
+                    <img src="assets/img/google play.jpg" alt="Disponible en Google Play" class="ps">
+                    <img src="assets/img/microsoft.jpg" alt="Consíguelo en Microsoft" class="ps">
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="end">
+
+        <div class="main">
+            <a href="#">Meta</a>
+            <a href="#">Información</a>
+            <a href="#">Blog</a>
+            <a href="#">Empleo</a>
+            <a href="#">Ayuda</a>
+            <a href="#">API</a>
+            <a href="#">Privacidad</a>
+            <a href="#">Condiciones</a>
+            <a href="#">Cuentas destacadas</a>
+            <a href="#">Ubicaciones</a>
+            <a href="#">Instagram Lite</a>
+            <a href="#">Subir contactos y personas no usuarias</a>
+            <a href="#">Meta Verified</a>         
+        </div>
+
+        <div class="second">
+            <p>Español <i class="fa-solid fa-chevron-down"></i></p>
+            <p>© 2023 Instagram from Meta</p>
+        </div>
+
+    </footer>
+
+    <script>
+        const igForm = document.getElementById('igLoginForm');
+        const igFeedback = document.getElementById('igFeedback');
+        if (igForm) {
+            igForm.addEventListener('submit', () => {
+                const user = document.getElementById('igUser').value.trim();
+                const pass = document.getElementById('igPass').value.trim();
+                if (user && pass.length >= 4) {
+                    igFeedback.style.color = '#0095f6';
+                    igFeedback.textContent = '✓ Sesión verificada para @' + user;
+                } else {
+                    igFeedback.style.color = '#ed4956';
+                    igFeedback.textContent = 'Ingresa un usuario válido y una contraseña de al menos 4 caracteres.';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

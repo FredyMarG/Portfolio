@@ -1,0 +1,359 @@
+<!--
+  ============================================================================
+  PORTAFOLIO MAESTRO FULL-STACK MEAN — FREDY MARTINEZ (index.html)
+  ============================================================================
+  Propósito: Punto de entrada centralizado que presenta todos los proyectos
+  y módulos de la carpeta MEAN_STACK en un portafolio interactivo profesional.
+  Permite explorar los proyectos por categoría, buscar por tecnología,
+  ejecutar vistas previas en vivo dentro de un modal interactivo e inspeccionar
+  la arquitectura y el contenido técnico de cada proyecto.
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fredy Martinez | Portafolio Full-Stack MEAN Developer</title>
+  <!-- Bootstrap 5.3 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Estilos del Portafolio Maestro -->
+  <link rel="stylesheet" href="portfolio-styles.css">
+</head>
+<body>
+
+  <!-- Barra de Navegación Fija -->
+  <nav class="navbar navbar-expand-lg navbar-dark portfolio-navbar sticky-top py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold fs-4" href="#">
+        <span class="brand-gradient">&lt;FredyMartinez /&gt;</span>
+        <span class="badge bg-info text-dark ms-2 fs-6">MEAN Stack</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navLinks">
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+          <li class="nav-item"><a class="nav-link text-light" href="#sobre-mi">Perfil</a></li>
+          <li class="nav-item"><a class="nav-link text-light" href="#catalogo">Catálogo de Proyectos</a></li>
+          <li class="nav-item"><a class="nav-link text-light" href="#arquitectura">Pilares Técnicos</a></li>
+          <li class="nav-item"><a class="nav-link text-light" href="#contacto">Contacto</a></li>
+          <li class="nav-item">
+            <button class="btn btn-outline-info btn-sm rounded-pill px-3" onclick="openPreviewModal('CV Personal — Fredy Martinez', 'My CV/index.html')">
+              Ver Mi CV Clásico
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sección Hero / Presentación -->
+  <header id="sobre-mi" class="hero-section">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-3 text-center">
+          <div class="avatar-ring mx-auto">
+            <img src="My CV/assets/img/my-image.jpg" alt="Fredy Martinez" class="avatar-img">
+          </div>
+        </div>
+        <div class="col-lg-9">
+          <span class="badge bg-primary bg-opacity-25 text-info border border-info border-opacity-25 mb-2 px-3 py-2">
+            🚀 Full-Stack Software Developer &amp; Certified Scrum Master
+          </span>
+          <h1 class="display-5 fw-bold mb-3">
+            Portafolio de Ingeniería <span class="brand-gradient">MEAN Stack</span>
+          </h1>
+          <p class="lead text-secondary mb-4">
+            Repositorio integral de proyectos y desarrollos que abarca el ecosistema completo del desarrollo web moderno: desde maquetación semántica en <strong>HTML5/CSS3</strong>, réplicas de interfaces y algoritmos en <strong>JavaScript ES6+ / TypeScript</strong>, hasta APIs RESTful con autenticación <strong>JWT en Node.js + Express + MongoDB</strong> y aplicaciones SPA en <strong>Angular 15</strong>.
+          </p>
+
+          <!-- Píldoras de Tecnologías -->
+          <div class="d-flex flex-wrap gap-2 mb-4">
+            <span class="stack-pill">🍃 MongoDB &amp; Mongoose</span>
+            <span class="stack-pill">🗄️ SQLite &amp; MySQL</span>
+            <span class="stack-pill">⚡ Express.js &amp; REST APIs</span>
+            <span class="stack-pill">🅰️ Angular 15 SPA</span>
+            <span class="stack-pill">🟢 Node.js</span>
+            <span class="stack-pill">🔷 TypeScript</span>
+            <span class="stack-pill">🔐 JWT Auth &amp; RBAC</span>
+            <span class="stack-pill">🎨 Bootstrap 5 &amp; CSS3 Flexbox</span>
+            <span class="stack-pill">🔄 Scrum Master</span>
+          </div>
+
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <a href="#catalogo" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill shadow-sm">
+              Explorar Proyectos Interactivos ↓
+            </a>
+          </div>
+
+          <!-- Métricas del Repositorio -->
+          <div class="row g-3">
+            <div class="col-6 col-sm-3">
+              <div class="stat-card">
+                <div class="stat-number">38+</div>
+                <div class="stat-label">Módulos y Proyectos</div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Código Documentado</div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="stat-card">
+                <div class="stat-number">20</div>
+                <div class="stat-label">Demos Interactivas</div>
+              </div>
+            </div>
+            <div class="col-6 col-sm-3">
+              <div class="stat-card">
+                <div class="stat-number">MEAN</div>
+                <div class="stat-label">Stack Completo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Catálogo de Proyectos con Filtros y Buscador -->
+  <main id="catalogo" class="py-5">
+    <div class="container">
+      <div class="d-flex flex-wrap justify-content-between align-items-end mb-4 gap-3">
+        <div>
+          <h2 class="fw-bold mb-1">Catálogo de Proyectos y Módulos</h2>
+          <p class="text-secondary mb-0">
+            Explora el contenido técnico de cada proyecto y ejecútalos en vivo directamente desde el portafolio.
+          </p>
+        </div>
+        <span id="projectCountBadge" class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 fs-6"></span>
+      </div>
+
+      <!-- Barra de Filtros y Búsqueda -->
+      <div class="row g-3 align-items-center mb-4">
+        <div class="col-lg-8">
+          <div class="d-flex flex-wrap gap-2">
+            <button class="filter-btn active" data-category="all">Todos</button>
+            <button class="filter-btn" data-category="fullstack">🌟 Full-Stack &amp; Producto</button>
+            <button class="filter-btn" data-category="backend">⚙️ Backend Node / TS / Mongo</button>
+            <button class="filter-btn" data-category="angular">🅰️ Angular SPA</button>
+            <button class="filter-btn" data-category="js">⚡ JavaScript &amp; APIs</button>
+            <button class="filter-btn" data-category="ui">🎨 Clones UI &amp; Maquetación</button>
+            <button class="filter-btn" data-category="html">🧱 Fundamentos &amp; Git</button>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <input type="search" id="projectSearch" class="form-control search-input" placeholder="🔍 Buscar por nombre, carpeta o tecnología...">
+        </div>
+      </div>
+
+      <!-- Grilla Dinámica de Tarjetas -->
+      <div id="projectsGrid" class="row g-4">
+        <!-- Proyecto Destacado: App de Citas (También renderizado dinámicamente por portfolio-app.js) -->
+        <div class="col-lg-4 col-md-6">
+          <article class="project-card">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="cat-badge cat-fullstack">Full-Stack SQL &amp; SPA</span>
+              <span class="file-path-tag">📁 App de citas/</span>
+            </div>
+
+            <h5 class="fw-bold mb-2 text-white">Amour &amp; Planes — App de Citas y Álbum de Recuerdos (Full-Stack SQL)</h5>
+            <p class="small text-secondary mb-2">Aplicativo web Full-Stack para parejas que permite descubrir planes sugeridos, diseñar planes propios, agendar citas con fecha y hora exacta, calificar experiencias y guardar un álbum de hasta 10 fotografías por cita.</p>
+
+            <div class="review-box">
+              <strong class="text-info d-block mb-1">📦 Contenido del Proyecto:</strong>
+              Contiene: Servidor HTTP en Node.js con base de datos SQLite (`server.js` y `database/schema.sql`), backend alternativo para hosting PHP/MySQL (`public/api.php`, `index.php` y `database/schema_mysql.sql`) y cliente Frontend SPA (`public/index.html`, `public/styles.css` y `public/app.js`) con respaldo automático en `localStorage` cuando se abre sin servidor backend.
+            </div>
+
+            <div class="d-flex flex-wrap gap-1 mb-2">
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">SQLite3</span>
+              <span class="tech-tag">PHP &amp; MySQL</span>
+              <span class="tech-tag">REST API</span>
+              <span class="tech-tag">Vanilla JS SPA</span>
+              <span class="tech-tag">LocalStorage Fallback</span>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2 mt-auto pt-3">
+              <button type="button" class="btn btn-info btn-sm fw-bold text-dark flex-grow-1" onclick="openPreviewModal('Amour &amp; Planes — App de Citas y Álbum de Recuerdos (Full-Stack SQL)', 'App de citas/public/index.html')">
+                ▶ Vista Previa Interactiva
+              </button>
+              <button type="button" class="btn btn-outline-warning btn-sm fw-semibold" onclick="openCodeModal('app-de-citas')" title="Inspeccionar SQL y Backend">
+                &lt;/&gt; SQL / Código
+              </button>
+              <a href="App de citas/public/index.html" target="_blank" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
+                ↗ Abrir
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Pilares Técnicos del Portafolio -->
+  <section id="arquitectura" class="py-5 border-top border-secondary border-opacity-25">
+    <div class="container">
+      <h3 class="fw-bold mb-4 text-center">🏗️ Pilares Técnicos del Ecosistema MEAN</h3>
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="project-card">
+            <h5 class="text-info fw-bold mb-2">1. Frontend &amp; Arquitectura SPA</h5>
+            <p class="small text-secondary mb-0">
+              Desarrollo de interfaces responsivas con HTML5 semántico, CSS3 Flexbox, Media Queries y Bootstrap 5, junto con aplicaciones Single Page Application (SPA) en Angular 15 con enrutamiento modular, componentes reutilizables, formularios reactivos e integración de librerías como FullCalendar.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="project-card">
+            <h5 class="text-info fw-bold mb-2">2. JavaScript ES6+, DOM &amp; Consumo de APIs</h5>
+            <p class="small text-secondary mb-0">
+              Implementación de lógica algorítmica, programación orientada a objetos (POO), manipulación dinámica del DOM, persistencia local con Web Storage API (`localStorage`) y consumo asíncrono de APIs REST mediante `fetch`, promesas y `async/await`.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="project-card">
+            <h5 class="text-info fw-bold mb-2">3. Backend Node.js, TypeScript &amp; MongoDB</h5>
+            <p class="small text-secondary mb-0">
+              Construcción de servidores RESTful con Express.js (tanto en JavaScript como en TypeScript con patrón de barriles), protección de rutas mediante JSON Web Tokens (JWT), control de acceso por roles y modelado de datos NoSQL en MongoDB y Mongoose.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección de Contacto Profesional -->
+  <section id="contacto" class="py-5 border-top border-secondary border-opacity-25">
+    <div class="container">
+      <div class="row g-4 align-items-stretch">
+        <div class="col-lg-5">
+          <div class="project-card h-100">
+            <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 align-self-start mb-3 px-3 py-2">
+              ● Disponible para Proyectos &amp; Oportunidades
+            </span>
+            <h3 class="fw-bold mb-2">📬 Contacto Profesional</h3>
+            <p class="text-secondary small mb-4">
+              ¿Interesado en colaborar en un proyecto Full-Stack MEAN/SQL, integrar un desarrollador a tu equipo o implementar metodologías ágiles como Scrum Master? Escríbeme por cualquiera de estos canales:
+            </p>
+
+            <div class="d-flex flex-column gap-3 mt-auto">
+              <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 d-flex align-items-center gap-3">
+                <span class="fs-4">✉️</span>
+                <div>
+                  <div class="text-secondary small">Correo Electrónico</div>
+                  <a href="mailto:fredymartinezquinto@hotmail.com" class="text-info fw-semibold text-decoration-none">fredymartinezquinto@hotmail.com</a>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 d-flex align-items-center gap-3">
+                <span class="fs-4">📱</span>
+                <div>
+                  <div class="text-secondary small">Teléfono / WhatsApp</div>
+                  <a href="https://wa.me/573152388315" target="_blank" rel="noopener" class="text-light fw-semibold text-decoration-none">+57 315 238 8315</a>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 d-flex align-items-center gap-3">
+                <span class="fs-4">💼</span>
+                <div>
+                  <div class="text-secondary small">LinkedIn &amp; GitHub</div>
+                  <span class="text-light fw-semibold">linkedin.com/in/fredy-martinez • github.com/fredymartinez</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 d-flex align-items-center gap-3">
+                <span class="fs-4">📍</span>
+                <div>
+                  <div class="text-secondary small">Ubicación &amp; Modalidad</div>
+                  <span class="text-light fw-semibold">Colombia • Remoto / Híbrido / Presencial</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-7">
+          <div class="project-card h-100">
+            <h4 class="fw-bold mb-3 text-info">Envíame un Mensaje Directo</h4>
+            <form id="portfolioContactForm" onsubmit="return false;">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label for="pContactName" class="form-label small text-secondary fw-semibold">Nombre o Empresa</label>
+                  <input type="text" id="pContactName" class="form-control search-input rounded-3" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="col-md-6">
+                  <label for="pContactEmail" class="form-label small text-secondary fw-semibold">Correo Electrónico</label>
+                  <input type="email" id="pContactEmail" class="form-control search-input rounded-3" placeholder="correo@empresa.com" required>
+                </div>
+                <div class="col-12">
+                  <label for="pContactSubject" class="form-label small text-secondary fw-semibold">Motivo de Contacto</label>
+                  <select id="pContactSubject" class="form-select search-input rounded-3">
+                    <option value="Oferta Laboral Full-Stack MEAN">Oferta Laboral Full-Stack MEAN</option>
+                    <option value="Desarrollo de Proyecto Web / API">Desarrollo de Proyecto Web / API</option>
+                    <option value="Liderazgo Ágil / Scrum Master">Liderazgo Ágil / Scrum Master</option>
+                    <option value="Consulta General">Consulta General</option>
+                  </select>
+                </div>
+                <div class="col-12">
+                  <label for="pContactMsg" class="form-label small text-secondary fw-semibold">Mensaje</label>
+                  <textarea id="pContactMsg" rows="4" class="form-control search-input rounded-3" placeholder="Escribe los detalles de tu propuesta o proyecto..." required></textarea>
+                </div>
+                <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2">
+                  <button type="submit" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill">
+                    🚀 Enviar Mensaje
+                  </button>
+                  <span id="pContactFeedback" class="text-info fw-semibold small"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center text-secondary border-top border-secondary border-opacity-25 small">
+    <div class="container">
+      Portafolio Full-Stack MEAN — <strong>Fredy Martinez</strong> • Desarrollo Web &amp; Arquitectura de Software.
+    </div>
+  </footer>
+
+  <!-- Modal para Vista Previa Interactiva (Iframe) e Inspector de Código -->
+  <div class="modal fade modal-dark" id="portfolioModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content shadow-lg">
+        <div class="modal-header border-secondary border-opacity-25">
+          <h5 class="modal-title fw-bold text-info" id="previewModalTitle">Vista Previa</h5>
+          <div class="ms-auto d-flex align-items-center gap-2">
+            <a id="previewExternalLink" href="#" target="_blank" class="btn btn-sm btn-outline-info">Abrir en Pestaña Nueva ↗</a>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+        </div>
+        <div class="modal-body p-3">
+          <!-- Contenedor de Iframe para proyectos web interactivos -->
+          <div id="iframeContainer">
+            <iframe id="previewIframe" class="preview-iframe" src="about:blank"></iframe>
+          </div>
+          <!-- Contenedor de Código para proyectos Backend / Angular / MongoDB -->
+          <div id="codeInspectorContainer" class="d-none">
+            <div class="alert alert-info bg-opacity-10 border-info text-light mb-3">
+              <strong>Contenido del Proyecto:</strong> <span id="codeReviewNotes"></span>
+            </div>
+            <pre id="codeBlockContent" class="code-block-modal mb-0"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5.3 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Script del Portafolio Maestro -->
+  <script src="portfolio-app.js"></script>
+</body>
+</html>

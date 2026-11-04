@@ -1,0 +1,23 @@
+/**
+ * ============================================================================
+ * ESTILOS DEL FORMULARIO DE ASPIRANTES (Formulario/style.css)
+ * ============================================================================
+ */
+body {
+  background-color: #f8fafc;
+}
+
+.card-form {
+  border-radius: 12px;
+}
+
+.pink {
+  background-color: #ec4899;
+  color: #ffffff;
+  border-color: #db2777;
+}
+
+.pink:hover {
+  background-color: #db2777;
+  color: #ffffff;
+}
