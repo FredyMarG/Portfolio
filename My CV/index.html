@@ -166,10 +166,16 @@
               <label for="cMessage">Mensaje</label>
               <textarea id="cMessage" rows="4" placeholder="Cuéntame sobre el proyecto, vacante o colaboración..." required></textarea>
             </div>
-            <button type="submit" class="btn-submit-contact">
-              <span class="material-icons" style="font-size: 19px;">send</span>
-              Enviar Mensaje
-            </button>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <button type="button" id="cvWhatsAppBtn" class="btn-submit-contact" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669);">
+                <span class="material-icons" style="font-size: 19px;">chat</span>
+                Enviar por WhatsApp
+              </button>
+              <button type="submit" class="btn-submit-contact" style="flex: 1;">
+                <span class="material-icons" style="font-size: 19px;">send</span>
+                Enviar por Correo
+              </button>
+            </div>
             <p id="cvContactFeedback" class="contact-feedback"></p>
           </form>
         </div>
@@ -183,12 +189,46 @@
     <script>
       const cvForm = document.getElementById('cvContactForm');
       const cvFeedback = document.getElementById('cvContactFeedback');
+      const cvWhatsAppBtn = document.getElementById('cvWhatsAppBtn');
+
+      function getCvValues() {
+        return {
+          name: document.getElementById('cName').value.trim(),
+          email: document.getElementById('cEmail').value.trim(),
+          subject: document.getElementById('cSubject').value,
+          msg: document.getElementById('cMessage').value.trim()
+        };
+      }
+
+      if (cvWhatsAppBtn && cvForm) {
+        cvWhatsAppBtn.addEventListener('click', () => {
+          if (!cvForm.reportValidity()) return;
+          const { name, email, subject, msg } = getCvValues();
+          const text =
+            'Hola Fredy, vi tu CV Ejecutivo y quiero contactarte:%0A%0A' +
+            '*Nombre:* ' + encodeURIComponent(name) + '%0A' +
+            '*Correo:* ' + encodeURIComponent(email) + '%0A' +
+            '*Asunto:* ' + encodeURIComponent(subject) + '%0A' +
+            '*Mensaje:* ' + encodeURIComponent(msg);
+          window.open('https://wa.me/573152388315?text=' + text, '_blank', 'noopener');
+          cvFeedback.textContent = '✓ Abriendo WhatsApp con tu mensaje listo para enviar...';
+        });
+      }
+
       if (cvForm) {
         cvForm.addEventListener('submit', () => {
-          const name = document.getElementById('cName').value.trim();
-          const subject = document.getElementById('cSubject').value;
-          if (name) {
-            cvFeedback.textContent = '✓ ¡Gracias, ' + name + '! Tu mensaje sobre "' + subject + '" ha sido registrado correctamente.';
+          const { name, email, subject, msg } = getCvValues();
+          if (name && email && msg) {
+            const mailtoSubject = encodeURIComponent('[CV Fredy Martinez] ' + subject + ' — ' + name);
+            const mailtoBody = encodeURIComponent(
+              'Hola Fredy,\n\n' +
+              'Nombre: ' + name + '\n' +
+              'Correo: ' + email + '\n' +
+              'Asunto: ' + subject + '\n\n' +
+              'Mensaje:\n' + msg + '\n'
+            );
+            window.location.href = 'mailto:fredymartinezquinto@hotmail.com?subject=' + mailtoSubject + '&body=' + mailtoBody;
+            cvFeedback.textContent = '✓ Se abrió tu aplicación de correo hacia fredymartinezquinto@hotmail.com.';
             cvForm.reset();
           }
         });

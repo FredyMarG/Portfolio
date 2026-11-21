@@ -300,11 +300,14 @@
                   <label for="pContactMsg" class="form-label small text-secondary fw-semibold">Mensaje</label>
                   <textarea id="pContactMsg" rows="4" class="form-control search-input rounded-3" placeholder="Escribe los detalles de tu propuesta, vacante o proyecto..." required></textarea>
                 </div>
-                <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-2 mt-2">
-                  <button type="submit" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill">
-                    🚀 Enviar Mensaje
+                <div class="col-12 d-flex align-items-center flex-wrap gap-2 mt-2">
+                  <button type="button" id="btnSendWhatsApp" class="btn btn-success fw-bold px-4 py-2 rounded-pill">
+                    💬 Enviar por WhatsApp
                   </button>
-                  <span id="pContactFeedback" class="text-info fw-semibold small"></span>
+                  <button type="submit" id="btnSendEmail" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill">
+                    ✉️ Enviar por Correo
+                  </button>
+                  <span id="pContactFeedback" class="text-info fw-semibold small ms-auto"></span>
                 </div>
               </div>
             </form>

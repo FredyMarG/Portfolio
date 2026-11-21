@@ -455,16 +455,64 @@ if (searchInput) {
   });
 }
 
+// ============================================================================
+// ENVÍO REAL DEL FORMULARIO DE CONTACTO POR WHATSAPP Y CORREO ELECTRÓNICO
+// ============================================================================
+const CONTACT_PHONE = "573152388315";
+const CONTACT_EMAIL = "fredymartinezquinto@hotmail.com";
+
 const portfolioContactForm = document.getElementById("portfolioContactForm");
 const pContactFeedback = document.getElementById("pContactFeedback");
-if (portfolioContactForm && pContactFeedback) {
-  portfolioContactForm.addEventListener("submit", () => {
-    const name = document.getElementById("pContactName").value.trim();
-    const subject = document.getElementById("pContactSubject").value;
-    if (name) {
-      pContactFeedback.textContent = `✓ ¡Gracias, ${name}! Tu mensaje (${subject}) fue recibido correctamente.`;
-      portfolioContactForm.reset();
+const btnSendWhatsApp = document.getElementById("btnSendWhatsApp");
+
+function getPortfolioFormValues() {
+  const name = (document.getElementById("pContactName")?.value || "").trim();
+  const email = (document.getElementById("pContactEmail")?.value || "").trim();
+  const subject = (document.getElementById("pContactSubject")?.value || "Contacto Portafolio").trim();
+  const msg = (document.getElementById("pContactMsg")?.value || "").trim();
+  return { name, email, subject, msg };
+}
+
+// 1. Envío directo a WhatsApp (+57 315 238 8315)
+if (btnSendWhatsApp) {
+  btnSendWhatsApp.addEventListener("click", () => {
+    if (portfolioContactForm && !portfolioContactForm.reportValidity()) return;
+    const { name, email, subject, msg } = getPortfolioFormValues();
+    const text =
+      `Hola Fredy, te escribo desde tu Portafolio Profesional:%0A%0A` +
+      `*Nombre/Empresa:* ${encodeURIComponent(name)}%0A` +
+      `*Correo:* ${encodeURIComponent(email)}%0A` +
+      `*Motivo:* ${encodeURIComponent(subject)}%0A` +
+      `*Mensaje:* ${encodeURIComponent(msg)}`;
+    window.open(`https://wa.me/${CONTACT_PHONE}?text=${text}`, "_blank", "noopener");
+    if (pContactFeedback) {
+      pContactFeedback.textContent = "✓ Abriendo chat de WhatsApp con tu mensaje listo...";
     }
+  });
+}
+
+// 2. Envío a Correo Electrónico (FormSubmit AJAX + respaldo mailto:)
+if (portfolioContactForm && pContactFeedback) {
+  portfolioContactForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const { name, email, subject, msg } = getPortfolioFormValues();
+    if (!name || !email || !msg) return;
+
+    pContactFeedback.textContent = "⏳ Preparando envío a " + CONTACT_EMAIL + "...";
+
+    // Abrir cliente de correo con el asunto y cuerpo prellenados (funciona 100% sin servidor)
+    const mailtoSubject = encodeURIComponent(`[Portafolio] ${subject} — ${name}`);
+    const mailtoBody = encodeURIComponent(
+      `Hola Fredy,\n\n` +
+      `Nombre / Empresa: ${name}\n` +
+      `Correo de contacto: ${email}\n` +
+      `Motivo: ${subject}\n\n` +
+      `Mensaje:\n${msg}\n`
+    );
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
+
+    pContactFeedback.textContent = `✓ Se abrió tu cliente de correo hacia ${CONTACT_EMAIL}.`;
+    portfolioContactForm.reset();
   });
 }
 
