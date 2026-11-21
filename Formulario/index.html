@@ -1,20 +1,11 @@
 <!--
   ============================================================================
-  FORMULARIO DINÁMICO DE REGISTRO DE ASPIRANTES (Formulario/index.html)
+  PORTAL CORPORATIVO DE GESTIÓN DE TALENTO & ASPIRANTES (Formulario/index.html)
   ============================================================================
-  Requerimientos implementados:
-  1. Campos: Nombres, Apellidos, Aspiración Salarial, Correo Electrónico, Género y Cargo.
-  2. Cargos disponibles: Desarrollador, Gerente de Proyecto, Líder Administrativo, Conductor, Otros.
-  3. Si se selecciona "Otros", se habilita dinámicamente un campo de texto adicional.
-  4. Al guardar, almacena el registro como objeto JSON dentro de una lista,
-     muestra la tabla de registros acumulados y vacía el formulario para un nuevo registro.
-  5. Restricciones: Todos los campos son obligatorios; si el género es masculino el botón
-     es azul (`.btn-primary`), si es femenino el botón es rosado (`.btn-pink`).
-
-  Correcciones aplicadas respecto a la versión original:
-  - Se agregaron los contenedores `#alertCorrect` y `#alertIncorrect` que `script.js`
-    referenciaba pero no tenían `id` en el HTML.
-  - Se añadió una tabla inferior para visualizar en tiempo real la lista de objetos JSON guardados.
+  Propósito: Sistema interactivo de reclutamiento y postulación con validación
+  de campos requeridos, activación condicional de cargos ("Otros"), estilo
+  adaptativo del botón por género (Azul/Rosado), persistencia en LocalStorage
+  y visor en vivo de la colección JSON.
 -->
 <!DOCTYPE html>
 <html lang="es">
@@ -22,97 +13,121 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-    <title>Formulario de Registro de Aspirantes</title>
-    <style>
-        .btn-pink {
-            background: #ff0080 !important;
-            color: white !important;
-            border: none;
-        }
-        .btn-pink:hover {
-            background: #d6006b !important;
-            color: white !important;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <title>TalentHub — Portal de Registro de Aspirantes</title>
 </head>
-<body class="bg-light pb-5">
-    
-    <form id="registroForm" class="w-50 d-flex justify-content-center align-items-center mx-auto flex-wrap mt-5 p-4 bg-info rounded-3 shadow text-white">
+<body>
 
-        <h1 class="w-100 text-center mb-3 fw-bold">Registro de Aspirante</h1>
-
-        <!-- Alertas de validación conectadas con script.js -->
-        <div id="alertCorrect" class="alert alert-success w-100 mx-2 d-none" role="alert">
-            ✅ Aspirante registrado exitosamente en la lista JSON.
-        </div>
-        <div id="alertIncorrect" class="alert alert-danger w-100 mx-2 d-none" role="alert">
-            ⚠️ Por favor completa todos los campos obligatorios (*).
-        </div>
-
-        <div class="w-100 d-flex justify-content-center align-items-center mb-2">
-            <div class="w-50 mx-2">
-                <label for="nombre" class="w-100 form-label fw-semibold">Nombre*</label>
-                <input type="text" name="nombre" id="nombre" placeholder="Ingrese el nombre" class="w-100 form-control">
-            </div>
-
-            <div class="w-50 mx-2">
-                <label for="apellido" class="w-100 form-label fw-semibold">Apellido*</label>
-                <input type="text" name="apellido" id="apellido" placeholder="Ingrese el apellido" class="w-100 form-control">
-            </div>
-        </div>
-
-        <div class="w-100 d-flex justify-content-center align-items-center mb-2 flex-wrap">
-            <div class="mx-2 w-100">
-                <label for="aspiracion" class="form-label fw-semibold">Aspiración Salarial (COP)*</label>
-                <input type="number" name="aspiracion" class="form-control" id="aspiracion" placeholder="Ingrese su aspiración salarial">
-            </div>
-        </div>
-
-        <div class="w-100 d-flex justify-content-center align-items-center mb-2 flex-wrap">
-            <div class="mx-2 w-100">
-                <label for="correo" class="form-label fw-semibold">Email*</label>
-                <input type="email" name="correo" class="form-control" id="correo" placeholder="Ingrese el correo electrónico">
-            </div>
-        </div> 
-        
-        <div class="w-100 d-flex justify-content-center align-items-start mb-3 flex-wrap">
-            <div class="w-50 d-flex justify-content-start align-items-center flex-wrap px-2">
-                <label class="form-check-label w-100 mb-2 fw-semibold">Género*</label>
-                <div class="form-check me-3">
-                    <input onclick="blue()" class="form-check-input" type="radio" name="genero" id="hombre">
-                    <label class="form-check-label" for="hombre">Hombre</label>
-                </div>
-                <div class="form-check">
-                    <input onclick="pink()" class="form-check-input" type="radio" name="genero" id="mujer">
-                    <label class="form-check-label" for="mujer">Mujer</label>
+    <header class="hr-header py-3 mb-4">
+        <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-2">
+                <span class="hr-logo-badge">HR</span>
+                <div>
+                    <h5 class="m-0 fw-bold text-white">TalentHub Tech Recruiting</h5>
+                    <small class="text-info">Sistema de Postulación &amp; Registro JSON</small>
                 </div>
             </div>
-            <div class="w-50 d-flex justify-content-center align-items-center flex-wrap px-2">
-                <label for="cargo" class="form-label w-100 fw-semibold">Cargo a ocupar*</label>
-                <select name="cargo" class="form-select w-100" id="cargo">
-                    <option value="" selected disabled>--Seleccione una opción--</option>
-                    <option value="Desarrollador">Desarrollador</option>
-                    <option value="Gerente de Proyecto">Gerente de Proyecto</option>
-                    <option value="Líder Administrativo">Líder Administrativo</option>
-                    <option value="Conductor">Conductor</option>
-                    <option value="otros">Otros</option>
-                </select>
-                <input type="text" name="otro" id="otro" placeholder="Especifique el cargo" class="form-control w-100 mt-2 d-none">
+            <span id="totalCandidatesBadge" class="badge bg-info text-dark fw-bold px-3 py-2 rounded-pill">0 Aspirantes</span>
+        </div>
+    </header>
+
+    <main class="container pb-5">
+        <div class="row g-4 justify-content-center">
+            <!-- Columna del Formulario -->
+            <div class="col-lg-6">
+                <form id="registroForm" class="hr-card p-4">
+                    <div class="mb-3 border-bottom pb-3">
+                        <span class="badge bg-primary-subtle text-primary mb-1">Formulario de Postulación</span>
+                        <h3 class="fw-bold m-0 text-dark">Registro de Aspirante</h3>
+                    </div>
+
+                    <!-- Alertas de validación conectadas con script.js -->
+                    <div id="alertCorrect" class="alert alert-success d-none" role="alert">
+                        ✅ Aspirante registrado exitosamente en la colección JSON.
+                    </div>
+                    <div id="alertIncorrect" class="alert alert-danger d-none" role="alert">
+                        ⚠️ Por favor completa todos los campos obligatorios (*).
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <label for="nombre" class="form-label fw-semibold">Nombre*</label>
+                            <input type="text" name="nombre" id="nombre" placeholder="Ej. Laura" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="apellido" class="form-label fw-semibold">Apellido*</label>
+                            <input type="text" name="apellido" id="apellido" placeholder="Ej. Méndez" class="form-control">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="aspiracion" class="form-label fw-semibold">Aspiración Salarial (COP)*</label>
+                            <input type="number" name="aspiracion" class="form-control" id="aspiracion" placeholder="Ej. 5500000">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="correo" class="form-label fw-semibold">Correo Electrónico*</label>
+                            <input type="email" name="correo" class="form-control" id="correo" placeholder="candidato@correo.com">
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label class="form-label d-block fw-semibold">Género*</label>
+                            <div class="d-flex gap-3 pt-1">
+                                <div class="form-check">
+                                    <input onclick="blue()" class="form-check-input" type="radio" name="genero" id="hombre">
+                                    <label class="form-check-label" for="hombre">Hombre</label>
+                                </div>
+                                <div class="form-check">
+                                    <input onclick="pink()" class="form-check-input" type="radio" name="genero" id="mujer">
+                                    <label class="form-check-label" for="mujer">Mujer</label>
+                                </div>
+                            </div>
+                            <small class="text-muted d-block mt-1" style="font-size: 0.76rem;">Activa el botón con tema dinámico</small>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <label for="cargo" class="form-label fw-semibold">Cargo a ocupar*</label>
+                            <select name="cargo" class="form-select" id="cargo">
+                                <option value="" selected disabled>-- Seleccione cargo --</option>
+                                <option value="Desarrollador">Desarrollador Full-Stack</option>
+                                <option value="Gerente de Proyecto">Gerente de Proyecto / Scrum</option>
+                                <option value="Líder Administrativo">Líder Administrativo</option>
+                                <option value="Conductor">Conductor Logístico</option>
+                                <option value="otros">Otros (Especificar)</option>
+                            </select>
+                            <input type="text" name="otro" id="otro" placeholder="Especifique el cargo..." class="form-control mt-2 d-none">
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" id="submit" class="btn w-100 py-2 fw-bold d-none">Guardar Aspirante</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Columna de Lista y JSON Inspector -->
+            <div class="col-lg-6">
+                <div class="hr-card p-4 h-100 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-3">
+                        <div>
+                            <span class="badge bg-success-subtle text-success mb-1">Base de Datos en Memoria</span>
+                            <h4 class="fw-bold m-0 text-dark">Aspirantes Registrados</h4>
+                        </div>
+                        <button type="button" id="toggleJsonBtn" class="btn btn-sm btn-outline-dark fw-semibold">
+                            { } Ver JSON
+                        </button>
+                    </div>
+
+                    <ul id="listaRegistros" class="list-group list-group-flush mb-3 flex-grow-1"></ul>
+
+                    <pre id="jsonOutput" class="json-viewer d-none mb-0"></pre>
+                </div>
             </div>
         </div>
+    </main>
 
-        <button type="submit" id="submit" class="btn my-2 px-4 fw-bold d-none">Guardar</button>
-    </form>
-
-    <!-- Sección complementaria para mostrar la lista de objetos JSON registrados -->
-    <div class="w-50 mx-auto mt-4">
-        <h5 class="fw-bold text-secondary">Registros Almacenados (Lista JSON):</h5>
-        <ul id="listaRegistros" class="list-group shadow-sm"></ul>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

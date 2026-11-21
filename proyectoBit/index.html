@@ -89,7 +89,7 @@
             <nav class="navbar navbar-expand-lg background-navbar-superior">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
-                        <p style="color:white; margin: 0;">Panel Principal — Pomodoro</p>
+                        <p style="color:white; margin: 0; font-weight: 700;">Procrastination Nightmare • Pomodoro Focus</p>
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -97,66 +97,89 @@
                         <i class="fa-solid fa-bars" style="color: white;"></i>
                     </button>
                     <div class="collapse navbar-collapse c-nav-superior" id="navbarSupportedContent">
-                        <form class="d-flex c-nav-items-toogle" role="search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                            <button class="btn btn-outline-success" type="submit">Search</button>
+                        <form class="d-flex c-nav-items-toogle" role="search" onsubmit="return false;">
+                            <input class="form-control me-2" type="search" placeholder="Buscar módulo o tarea..." aria-label="Search">
+                            <button class="btn btn-outline-info" type="submit">Buscar</button>
                         </form>
                         <div class="input-group c-nav-items-toogle d-flex justify-content-center align-items-center"
-                            style="width: 100%;">
-                            <label class="input-group-text" for="inputGroupSelect01">Cambiar a</label>
-                            <select class="form-select" id="inputGroupSelect01" style="max-width: 12rem">
-                                <option selected>Bit</option>
-                                <option value="1">Bit 2</option>
-                                <option value="2">Bit 3</option>
+                            style="max-width: 18rem;">
+                            <label class="input-group-text bg-dark text-light border-secondary" for="inputGroupSelect01">Workspace</label>
+                            <select class="form-select bg-dark text-light border-secondary" id="inputGroupSelect01">
+                                <option selected>Equipo BIT</option>
+                                <option value="1">Sprint Activo</option>
+                                <option value="2">Backlog Personal</option>
                             </select>
                         </div>
-                        <span class="d-flex align-items-center justify-content-center gap-1 c-nav-items-toogle"
+                        <span class="d-flex align-items-center justify-content-center gap-3 c-nav-items-toogle"
                             style="color: white">
-                            <button class="btn" style="
-                                  border-radius: 0.3rem;
-                                  width: 10rem;
+                            <a href="to-do-list.html" class="btn fw-bold text-dark" style="
+                                  border-radius: 0.4rem;
+                                  padding: 0.45rem 1.2rem;
                                   background-color: #00d2e5;
-                                  color: white;
                                 ">
-                                <p>Crear +</p>
-
-                            </button>
-                            <i class="fa-regular fa-bell"></i>
-                            <button class="btn d-flex align-items-center justify-content-center" style="
+                                Crear Tarea +
+                            </a>
+                            <i class="fa-regular fa-bell fs-5"></i>
+                            <button class="btn d-flex align-items-center justify-content-center p-0" style="
                                   background-color: #00d2e5;
                                   border-radius: 50%;
-                                  width: 50px;
-                                  height: 50px;
+                                  width: 44px;
+                                  height: 44px;
                                 ">
-                                <img src="./assets/img/avatar.png" alt="Avatar" width="40px" height="40px" />
+                                <img src="./assets/img/avatar.png" alt="Avatar" width="36" height="36" class="rounded-circle" />
                             </button>
                         </span>
                     </div>
                 </div>
             </nav>
-            <div class="container space-work" style="margin-top: 2rem;">
-                <div class="container bg-secondary rounded-2 d-flex align-items-center justify-content-center"
-                    style="height: 30rem; color:white;">
-                    <div class="d-flex gap-5 flex-column align-items-center justify-content-center"
-                        style="width: 80%; height: 80%;">
-                        <div class="c-election-pomodoro d-flex justify-content-around" style="width: 90%;">
-                            <button class="btn btn-light" id="btn-work">
-                                <h3 id="button-work">TRABAJO</h3>
-                            </button>
-                            <button class="btn btn-light" id="btn-rest">
-                                <h3 id="button-rest">DESCANSO</h3>
-                            </button>
-                        </div>
-                        <div class="c-timer-pomodoro">
-                            <h3 style="color:black; font-size: 5rem;" id="time-text-pomodoro">24:59</h3>
-                        </div>
-                        <div class="c-start-pomodoro">
-                            <button class="btn btn-light" id="startButton">
-                                <h3>START</h3>
-                            </button>
-                        </div>
+
+            <div class="container space-work py-4">
+                <div class="pomodoro-shell mx-auto">
+                    <div class="text-center mb-3">
+                        <span class="pomodoro-badge">⏱️ Gestión de Enfoque &amp; Productividad</span>
+                        <h2 class="text-white fw-bold mt-2">Temporizador Pomodoro</h2>
+                        <p class="text-secondary small">Alterna ciclos de 25 minutos de concentración profunda con 5 minutos de descanso activo.</p>
                     </div>
 
+                    <div class="c-election-pomodoro d-flex justify-content-center gap-3 mb-4">
+                        <button class="btn pomodoro-mode-btn active-mode" id="btn-work">
+                            <h3 id="button-work" class="fs-6 fw-bold m-0">🎯 TRABAJO (25:00)</h3>
+                        </button>
+                        <button class="btn pomodoro-mode-btn" id="btn-rest">
+                            <h3 id="button-rest" class="fs-6 fw-bold m-0">☕ DESCANSO (05:00)</h3>
+                        </button>
+                    </div>
+
+                    <div class="c-timer-pomodoro mx-auto my-3">
+                        <h3 id="time-text-pomodoro">24:59</h3>
+                    </div>
+
+                    <div class="c-start-pomodoro text-center mt-4">
+                        <button class="btn pomodoro-start-btn" id="startButton">
+                            <h3 class="fs-5 fw-bold m-0">START</h3>
+                        </button>
+                    </div>
+
+                    <div class="row g-3 mt-4 pt-3 border-top border-secondary border-opacity-25 text-center">
+                        <div class="col-4">
+                            <a href="to-do-list.html" class="pomodoro-quick-link">
+                                <span class="material-icons-outlined d-block mb-1">check_circle</span>
+                                Lista de Tareas
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="habitos.html" class="pomodoro-quick-link">
+                                <span class="material-icons-outlined d-block mb-1">autorenew</span>
+                                Tracker Hábitos
+                            </a>
+                        </div>
+                        <div class="col-4">
+                            <a href="roadMapTareas.html" class="pomodoro-quick-link">
+                                <span class="material-icons-outlined d-block mb-1">table_rows</span>
+                                Roadmap Equipo
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

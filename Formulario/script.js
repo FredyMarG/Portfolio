@@ -5,14 +5,7 @@
  * Propósito: Validar campos obligatorios, cambiar dinámicamente el color del
  * botón según el género seleccionado (azul para hombre, rosado para mujer),
  * habilitar el campo "Otro cargo", almacenar cada registro en una lista de
- * objetos JSON y limpiar el formulario tras cada envío exitoso.
- *
- * Correcciones aplicadas:
- * 1. Se corrigió la condición `if (cargo.value == "otros")` que antes impedía
- *    alcanzar el bloque `else if (cargo.value == "otros" && otro.value != "")`.
- * 2. Se aplicó la clase `.btn-pink` definida en el CSS cuando se selecciona Mujer.
- * 3. Se agregó el arreglo `listaAspirantes` para cumplir el requerimiento de
- *    almacenar los objetos JSON dentro de una lista y vaciar el formulario.
+ * objetos JSON y renderizar la colección en tiempo real.
  */
 
 const nombre = document.querySelector("#nombre");
@@ -29,14 +22,31 @@ const alertDOMIncorrect = document.querySelector("#alertIncorrect");
 const btn_submit = document.querySelector("#submit");
 const otro = document.querySelector("#otro");
 const listaRegistros = document.querySelector("#listaRegistros");
+const totalCandidatesBadge = document.querySelector("#totalCandidatesBadge");
+const jsonOutput = document.querySelector("#jsonOutput");
+const toggleJsonBtn = document.querySelector("#toggleJsonBtn");
 
-// Lista donde se almacenan todos los aspirantes registrados
-const listaAspirantes = [];
+// Lista donde se almacenan todos los aspirantes registrados (con 2 candidatos iniciales de ejemplo)
+const listaAspirantes = [
+    {
+        nombre: "Camila",
+        apellido: "Restrepo",
+        aspiracion: 6200000,
+        email: "camila.restrepo@tech.co",
+        genero: "Femenino",
+        cargo: "Gerente de Proyecto"
+    },
+    {
+        nombre: "Andrés",
+        apellido: "Villamizar",
+        aspiracion: 5400000,
+        email: "andres.dev@software.co",
+        genero: "Masculino",
+        cargo: "Desarrollador"
+    }
+];
 let objeto = {};
 
-/**
- * Activa el botón de envío en color azul (Bootstrap btn-primary) para género masculino.
- */
 function blue() {
     if (hombre.checked) {
         btn_submit.classList.remove("d-none", "btn-pink", "btn-danger");
@@ -44,9 +54,6 @@ function blue() {
     }
 }
 
-/**
- * Activa el botón de envío en color rosado (.btn-pink) para género femenino.
- */
 function pink() {
     if (mujer.checked) {
         btn_submit.classList.remove("d-none", "btn-primary");
@@ -54,9 +61,6 @@ function pink() {
     }
 }
 
-/**
- * Muestra u oculta el campo de texto adicional cuando el usuario elige "otros" en Cargo.
- */
 cargo.addEventListener("change", () => {
     if (cargo.value === "otros") {
         otro.classList.remove("d-none");
@@ -66,15 +70,41 @@ cargo.addEventListener("change", () => {
     }
 });
 
-/**
- * Valida el formulario, guarda el objeto en la lista JSON y limpia los campos.
- */
+function renderLista() {
+    if (totalCandidatesBadge) {
+        totalCandidatesBadge.textContent = `${listaAspirantes.length} Aspirantes`;
+    }
+    if (jsonOutput) {
+        jsonOutput.textContent = JSON.stringify(listaAspirantes, null, 2);
+    }
+    if (!listaRegistros) return;
+
+    listaRegistros.innerHTML = listaAspirantes
+        .map(
+            (item) => `
+            <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                <div>
+                    <div class="fw-bold text-dark">${item.nombre} ${item.apellido} <span class="badge bg-primary-subtle text-primary ms-1">${item.cargo}</span></div>
+                    <div class="small text-muted">${item.email} • ${item.genero}</div>
+                </div>
+                <span class="fw-bold text-success">$${Number(item.aspiracion).toLocaleString("es-CO")}</span>
+            </li>
+        `
+        )
+        .join("");
+}
+
+if (toggleJsonBtn && jsonOutput) {
+    toggleJsonBtn.addEventListener("click", () => {
+        jsonOutput.classList.toggle("d-none");
+    });
+}
+
 btn_submit.addEventListener("click", (e) => {
     e.preventDefault();
 
     const cargoSeleccionado = cargo.value === "otros" ? otro.value.trim() : cargo.value;
 
-    // Validación de todos los campos obligatorios
     if (
         nombre.value.trim() !== "" &&
         apellido.value.trim() !== "" &&
@@ -92,29 +122,11 @@ btn_submit.addEventListener("click", (e) => {
             cargo: cargoSeleccionado
         };
 
-        // Guardar en la lista de objetos JSON
-        listaAspirantes.push(objeto);
-        console.log("Lista actualizada de aspirantes:", listaAspirantes);
-
-        // Mostrar alerta de éxito
+        listaAspirantes.unshift(objeto);
         alertDOMCorrect.classList.remove("d-none");
         alertDOMIncorrect.classList.add("d-none");
+        renderLista();
 
-        // Renderizar en la lista visual
-        if (listaRegistros) {
-            const li = document.createElement("li");
-            li.className = "list-group-item d-flex justify-content-between align-items-center";
-            li.innerHTML = `
-                <div>
-                    <strong>${objeto.nombre} ${objeto.apellido}</strong> (${objeto.genero}) — <span class="badge bg-secondary">${objeto.cargo}</span>
-                    <div class="small text-muted">${objeto.email}</div>
-                </div>
-                <span class="fw-bold text-success">$${objeto.aspiracion.toLocaleString("es-CO")}</span>
-            `;
-            listaRegistros.appendChild(li);
-        }
-
-        // Vaciar el formulario para un nuevo registro
         document.querySelector("#registroForm").reset();
         otro.classList.add("d-none");
         btn_submit.classList.add("d-none");
@@ -123,3 +135,5 @@ btn_submit.addEventListener("click", (e) => {
         alertDOMIncorrect.classList.remove("d-none");
     }
 });
+
+renderLista();

@@ -382,3 +382,95 @@ h6 {
 .dg-flex-wrap-personalized > * {
   margin-top: 15px;
 }
+
+/* Pomodoro Focus Card Modernizado */
+.pomodoro-shell {
+  max-width: 640px;
+  background: #2b303a;
+  border: 1px solid rgba(0, 210, 229, 0.25);
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+}
+
+.pomodoro-badge {
+  display: inline-block;
+  background: rgba(0, 210, 229, 0.14);
+  color: #00d2e5;
+  border: 1px solid rgba(0, 210, 229, 0.35);
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.pomodoro-mode-btn {
+  background: #363b45;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 10px 22px;
+  transition: all 0.2s ease;
+}
+
+.pomodoro-mode-btn:hover,
+.pomodoro-mode-btn.active-mode {
+  background: rgba(0, 210, 229, 0.18);
+  color: #00d2e5;
+  border-color: #00d2e5;
+}
+
+.c-timer-pomodoro {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #1f242d 0%, #171b22 100%);
+  border: 5px solid #00d2e5;
+  box-shadow: 0 0 32px rgba(0, 210, 229, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#time-text-pomodoro {
+  color: #ffffff;
+  font-size: 3.8rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pomodoro-start-btn {
+  background: linear-gradient(135deg, #00d2e5, #0095ff);
+  color: #0f172a;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 48px;
+  box-shadow: 0 8px 22px rgba(0, 210, 229, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pomodoro-start-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 210, 229, 0.5);
+  color: #0f172a;
+}
+
+.pomodoro-quick-link {
+  display: block;
+  background: rgba(54, 59, 69, 0.7);
+  color: #cbd5e1;
+  padding: 12px 8px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.2s ease;
+}
+
+.pomodoro-quick-link:hover {
+  color: #00d2e5;
+  border-color: rgba(0, 210, 229, 0.4);
+  background: rgba(0, 210, 229, 0.08);
+}
