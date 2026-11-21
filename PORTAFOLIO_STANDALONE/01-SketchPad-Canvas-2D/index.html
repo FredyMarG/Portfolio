@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SketchPad 2D Pro — HTML5 Canvas App</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%3E%3Crect%20width%3D'64'%20height%3D'64'%20rx%3D'14'%20fill%3D'%230b1120'%20stroke%3D'%2300f0ff'%20stroke-width%3D'4'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'54%25'%20dominant-baseline%3D'middle'%20text-anchor%3D'middle'%20font-size%3D'36'%3E%F0%9F%8E%A8%3C%2Ftext%3E%3C%2Fsvg%3E" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+</head>
+<body>
+    <main class="app-shell">
+        <header class="app-header">
+            <div>
+                <span class="pill">HTML5 Canvas 2D · Vanilla JS</span>
+                <h1>🎨 SketchPad 2D Pro</h1>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn" id="btnUndo" title="Deshacer (Ctrl+Z)">↩️ Deshacer</button>
+                <button type="button" class="btn" id="btnClear">🧹 Limpiar</button>
+                <button type="button" class="btn primary" id="btnExport">💾 Exportar PNG</button>
+            </div>
+        </header>
+
+        <section class="toolbar" aria-label="Herramientas de dibujo">
+            <div class="tool-group">
+                <button type="button" class="tool-btn active" data-tool="brush">✏️ Pincel</button>
+                <button type="button" class="tool-btn" data-tool="eraser">🧽 Borrador</button>
+                <button type="button" class="tool-btn" data-tool="rect">⬛ Rectángulo</button>
+                <button type="button" class="tool-btn" data-tool="circle">⚪ Círculo</button>
+                <button type="button" class="tool-btn" data-tool="line">📏 Línea</button>
+            </div>
+            <div class="tool-group">
+                <label>Color <input type="color" id="colorPicker" value="#00f0ff" /></label>
+                <label>Grosor <input type="range" id="sizePicker" min="1" max="24" value="4" /> <span id="sizeLabel">4px</span></label>
+                <button type="button" class="btn" id="btnGrid">🕸️ Rejilla</button>
+            </div>
+        </section>
+
+        <section class="canvas-wrap">
+            <canvas id="sketchCanvas" width="960" height="500"></canvas>
+        </section>
+
+        <footer class="status-bar">
+            <span id="statusCoords">Cursor: (x: 0, y: 0)</span>
+            <span id="statusHistory">Historial: 1 estado · Atajo Ctrl+Z para deshacer</span>
+        </footer>
+    </main>
+</body>
+</html>

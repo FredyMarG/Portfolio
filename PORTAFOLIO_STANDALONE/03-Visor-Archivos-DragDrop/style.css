@@ -1,0 +1,70 @@
+/* FileDrop Inspector — Hoja de estilos standalone */
+:root {
+    --bg: #070d12;
+    --surface: #0f172a;
+    --border: rgba(16, 185, 129, 0.3);
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #10b981;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at top, #064e3b 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.app-shell { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+
+.app-header, .meta-bar, .preview-box {
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+}
+
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #6ee7b7; background: rgba(16, 185, 129, 0.16); padding: 0.2rem 0.65rem; border-radius: 999px; margin-bottom: 0.4rem; }
+.app-header p { color: var(--muted); font-size: 0.92rem; margin-top: 0.25rem; }
+
+.drop-zone {
+    border: 2px dashed rgba(16, 185, 129, 0.45);
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.72);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+
+.drop-zone.drag-over {
+    border-color: var(--accent);
+    background: rgba(16, 185, 129, 0.12);
+    transform: scale(1.01);
+}
+
+.drop-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+.progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+}
+.progress-track { flex: 1; height: 10px; background: #1e293b; border-radius: 999px; overflow: hidden; }
+.progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #10b981, #00f0ff); transition: width 0.15s ease; }
+
+.meta-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; font-size: 0.86rem; color: #cbd5e1; }
+.btn { border: 1px solid var(--accent); background: rgba(16, 185, 129, 0.2); color: #6ee7b7; padding: 0.45rem 0.85rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-left: auto; }
+
+.preview-box:empty { display: none; }
+.preview-box img, .preview-box video { max-width: 100%; max-height: 460px; border-radius: 10px; display: block; margin: 0 auto; }
+.preview-box audio { width: 100%; }
+.preview-box pre { background: #020617; padding: 1rem; border-radius: 10px; overflow: auto; max-height: 420px; font-family: Consolas, monospace; font-size: 0.85rem; color: #e2e8f0; white-space: pre-wrap; word-break: break-word; }

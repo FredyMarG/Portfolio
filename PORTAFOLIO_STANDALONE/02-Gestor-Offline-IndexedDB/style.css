@@ -1,0 +1,83 @@
+/* NotesDB — Gestor Offline con IndexedDB */
+:root {
+    --bg: #090d16;
+    --surface: #111827;
+    --surface-2: #1e293b;
+    --border: rgba(168, 85, 247, 0.28);
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #a855f7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: radial-gradient(circle at top, #3b0764 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+}
+
+.app-shell { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem; }
+
+.app-header, .form-card, .search-bar {
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.25rem;
+}
+
+.app-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; }
+.pill { display: inline-block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #d8b4fe; background: rgba(168, 85, 247, 0.16); padding: 0.2rem 0.65rem; border-radius: 999px; margin-bottom: 0.35rem; }
+.app-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.2rem; }
+
+.form-card { display: grid; grid-template-columns: 1fr auto auto; gap: 0.6rem; }
+.search-bar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.search-bar input { flex: 1; }
+#countLabel { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+
+input, select {
+    background: var(--surface-2);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: var(--text);
+    padding: 0.6rem 0.85rem;
+    border-radius: 9px;
+    font-size: 0.92rem;
+}
+
+.btn {
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: var(--surface-2);
+    color: var(--text);
+    padding: 0.55rem 0.9rem;
+    border-radius: 9px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.danger { background: rgba(244, 63, 94, 0.16); border-color: rgba(244, 63, 94, 0.45); color: #fda4af; }
+
+.notes-list { display: flex; flex-direction: column; gap: 0.7rem; }
+
+.note-item {
+    background: rgba(17, 24, 39, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.note-main { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 0.25rem; }
+.note-title { font-size: 1rem; font-weight: 600; outline: none; padding: 2px 6px; border-radius: 6px; }
+.note-title[contenteditable="true"]:focus { background: rgba(168, 85, 247, 0.14); }
+.note-meta { font-size: 0.78rem; color: var(--muted); }
+.note-actions { display: flex; gap: 0.45rem; }
+
+@media (max-width: 640px) {
+    .form-card { grid-template-columns: 1fr; }
+}

@@ -8,9 +8,9 @@ Repositorio oficial de proyectos de ingeniería de software de **Fredy Martinez*
 
 ---
 
-## 🌟 Selección Curada de Proyectos Profesionales (14 Proyectos)
+## 🌟 Selección Curada de Proyectos Profesionales (17 Proyectos)
 
-El repositorio está estructurado exclusivamente con los **14 proyectos más completos y relevantes a nivel profesional**, descartando ejercicios básicos de aula para ofrecer una presentación ejecutiva enfocada en arquitectura real, calidad visual y código limpio.
+El repositorio está estructurado exclusivamente con los **17 proyectos más completos y relevantes a nivel profesional**, descartando ejercicios básicos de aula para ofrecer una presentación ejecutiva enfocada en arquitectura real, Web APIs avanzadas, calidad visual y código limpio.
 
 ### 1. 🌟 Aplicaciones Full-Stack & Productos Integradores
 
@@ -33,10 +33,13 @@ El repositorio está estructurado exclusivamente con los **14 proyectos más com
 
 ---
 
-### 3. ⚡ JavaScript Avanzado, Gestión de Estado & Consumo de APIs
+### 3. ⚡ JavaScript Avanzado, HTML5 Web APIs & Consumo de APIs REST
 
 | Proyecto | Stack Principal | Arquitectura y Funcionalidades Clave |
 | :--- | :--- | :--- |
+| **[`PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/`](./PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/index.html)**<br>*SketchPad 2D Pro — Estudio de Dibujo Vectorial* | HTML5 Canvas 2D API, ImageData Stack, Vanilla JS | • Pizarra 2D con pincel, borrador, figuras geométricas en tiempo real (rectángulo, círculo, línea), rejilla técnica, pila de historial **Deshacer (`Ctrl+Z`)** con `getImageData`/`putImageData` y **Exportación a PNG**. |
+| **[`PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/`](./PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/index.html)**<br>*NotesDB — Gestor Transaccional Offline-First* | IndexedDB API, IDBTransaction, IDBCursor, Blob JSON | • Base de datos transaccional en el navegador con **IndexedDB** (operaciones CRUD asíncronas, edición en línea `contentEditable`, búsqueda en tiempo real mediante cursores y **Exportación de backup a JSON**). |
+| **[`PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/`](./PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/index.html)**<br>*FileDrop Inspector — Analizador Multimedia* | Drag & Drop API, FileReader, ObjectURL, Clipboard API | • Inspector de archivos con soporte **Drag & Drop**, barra de progreso de lectura binaria, metadatos (MIME y tamaño), previsualización de imagen/audio/video/código, botón de archivo demo y copia al portapapeles. |
 | **[`rickandmorty_api/`](./rickandmorty_api/index.html)**<br>*Multiverse Character Explorer (REST API)* | Fetch API, Async/Await, URLSearchParams, Bootstrap 5 | • Explorador asíncrono conectado a la API oficial de Rick & Morty con búsqueda por nombre, filtros por estado vital (*Alive*, *Dead*, *Unknown*), paginación dinámica y modo offline de respaldo. |
 | **[`Formulario/`](./Formulario/index.html)**<br>*TalentHub — Portal HR de Postulación JSON* | JavaScript ES6+, Form Validation, Live JSON Inspector | • Portal corporativo de registro de aspirantes con validación de campos, activación condicional de cargos, estilo dinámico por género y visor JSON en tiempo real. |
 | **[`Navbar-todolist/`](./Navbar-todolist/index.html)**<br>*Dashboard Administrativo BIT + Task Manager* | Bootstrap 5, Material Icons, CSS Transitions, JS | • Panel administrativo con barra superior, menú lateral expandible animado y módulo interactivo de gestión de tareas. |

@@ -204,8 +204,104 @@ export const division = (req: Express.Request, res: Express.Response) => {
   },
 
   // ==========================================================================
-  // 3. JAVASCRIPT AVANZADO, GESTIÓN DE ESTADO & CONSUMO DE APIS REST
+  // 3. JAVASCRIPT AVANZADO, HTML5 WEB APIS & CONSUMO DE APIS REST
   // ==========================================================================
+  {
+    id: "sketchpad-canvas-2d",
+    title: "SketchPad 2D Pro — Estudio de Dibujo Vectorial (HTML5 Canvas API)",
+    folder: "PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/",
+    category: "js",
+    categoryLabel: "HTML5 Canvas 2D API",
+    stack: ["HTML5 Canvas 2D", "ImageData Undo Stack", "Ctrl+Z History", "PNG Export (toDataURL)", "Vanilla JS"],
+    description: "Pizarra interactiva de diseño 2D con soporte de pincel libre, borrador, trazado geométrico en tiempo real (rectángulos, círculos, líneas), rejilla técnica, pila de historial Deshacer (Ctrl+Z) mediante snapshots de píxeles y exportación directa a PNG.",
+    review: "Aplicación standalone autocontenida (`index.html`, `style.css`, `app.js`) que manipula buffers de píxeles con `ctx.getImageData()` y `ctx.putImageData()` para previsualizar figuras sin destruir las capas previas.",
+    previewUrl: "PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/index.html",
+    codeSnippet: `// PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/app.js
+// Gestión de pila de historial (Undo Ctrl+Z) con snapshots ImageData
+function saveHistory() {
+    history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+    if (history.length > 25) history.shift();
+}
+
+function undo() {
+    if (history.length <= 1) return;
+    history.pop();
+    ctx.putImageData(history[history.length - 1], 0, 0);
+}
+
+// Exportación del lienzo a archivo PNG descargable
+document.getElementById('btnExport').addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = \`sketchpad-\${Date.now()}.png\`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+});`
+  },
+  {
+    id: "notesdb-indexeddb",
+    title: "NotesDB — Gestor Transaccional Offline-First con IndexedDB",
+    folder: "PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/",
+    category: "js",
+    categoryLabel: "IndexedDB & Offline-First",
+    stack: ["IndexedDB API", "IDBTransaction CRUD", "IDBCursor Search", "Inline ContentEditable", "Blob JSON Export"],
+    description: "Sistema de gestión de notas y tareas con arquitectura Offline-First que utiliza la base de datos transaccional nativa del navegador (`IndexedDB`) para operaciones CRUD asíncronas, edición en línea, filtrado por cursores y respaldo descargable en JSON.",
+    review: "Aplicación standalone (`index.html`, `style.css`, `app.js`) que implementa `indexedDB.open()`, migración de esquemas en `upgradeneeded`, transacciones `readwrite`/`readonly`, recorrido con `openCursor()` y generación de archivos con `Blob`.",
+    previewUrl: "PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/index.html",
+    codeSnippet: `// PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/app.js
+const req = indexedDB.open('NotesDB_Portfolio', 1);
+req.addEventListener('upgradeneeded', () => {
+    const database = req.result;
+    if (!database.objectStoreNames.contains('notas')) {
+        database.createObjectStore('notas', { autoIncrement: true });
+    }
+});
+
+// Exportación completa de la base de datos IndexedDB a archivo JSON
+document.getElementById('btnExportJson').addEventListener('click', () => {
+    const allReq = db.transaction('notas', 'readonly').objectStore('notas').getAll();
+    allReq.addEventListener('success', () => {
+        const blob = new Blob([JSON.stringify(allReq.result, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = \`notesdb-backup-\${Date.now()}.json\`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+});`
+  },
+  {
+    id: "filedrop-inspector",
+    title: "FileDrop Inspector — Analizador Multimedia (Drag & Drop + FileReader)",
+    folder: "PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/",
+    category: "js",
+    categoryLabel: "FileReader & Drag-Drop API",
+    stack: ["Drag & Drop API", "FileReader Streams", "Blob & ObjectURL", "Clipboard API", "Progress Bar"],
+    description: "Inspector y previsualizador universal de archivos en el navegador con soporte Drag & Drop, barra de progreso de lectura binaria, extracción de metadatos (MIME type y tamaño formateado), renderizado de imágenes/audio/video/código y copia al portapapeles.",
+    review: "Aplicación standalone (`index.html`, `style.css`, `app.js`) con lectura adaptativa (`readAsDataURL`, `readAsArrayBuffer`, `readAsText`), `URL.createObjectURL` para streaming multimedia local e integración con `navigator.clipboard.writeText`.",
+    previewUrl: "PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/index.html",
+    codeSnippet: `// PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/app.js
+const reader = new FileReader();
+reader.addEventListener('progress', (e) => {
+    if (e.lengthComputable) {
+        const pct = Math.round((e.loaded / e.total) * 100);
+        progressFill.style.width = \`\${pct}%\`;
+    }
+});
+
+reader.addEventListener('load', () => {
+    if (file.type.startsWith('image/')) {
+        const img = document.createElement('img');
+        img.src = reader.result;
+        previewBox.appendChild(img);
+    } else if (file.type.startsWith('video/') || file.type.startsWith('audio/')) {
+        const media = document.createElement(file.type.startsWith('video/') ? 'video' : 'audio');
+        media.controls = true;
+        media.src = URL.createObjectURL(file);
+        previewBox.appendChild(media);
+    }
+});`
+  },
   {
     id: "rickandmorty-api",
     title: "Multiverse Character Explorer — The Rick and Morty REST API",
@@ -351,7 +447,7 @@ function renderPortfolio() {
              </button>
              ${
                proj.codeSnippet
-                 ? `<button type="button" class="btn btn-outline-warning btn-sm fw-semibold" onclick="openCodeModal('${proj.id}')" title="Inspeccionar SQL y Backend">&lt;/&gt; SQL / Código</button>`
+                 ? `<button type="button" class="btn btn-outline-warning btn-sm fw-semibold" onclick="openCodeModal('${proj.id}')" title="Inspeccionar Código y Arquitectura">&lt;/&gt; Código</button>`
                  : ""
              }
              <a href="${proj.previewUrl}" target="_blank" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
