@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tablero Kanban — Gestión Ágil Scrum con Drag &amp; Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%3E%3Crect%20width%3D'64'%20height%3D'64'%20rx%3D'14'%20fill%3D'%230b1120'%20stroke%3D'%2300f0ff'%20stroke-width%3D'4'%2F%3E%3Ctext%20x%3D'50%25'%20y%3D'54%25'%20dominant-baseline%3D'middle'%20text-anchor%3D'middle'%20font-size%3D'36'%3E%F0%9F%93%8B%3C%2Ftext%3E%3C%2Fsvg%3E" />
+</head>
+<body>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <header class="encabezado">
+    <span class="badge-modulo">Agile Scrum Board · Native Drag &amp; Drop API</span>
+    <h1>📋 Tablero Kanban</h1>
+  </header>
+
+  <div class="nueva-tarea">
+    <input type="text" id="texto-tarea" placeholder="Escribe una nueva historia de usuario o tarea del Sprint..." />
+    <button id="btn-agregar">+ Agregar Tarea</button>
+  </div>
+
+  <div class="kanban-board">
+    <div class="columna" data-columna="pendiente">
+      <h2>📌 Por Hacer (To-Do)</h2>
+      <div class="contenedor-tarjetas"></div>
+    </div>
+    <div class="columna" data-columna="progreso">
+      <h2>⚡ En Progreso (WIP)</h2>
+      <div class="contenedor-tarjetas"></div>
+    </div>
+    <div class="columna" data-columna="completado">
+      <h2>✅ Completado (Done)</h2>
+      <div class="contenedor-tarjetas"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -2,15 +2,16 @@
 
 Repositorio oficial de proyectos de ingeniería de software de **Fredy Martinez** (*Full-Stack Software Developer & Certified Scrum Master*).
 
+- 🌐 **Portafolio Desplegado en Vivo (Netlify):** [https://portafoliofredy.netlify.app/](https://portafoliofredy.netlify.app/)
 - 📧 **Correo:** [fredymartinezquinto@hotmail.com](mailto:fredymartinezquinto@hotmail.com)
 - 📱 **Teléfono / WhatsApp:** [+57 315 238 8315](https://wa.me/573152388315)
-- 🖥️ **Portafolio Interactivo:** Abre [`index.html`](./index.html) en tu navegador para explorar y ejecutar los proyectos en vivo.
+- 🖥️ **Ejecución Local:** Abre [`index.html`](./index.html) en tu navegador para explorar y ejecutar los proyectos en vivo.
 
 ---
 
-## 🌟 Selección Curada de Proyectos Profesionales (17 Proyectos)
+## 🌟 Selección Curada de Proyectos Profesionales (20 Proyectos)
 
-El repositorio está estructurado exclusivamente con los **17 proyectos más completos y relevantes a nivel profesional**, descartando ejercicios básicos de aula para ofrecer una presentación ejecutiva enfocada en arquitectura real, Web APIs avanzadas, calidad visual y código limpio.
+El repositorio está estructurado exclusivamente con los **20 proyectos más completos y relevantes a nivel profesional**, descartando ejercicios básicos de aula para ofrecer una presentación ejecutiva enfocada en arquitectura real, Web APIs avanzadas, calidad visual y código limpio.
 
 ### 1. 🌟 Aplicaciones Full-Stack & Productos Integradores
 
@@ -18,6 +19,8 @@ El repositorio está estructurado exclusivamente con los **17 proyectos más com
 | :--- | :--- | :--- |
 | **[`App de citas/`](./App%20de%20citas/public/index.html)**<br>*Amour & Planes — App de Citas y Álbum SQL* | Node.js, SQLite3, PHP/MySQL, REST API, Vanilla JS SPA | • Servidor HTTP REST en [`server.js`](./App%20de%20citas/server.js) con base de datos relacional SQLite3 ([`database/schema.sql`](./App%20de%20citas/database/schema.sql)) y soporte alternativo en PHP/MySQL ([`public/api.php`](./App%20de%20citas/public/api.php)).<br>• Catálogo de planes, creador de planes propios, agendamiento con fecha/hora, bitácora y álbum de hasta 10 fotografías por cita con respaldo automático en `localStorage`. |
 | **[`proyectoBit/`](./proyectoBit/index.html)**<br>*Procrastination Nightmare — Suite SaaS (6 Módulos)* | HTML5, CSS3, Bootstrap 5, JavaScript POO | • **Pomodoro Focus** ([`index.html`](./proyectoBit/index.html), [`pomodoro.html`](./proyectoBit/pomodoro.html)), **Gestor To-Do** ([`to-do-list.html`](./proyectoBit/to-do-list.html)), **Calendario Mensual** ([`calendario.html`](./proyectoBit/calendario.html)), **Tracker de Hábitos** ([`habitos.html`](./proyectoBit/habitos.html)), **Roadmap de Tareas POO** ([`roadMapTareas.html`](./proyectoBit/roadMapTareas.html)) y **Landing Page Corporativa** ([`landing-full-bootstrap/index.html`](./proyectoBit/landing-full-bootstrap/index.html)). |
+| **[`Finanzas APP/`](./Finanzas%20APP/index.html)**<br>*Dashboard de Control Financiero & Gráfico Canvas 2D* | HTML5 Canvas 2D, JavaScript ES6+, LocalStorage, COP | • Control de ingresos, gastos y balance en tiempo real con separador automático de miles (`es-CO`), gráfico de dona proporcional dibujado nativamente en Canvas 2D y filtros dinámicos. |
+| **[`Tablero Kanban/`](./Tablero%20Kanban/index.html)**<br>*Tablero Kanban Scrum con Drag & Drop Nativo* | HTML5 Drag & Drop API, LocalStorage, CSS Grid | • Tablero ágil de 3 columnas (*Por Hacer*, *En Progreso*, *Completado*) con transferencia de tarjetas arrastrables mediante `dataTransfer` y persistencia en `localStorage`. |
 | **[`Tienda_Online/`](./Tienda_Online/index.html)**<br>*BIT Shop — E-Commerce Tecnológico* | JavaScript ES6+, Bootstrap 5 Offcanvas, Material Symbols | • Tienda virtual interactiva con Mega-Menú de categorías, buscador en tiempo real y carrito de compras lateral (*Offcanvas*) con liquidación dinámica en pesos colombianos (COP). |
 | **[`Proyecto_Bit/`](./Proyecto_Bit/TurismoBack/index.js)**<br>*Plataforma de Turismo Full-Stack MEAN* | MongoDB, Express.js, Angular 15, Node.js, Mongoose | • `TurismoBack/`: API RESTful en Express ([`index.js`](./Proyecto_Bit/TurismoBack/index.js)), conexión Mongoose ([`config/db.js`](./Proyecto_Bit/TurismoBack/config/db.js)) y CRUD de destinos ([`routes/routes.js`](./Proyecto_Bit/TurismoBack/routes/routes.js)).<br>• `TurismoFront/`: Cliente SPA en Angular 15. |
 
@@ -37,9 +40,10 @@ El repositorio está estructurado exclusivamente con los **17 proyectos más com
 
 | Proyecto | Stack Principal | Arquitectura y Funcionalidades Clave |
 | :--- | :--- | :--- |
-| **[`PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/`](./PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/index.html)**<br>*SketchPad 2D Pro — Estudio de Dibujo Vectorial* | HTML5 Canvas 2D API, ImageData Stack, Vanilla JS | • Pizarra 2D con pincel, borrador, figuras geométricas en tiempo real (rectángulo, círculo, línea), rejilla técnica, pila de historial **Deshacer (`Ctrl+Z`)** con `getImageData`/`putImageData` y **Exportación a PNG**. |
-| **[`PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/`](./PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/index.html)**<br>*NotesDB — Gestor Transaccional Offline-First* | IndexedDB API, IDBTransaction, IDBCursor, Blob JSON | • Base de datos transaccional en el navegador con **IndexedDB** (operaciones CRUD asíncronas, edición en línea `contentEditable`, búsqueda en tiempo real mediante cursores y **Exportación de backup a JSON**). |
-| **[`PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/`](./PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/index.html)**<br>*FileDrop Inspector — Analizador Multimedia* | Drag & Drop API, FileReader, ObjectURL, Clipboard API | • Inspector de archivos con soporte **Drag & Drop**, barra de progreso de lectura binaria, metadatos (MIME y tamaño), previsualización de imagen/audio/video/código, botón de archivo demo y copia al portapapeles. |
+| **[`Buscador de Peliculas/`](./Buscador%20de%20Peliculas/index.html)**<br>*CineSearch Explorer — OMDb REST API & Debounce* | OMDb REST API, Debounce (500ms), HTML5 `<dialog>` | • Buscador cinematográfico en tiempo real con técnica **Debounce** de 500ms, etiquetas rápidas por franquicia y ficha técnica detallada (sinopsis, director, IMDb rating) en modal nativo `<dialog>`. |
+| **[`SketchPad-Canvas-2D/`](./SketchPad-Canvas-2D/index.html)**<br>*SketchPad 2D Pro — Estudio de Dibujo Vectorial* | HTML5 Canvas 2D API, ImageData Stack, Vanilla JS | • Pizarra 2D con pincel, borrador, figuras geométricas en tiempo real (rectángulo, círculo, línea), rejilla técnica, pila de historial **Deshacer (`Ctrl+Z`)** con `getImageData`/`putImageData` y **Exportación a PNG**. |
+| **[`Gestor-Offline-IndexedDB/`](./Gestor-Offline-IndexedDB/index.html)**<br>*NotesDB — Gestor Transaccional Offline-First* | IndexedDB API, IDBTransaction, IDBCursor, Blob JSON | • Base de datos transaccional en el navegador con **IndexedDB** (operaciones CRUD asíncronas, edición en línea `contentEditable`, búsqueda en tiempo real mediante cursores y **Exportación de backup a JSON**). |
+| **[`Visor-Archivos-DragDrop/`](./Visor-Archivos-DragDrop/index.html)**<br>*FileDrop Inspector — Analizador Multimedia* | Drag & Drop API, FileReader, ObjectURL, Clipboard API | • Inspector de archivos con soporte **Drag & Drop**, barra de progreso de lectura binaria, metadatos (MIME y tamaño), previsualización de imagen/audio/video/código, botón de archivo demo y copia al portapapeles. |
 | **[`rickandmorty_api/`](./rickandmorty_api/index.html)**<br>*Multiverse Character Explorer (REST API)* | Fetch API, Async/Await, URLSearchParams, Bootstrap 5 | • Explorador asíncrono conectado a la API oficial de Rick & Morty con búsqueda por nombre, filtros por estado vital (*Alive*, *Dead*, *Unknown*), paginación dinámica y modo offline de respaldo. |
 | **[`Formulario/`](./Formulario/index.html)**<br>*TalentHub — Portal HR de Postulación JSON* | JavaScript ES6+, Form Validation, Live JSON Inspector | • Portal corporativo de registro de aspirantes con validación de campos, activación condicional de cargos, estilo dinámico por género y visor JSON en tiempo real. |
 | **[`Navbar-todolist/`](./Navbar-todolist/index.html)**<br>*Dashboard Administrativo BIT + Task Manager* | Bootstrap 5, Material Icons, CSS Transitions, JS | • Panel administrativo con barra superior, menú lateral expandible animado y módulo interactivo de gestión de tareas. |

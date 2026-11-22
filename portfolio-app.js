@@ -78,6 +78,93 @@ CREATE TABLE IF NOT EXISTS fotos_cita (
     ]
   },
   {
+    id: "finanzas-app",
+    title: "Finanzas APP — Dashboard de Control Financiero & Gráfico Canvas 2D",
+    folder: "Finanzas APP/",
+    category: "fullstack",
+    categoryLabel: "FinTech App & Canvas 2D",
+    stack: ["HTML5 Canvas 2D Chart", "JavaScript ES6+", "LocalStorage State", "COP Currency Formatter", "Dynamic Filters"],
+    description: "Aplicación FinTech de control de ingresos, gastos y balance patrimonial en tiempo real con formateo automático de miles en pesos colombianos (COP), gráfico de dona renderizado nativamente en HTML5 Canvas 2D y filtros dinámicos.",
+    review: "Contiene interfaz Glassmorphism (`index.html`), hoja de estilos (`style.css`) y motor financiero (`app.js`) con cálculo reactivo con `filter`/`reduce`, gráfico circular proporcional sin librerías externas y persistencia en `localStorage`.",
+    previewUrl: "Finanzas APP/index.html",
+    codeSnippet: `// Finanzas APP/app.js (Gráfico de Dona proporcional en HTML5 Canvas 2D)
+function dibujarGrafico(totalIngresos, totalGastos) {
+  const sumaTotal = totalIngresos + totalGastos;
+  const proporcionIngresos = totalIngresos / sumaTotal;
+  const anguloInicial = -Math.PI / 2;
+  const anguloFinIngresos = anguloInicial + proporcionIngresos * Math.PI * 2;
+
+  // Arco de Ingresos (#10b981)
+  contextoGrafico.beginPath();
+  contextoGrafico.arc(90, 90, 66, anguloInicial, anguloFinIngresos);
+  contextoGrafico.strokeStyle = '#10b981';
+  contextoGrafico.lineWidth = 22;
+  contextoGrafico.stroke();
+
+  // Arco de Gastos (#fb7185)
+  contextoGrafico.beginPath();
+  contextoGrafico.arc(90, 90, 66, anguloFinIngresos, anguloInicial + Math.PI * 2);
+  contextoGrafico.strokeStyle = '#fb7185';
+  contextoGrafico.lineWidth = 22;
+  contextoGrafico.stroke();
+}`
+  },
+  {
+    id: "tablero-kanban",
+    title: "Tablero Kanban Scrum — Gestión Ágil de Sprints con Drag & Drop",
+    folder: "Tablero Kanban/",
+    category: "fullstack",
+    categoryLabel: "Agile Scrum & Drag-Drop",
+    stack: ["HTML5 Drag & Drop API", "Scrum Workflow", "LocalStorage Persistence", "CSS Grid Glassmorphism", "Vanilla JS"],
+    description: "Tablero interactivo de metodología ágil Scrum dividido en 3 columnas de flujo (Por Hacer, En Progreso, Completado) con transferencia de tarjetas mediante la API nativa Drag & Drop y persistencia automática en el navegador.",
+    review: "Contiene estructura del tablero (`index.html`), tema neón oscuro (`style.css`) y controlador de estado (`app.js`) que serializa payloads JSON en `dataTransfer` durante los eventos `dragstart`, `dragover` y `drop`.",
+    previewUrl: "Tablero Kanban/index.html",
+    codeSnippet: `// Tablero Kanban/app.js (Transferencia entre columnas con Drag & Drop API)
+contenedor.addEventListener('drop', (evento) => {
+  evento.preventDefault();
+  columnaEl.classList.remove('drag-over');
+
+  const datosArrastre = JSON.parse(evento.dataTransfer.getData('text/plain'));
+  const columnaDestino = columnaEl.dataset.columna;
+  if (datosArrastre.origen === columnaDestino) return;
+
+  const indice = estadoKanban[datosArrastre.origen].findIndex((t) => t.id === datosArrastre.id);
+  const [tareaMovida] = estadoKanban[datosArrastre.origen].splice(indice, 1);
+  estadoKanban[columnaDestino].push(tareaMovida);
+
+  guardarEstado();
+  renderizarTablero();
+});`
+  },
+  {
+    id: "buscador-peliculas",
+    title: "Buscador de Películas (CineSearch) — OMDb REST API & Debounce",
+    folder: "Buscador de Peliculas/",
+    category: "fullstack",
+    categoryLabel: "REST API & Debounce",
+    stack: ["OMDb REST API", "Debounce Pattern (500ms)", "Async/Await Fetch", "HTML5 Native Dialog", "CSS Grid"],
+    description: "Buscador cinematográfico en tiempo real conectado a la API REST de OMDb con optimización de peticiones mediante patrón Debounce (500ms), filtros rápidos por franquicia y ficha técnica completa en ventana modal nativa.",
+    review: "Contiene interfaz con sugerencias rápidas (`index.html`), estilos Glassmorphism (`style.css`) y controlador asíncrono (`app.js`) con `buscarPeliculas()`, `verDetalles(imdbID)`, catálogo local de respaldo y apertura modal nativa `showModal()`.",
+    previewUrl: "Buscador de Peliculas/index.html",
+    codeSnippet: `// Buscador de Peliculas/app.js (Optimización de búsqueda en vivo con patrón Debounce)
+let debounceTimer;
+buscadorInput.addEventListener('input', (evento) => {
+  clearTimeout(debounceTimer);
+  const busqueda = evento.target.value.trim();
+  if (busqueda.length < 2) return;
+
+  debounceTimer = setTimeout(() => {
+    buscarPeliculas(busqueda);
+  }, 500);
+});
+
+async function verDetalles(imdbID) {
+  const res = await fetch(\`https://www.omdbapi.com/?i=\${imdbID}&plot=full&apikey=\${API_KEY}\`);
+  const pelicula = await res.json();
+  modal.showModal();
+}`
+  },
+  {
     id: "tienda-online",
     title: "BIT Shop — E-Commerce Tecnológico con Carrito Offcanvas & Mega-Menú",
     folder: "Tienda_Online/",
@@ -209,14 +296,14 @@ export const division = (req: Express.Request, res: Express.Response) => {
   {
     id: "sketchpad-canvas-2d",
     title: "SketchPad 2D Pro — Estudio de Dibujo Vectorial (HTML5 Canvas API)",
-    folder: "PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/",
+    folder: "SketchPad-Canvas-2D/",
     category: "js",
     categoryLabel: "HTML5 Canvas 2D API",
     stack: ["HTML5 Canvas 2D", "ImageData Undo Stack", "Ctrl+Z History", "PNG Export (toDataURL)", "Vanilla JS"],
     description: "Pizarra interactiva de diseño 2D con soporte de pincel libre, borrador, trazado geométrico en tiempo real (rectángulos, círculos, líneas), rejilla técnica, pila de historial Deshacer (Ctrl+Z) mediante snapshots de píxeles y exportación directa a PNG.",
     review: "Aplicación standalone autocontenida (`index.html`, `style.css`, `app.js`) que manipula buffers de píxeles con `ctx.getImageData()` y `ctx.putImageData()` para previsualizar figuras sin destruir las capas previas.",
-    previewUrl: "PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/index.html",
-    codeSnippet: `// PORTAFOLIO_STANDALONE/01-SketchPad-Canvas-2D/app.js
+    previewUrl: "SketchPad-Canvas-2D/index.html",
+    codeSnippet: `// SketchPad-Canvas-2D/app.js
 // Gestión de pila de historial (Undo Ctrl+Z) con snapshots ImageData
 function saveHistory() {
     history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
@@ -240,14 +327,14 @@ document.getElementById('btnExport').addEventListener('click', () => {
   {
     id: "notesdb-indexeddb",
     title: "NotesDB — Gestor Transaccional Offline-First con IndexedDB",
-    folder: "PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/",
+    folder: "Gestor-Offline-IndexedDB/",
     category: "js",
     categoryLabel: "IndexedDB & Offline-First",
     stack: ["IndexedDB API", "IDBTransaction CRUD", "IDBCursor Search", "Inline ContentEditable", "Blob JSON Export"],
     description: "Sistema de gestión de notas y tareas con arquitectura Offline-First que utiliza la base de datos transaccional nativa del navegador (`IndexedDB`) para operaciones CRUD asíncronas, edición en línea, filtrado por cursores y respaldo descargable en JSON.",
     review: "Aplicación standalone (`index.html`, `style.css`, `app.js`) que implementa `indexedDB.open()`, migración de esquemas en `upgradeneeded`, transacciones `readwrite`/`readonly`, recorrido con `openCursor()` y generación de archivos con `Blob`.",
-    previewUrl: "PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/index.html",
-    codeSnippet: `// PORTAFOLIO_STANDALONE/02-Gestor-Offline-IndexedDB/app.js
+    previewUrl: "Gestor-Offline-IndexedDB/index.html",
+    codeSnippet: `// Gestor-Offline-IndexedDB/app.js
 const req = indexedDB.open('NotesDB_Portfolio', 1);
 req.addEventListener('upgradeneeded', () => {
     const database = req.result;
@@ -273,14 +360,14 @@ document.getElementById('btnExportJson').addEventListener('click', () => {
   {
     id: "filedrop-inspector",
     title: "FileDrop Inspector — Analizador Multimedia (Drag & Drop + FileReader)",
-    folder: "PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/",
+    folder: "Visor-Archivos-DragDrop/",
     category: "js",
     categoryLabel: "FileReader & Drag-Drop API",
     stack: ["Drag & Drop API", "FileReader Streams", "Blob & ObjectURL", "Clipboard API", "Progress Bar"],
     description: "Inspector y previsualizador universal de archivos en el navegador con soporte Drag & Drop, barra de progreso de lectura binaria, extracción de metadatos (MIME type y tamaño formateado), renderizado de imágenes/audio/video/código y copia al portapapeles.",
     review: "Aplicación standalone (`index.html`, `style.css`, `app.js`) con lectura adaptativa (`readAsDataURL`, `readAsArrayBuffer`, `readAsText`), `URL.createObjectURL` para streaming multimedia local e integración con `navigator.clipboard.writeText`.",
-    previewUrl: "PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/index.html",
-    codeSnippet: `// PORTAFOLIO_STANDALONE/03-Visor-Archivos-DragDrop/app.js
+    previewUrl: "Visor-Archivos-DragDrop/index.html",
+    codeSnippet: `// Visor-Archivos-DragDrop/app.js
 const reader = new FileReader();
 reader.addEventListener('progress', (e) => {
     if (e.lengthComputable) {
@@ -440,6 +527,7 @@ function renderPortfolio() {
         )
         .join("");
 
+      const encodedPreviewUrl = proj.previewUrl ? encodeURI(proj.previewUrl) : "";
       const actionButton = proj.previewUrl
         ? `<div class="d-flex flex-wrap gap-2 mt-auto pt-3">
              <button type="button" class="btn btn-info btn-sm fw-bold text-dark flex-grow-1" onclick="openPreviewModal('${proj.title}', '${proj.previewUrl}')">
@@ -450,7 +538,7 @@ function renderPortfolio() {
                  ? `<button type="button" class="btn btn-outline-warning btn-sm fw-semibold" onclick="openCodeModal('${proj.id}')" title="Inspeccionar Código y Arquitectura">&lt;/&gt; Código</button>`
                  : ""
              }
-             <a href="${proj.previewUrl}" target="_blank" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
+             <a href="${encodedPreviewUrl}" target="_blank" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
                ↗ Abrir
              </a>
            </div>`
@@ -496,13 +584,14 @@ window.openPreviewModal = function (title, url) {
   const externalLink = document.getElementById("previewExternalLink");
   const codeContainer = document.getElementById("codeInspectorContainer");
   const iframeContainer = document.getElementById("iframeContainer");
+  const safeUrl = encodeURI(url);
 
   modalTitle.textContent = title;
-  externalLink.href = url;
+  externalLink.href = safeUrl;
   externalLink.classList.remove("d-none");
   codeContainer.classList.add("d-none");
   iframeContainer.classList.remove("d-none");
-  iframe.src = url;
+  iframe.src = safeUrl;
 
   const modal = new bootstrap.Modal(document.getElementById("portfolioModal"));
   modal.show();
