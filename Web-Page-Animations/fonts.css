@@ -1,0 +1,37 @@
+/*
+ * CURSO_WEB_DOC_CSS v1
+ * Archivo: HTML y CSS/PROYECTOS/WEB PAGE ANIMATIONS/fonts.css
+ * Carpeta del tema: «WEB PAGE ANIMATIONS». Hoja: «fonts».
+ * Propósito: define la apariencia (colores, tipografía, cajas, disposición) de la página enlazada.
+ * Cómo leerlo: cada bloque `selector { ... }` aplica estilos a los elementos del HTML que cumplan el selector.
+ */
+
+
+
+
+/* Definición de una fuente personalizada. */
+@font-face { /* Regla at-rule de CSS */
+    font-family: "montserrat"; /* Familia tipográfica */
+    src: url("fonts/Montserrat-Regular.ttf")format("truetype"); /* Propiedad CSS: src */
+    font-weight: 400; /* Grosor de la fuente */
+}
+
+
+
+
+/* Definición de una fuente personalizada. */
+@font-face { /* Regla at-rule de CSS */
+    font-family: "montserrat"; /* Familia tipográfica */
+    src: url("fonts/Montserrat-ExtraBold.ttf")format("truetype"); /* Propiedad CSS: src */
+    font-weight: 700; /* Grosor de la fuente */
+}
+
+
+
+
+/* Definición de una fuente personalizada. */
+@font-face { /* Regla at-rule de CSS */
+    font-family: "montserrat"; /* Familia tipográfica */
+    src: url("fonts/Montserrat-ExtraLight.ttf")format("truetype"); /* Propiedad CSS: src */
+    font-weight: 100; /* Grosor de la fuente */
+}

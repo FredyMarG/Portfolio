@@ -1,9 +1,9 @@
 /**
  * ============================================================================
- * MOTOR DEL PORTAFOLIO PROFESIONAL FULL-STACK MEAN (portfolio-app.js)
+ * MOTOR DEL PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL (portfolio-app.js)
  * ============================================================================
- * Selección curada de los 14 proyectos de ingeniería y aplicaciones reales de
- * Fredy Martinez, organizados por impacto técnico para procesos de selección.
+ * Selección curada de los 16 proyectos de ingeniería de software y aplicaciones
+ * reales de Fredy Martinez, organizados por impacto técnico para selección.
  */
 
 const PORTFOLIO_PROJECTS = [
@@ -58,6 +58,33 @@ CREATE TABLE IF NOT EXISTS fotos_cita (
     FOREIGN KEY (cita_id) REFERENCES citas_programadas(id) ON DELETE CASCADE,
     UNIQUE(cita_id, slot_numero)
 );`
+  },
+  {
+    id: "gestor-tareas-node",
+    title: "Gestor de Tareas Full-Stack en Node.js Nativo (HTTP + NDJSON + node:test)",
+    folder: "Gestor-Tareas-Node/",
+    category: "fullstack",
+    categoryLabel: "Node.js Nativo & Testing",
+    stack: ["Node.js (node:http)", "REST API Nativa", "JSON & NDJSON Audit", "EventEmitter", "node:test", "SPA Fallback"],
+    description: "Aplicación Full-Stack construida sin dependencias externas: servidor HTTP nativo con API REST CRUD, persistencia en JSON, bitácora de auditoría en NDJSON, bus de eventos con EventEmitter, pruebas unitarias con node:test y SPA con respaldo en localStorage.",
+    review: "Arquitectura modular en `src/` (`server.js`, `tareas.js`, `storage.js`, `bus.js`, `index.js`), pruebas automatizadas en `tests/tareas.test.js`, protección contra Path Traversal y límite de payload de 1 MB.",
+    previewUrl: "Gestor-Tareas-Node/public/index.html",
+    codeSnippet: `// Gestor-Tareas-Node/src/server.js (API REST Nativa con node:http y seguridad)
+import http from 'node:http';
+import { crear, listar, completar, eliminar } from './tareas.js';
+
+// Protección contra Path Traversal al servir archivos estáticos
+async function intentarEnviarArchivo(baseDir, relPath, res) {
+  const fullPath = resolve(baseDir, relPath);
+  if (!fullPath.startsWith(baseDir)) {
+    enviarJson(res, 403, { error: 'Acceso denegado' });
+    return true;
+  }
+  const data = await readFile(fullPath);
+  res.writeHead(200, { 'Content-Type': MIME_TYPES[extname(fullPath)] || 'application/octet-stream' });
+  res.end(data);
+  return true;
+}`
   },
   {
     id: "proyecto-bit",
@@ -401,77 +428,15 @@ reader.addEventListener('load', () => {
     previewUrl: "rickandmorty_api/index.html"
   },
   {
-    id: "formulario-aspirantes",
-    title: "TalentHub — Portal HR de Postulación & Colección JSON en Vivo",
-    folder: "Formulario/",
+    id: "web-page-animations",
+    title: "Portfolio UI & Motion — Animaciones CSS3 a 60 FPS (GPU & Scroll-Driven)",
+    folder: "Web-Page-Animations/",
     category: "js",
-    categoryLabel: "JavaScript & JSON State",
-    stack: ["JavaScript ES6+", "Form Validation", "Live JSON Inspector", "Bootstrap 5"],
-    description: "Sistema corporativo de registro de aspirantes con campos condicionales dinámicos, adaptación visual por género, liquidación salarial en COP e inspector JSON en tiempo real.",
-    review: "Contiene interfaz ejecutiva de dos columnas (`index.html`), estilos (`style.css`) y motor de validación y estado (`script.js`).",
-    previewUrl: "Formulario/index.html"
-  },
-  {
-    id: "navbar-todolist",
-    title: "Panel Administrativo BIT con Sidebar Animado & Gestor de Tareas",
-    folder: "Navbar-todolist/",
-    category: "js",
-    categoryLabel: "Dashboard UI & DOM",
-    stack: ["Bootstrap 5", "Material Icons", "Bootstrap Icons", "CSS Transitions", "Vanilla JS"],
-    description: "Dashboard corporativo que integra barra superior de herramientas, menú lateral colapsable con transiciones CSS y módulo interactivo de gestión de tareas.",
-    review: "Contiene layout de administración (`index.html`), arquitectura CSS de sidebar aislado (`css/style.css`) y controlador DOM (`js/main.js`).",
-    previewUrl: "Navbar-todolist/index.html"
-  },
-
-  // ==========================================================================
-  // 4. CLONES UI DE ALTA FIDELIDAD & CV EJECUTIVO
-  // ==========================================================================
-  {
-    id: "my-cv",
-    title: "CV Ejecutivo & Perfil Profesional — Fredy Martinez",
-    folder: "My CV/",
-    category: "ui",
-    categoryLabel: "CV Ejecutivo",
-    stack: ["HTML5 Semántico", "CSS3 Flexbox", "Material Icons", "Formulario de Contacto"],
-    description: "Currículum web ejecutivo de Fredy Martinez con presentación profesional, tarjetas de especialidades Full-Stack / Scrum Master y módulo de contacto directo.",
-    review: "Contiene maquetación ejecutiva (`index.html`), sistema de diseño responsivo (`style.css`), retrato profesional y canales directos de WhatsApp y correo.",
-    previewUrl: "My CV/index.html"
-  },
-  {
-    id: "spotify-clone",
-    title: "Clon de Spotify Premium Colombia (Landing Page & Planes)",
-    folder: "Spotify/",
-    category: "ui",
-    categoryLabel: "Clon UI Corporativo",
-    stack: ["HTML5 Semántico", "CSS3 Flexbox", "Font Awesome", "Pasarelas de Pago"],
-    description: "Réplica de alta fidelidad de la página promocional de Spotify Premium Colombia con hero banner, grilla de beneficios, pasarelas locales y comparativa de 4 planes.",
-    review: "Contiene estructura semántica (`index.html`), hoja de estilos completa (`assets/css/style.css`) e iconografía personalizada en `assets/img/`.",
-    previewUrl: "Spotify/index.html"
-  },
-  {
-    id: "instagram-clone",
-    title: "Clon de Inicio de Sesión de Instagram Desktop",
-    folder: "Instagram/",
-    category: "ui",
-    categoryLabel: "Clon UI & Validación",
-    stack: ["HTML5", "CSS3 Positioning", "Flexbox", "Interactive Validation"],
-    description: "Réplica exacta de la pantalla de acceso de Instagram para escritorio con composición superpuesta de dispositivos móviles y validación interactiva de credenciales.",
-    review: "Contiene `index.html`, hoja de estilos `assets/css/style.css` con posicionamiento relativo/absoluto calibrado y recursos gráficos en `assets/img/`.",
-    previewUrl: "Instagram/index.html"
-  },
-  {
-    id: "microsoft-login",
-    title: "Clon de Autenticación de Microsoft Account (Fluent UI)",
-    folder: "Microsoft_Login/",
-    category: "ui",
-    categoryLabel: "Clon UI Fluent Design",
-    stack: ["HTML5", "CSS3 Fluent UI", "Bootstrap 5", "Material Symbols"],
-    description: "Réplica de la ventana de autenticación de cuentas Microsoft con estética Fluent Design, estados de foco corporativos y validación interactiva.",
-    review: "Contiene `index.html`, hoja de estilos `assets/css/style.css` y activos oficiales en `assets/img/`.",
-    previewUrl: "Microsoft_Login/index.html",
-    extraLinks: [
-      { label: "Ver también: Clon de Snapchat Web", url: "Snapchat/index.html" }
-    ]
+    categoryLabel: "CSS3 Motion & UI Architecture",
+    stack: ["CSS3 @keyframes", "3D GPU Transforms", "Scroll-Driven Animations", "prefers-reduced-motion", "Responsive Sin JS"],
+    description: "Interfaz futurista de alto rendimiento visual construida con animaciones CSS aceleradas por GPU: barra de progreso ligada al scroll, órbitas rotatorias, texto con gradiente cinético, marquee infinito, tarjetas 3D y soporte de accesibilidad `prefers-reduced-motion`.",
+    review: "Maquetación semántica (`index.html`), fuentes locales (`fonts.css`) y sistema de animaciones en `style.css` con menú hamburguesa 100% CSS (checkbox hack) sin librerías externas.",
+    previewUrl: "Web-Page-Animations/index.html"
   }
 ];
 
@@ -486,6 +451,17 @@ const countBadge = document.getElementById("projectCountBadge");
 
 let currentCategory = "all";
 let currentSearch = "";
+
+function updatePortfolioMetrics() {
+  const totalEl = document.getElementById("statTotalProjects");
+  const liveEl = document.getElementById("statLiveDemos");
+  const filterAllEl = document.getElementById("filterAllBtn");
+  const liveCount = PORTFOLIO_PROJECTS.filter((p) => Boolean(p.previewUrl)).length;
+
+  if (totalEl) totalEl.textContent = String(PORTFOLIO_PROJECTS.length);
+  if (liveEl) liveEl.textContent = String(liveCount);
+  if (filterAllEl) filterAllEl.textContent = `Todos (${PORTFOLIO_PROJECTS.length})`;
+}
 
 function renderPortfolio() {
   const filtered = PORTFOLIO_PROJECTS.filter((proj) => {
@@ -629,14 +605,16 @@ filterButtons.forEach((btn) => {
     filterButtons.forEach((b) => b.classList.remove("active"));
     btn.classList.add("active");
     currentCategory = btn.getAttribute("data-category");
-    renderPortfolio();
+    updatePortfolioMetrics();
+renderPortfolio();
   });
 });
 
 if (searchInput) {
   searchInput.addEventListener("input", (e) => {
     currentSearch = e.target.value.trim();
-    renderPortfolio();
+    updatePortfolioMetrics();
+renderPortfolio();
   });
 }
 
@@ -701,4 +679,5 @@ if (portfolioContactForm && pContactFeedback) {
   });
 }
 
+updatePortfolioMetrics();
 renderPortfolio();

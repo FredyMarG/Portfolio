@@ -1,10 +1,10 @@
 <!--
   ============================================================================
-  PORTAFOLIO PROFESIONAL FULL-STACK MEAN — FREDY MARTINEZ (index.html)
+  PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL — FREDY MARTINEZ (index.html)
   ============================================================================
-  Propósito: Portafolio ejecutivo con la selección curada de los 14 proyectos
-  más sólidos de ingeniería de software Full-Stack (MEAN, SQL, TypeScript,
-  APIs REST con JWT, Angular 15 SPAs y aplicaciones interactivas).
+  Propósito: Portafolio ejecutivo con la selección curada de proyectos de
+  ingeniería de software Full-Stack (MEAN, SQL, Node.js nativo, TypeScript,
+  APIs REST con JWT, Angular 15 SPAs, HTML5 Web APIs y CSS Motion).
 -->
 <!DOCTYPE html>
 <html lang="es">
@@ -96,14 +96,14 @@
           <div class="row g-3">
             <div class="col-6 col-sm-3">
               <div class="stat-card">
-                <div class="stat-number">20</div>
-                <div class="stat-label">Proyectos Destacados</div>
+                <div class="stat-number" id="statTotalProjects">16</div>
+                <div class="stat-label">Proyectos Curados</div>
               </div>
             </div>
             <div class="col-6 col-sm-3">
               <div class="stat-card">
-                <div class="stat-number">17</div>
-                <div class="stat-label">Apps Interactivas en Vivo</div>
+                <div class="stat-number" id="statLiveDemos">13</div>
+                <div class="stat-label">Demos Interactivas</div>
               </div>
             </div>
             <div class="col-6 col-sm-3">
@@ -137,15 +137,14 @@
         <span id="projectCountBadge" class="badge bg-secondary bg-opacity-25 text-light px-3 py-2 fs-6"></span>
       </div>
 
-      <!-- Barra de Filtros Ejecutiva (4 Categorías) -->
+      <!-- Barra de Filtros Ejecutiva (3 Categorías Especializadas) -->
       <div class="row g-3 align-items-center mb-4">
         <div class="col-lg-8">
           <div class="d-flex flex-wrap gap-2">
-            <button class="filter-btn active" data-category="all">Todos (20)</button>
+            <button class="filter-btn active" id="filterAllBtn" data-category="all">Todos (16)</button>
             <button class="filter-btn" data-category="fullstack">🌟 Full-Stack &amp; Productos</button>
             <button class="filter-btn" data-category="backend">⚙️ Backend APIs &amp; Angular</button>
-            <button class="filter-btn" data-category="js">⚡ JavaScript &amp; Web APIs</button>
-            <button class="filter-btn" data-category="ui">🎨 Clones UI &amp; CV Ejecutivo</button>
+            <button class="filter-btn" data-category="js">⚡ Web APIs, JS &amp; CSS Motion</button>
           </div>
         </div>
         <div class="col-lg-4">
@@ -154,46 +153,7 @@
       </div>
 
       <!-- Grilla Dinámica de Tarjetas -->
-      <div id="projectsGrid" class="row g-4">
-        <!-- Proyecto Destacado: App de Citas (También renderizado dinámicamente por portfolio-app.js) -->
-        <div class="col-lg-4 col-md-6">
-          <article class="project-card">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <span class="cat-badge cat-fullstack">Full-Stack SQL &amp; SPA</span>
-              <span class="file-path-tag">📁 App de citas/</span>
-            </div>
-
-            <h5 class="fw-bold mb-2 text-white">Amour &amp; Planes — App de Citas y Álbum de Recuerdos (Full-Stack SQL)</h5>
-            <p class="small text-secondary mb-2">Aplicativo web Full-Stack para parejas que permite descubrir planes sugeridos, diseñar planes personalizados, agendar citas con fecha y hora exacta, calificar experiencias y conservar un álbum interactivo de hasta 10 fotografías por cita.</p>
-
-            <div class="review-box">
-              <strong class="text-info d-block mb-1">📦 Arquitectura &amp; Componentes:</strong>
-              Arquitectura híbrida: Servidor HTTP en Node.js con SQLite3 (`server.js` y `database/schema.sql`), backend alternativo para hosting PHP/MySQL (`public/api.php`, `index.php` y `database/schema_mysql.sql`) y cliente SPA (`public/index.html`, `public/styles.css`, `public/app.js`) con persistencia automática en `localStorage` cuando se ejecuta sin servidor.
-            </div>
-
-            <div class="d-flex flex-wrap gap-1 mb-2">
-              <span class="tech-tag">Node.js</span>
-              <span class="tech-tag">SQLite3</span>
-              <span class="tech-tag">PHP &amp; MySQL</span>
-              <span class="tech-tag">REST API</span>
-              <span class="tech-tag">Vanilla JS SPA</span>
-              <span class="tech-tag">LocalStorage Fallback</span>
-            </div>
-
-            <div class="d-flex flex-wrap gap-2 mt-auto pt-3">
-              <button type="button" class="btn btn-info btn-sm fw-bold text-dark flex-grow-1" onclick="openPreviewModal('Amour &amp; Planes — App de Citas y Álbum de Recuerdos (Full-Stack SQL)', 'App de citas/public/index.html')">
-                ▶ Vista Previa Interactiva
-              </button>
-              <button type="button" class="btn btn-outline-warning btn-sm fw-semibold" onclick="openCodeModal('app-de-citas')" title="Inspeccionar Código y Arquitectura">
-                &lt;/&gt; Código
-              </button>
-              <a href="App%20de%20citas/public/index.html" target="_blank" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
-                ↗ Abrir
-              </a>
-            </div>
-          </article>
-        </div>
-      </div>
+      <div id="projectsGrid" class="row g-4"></div>
     </div>
   </main>
 

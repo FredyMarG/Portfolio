@@ -9,15 +9,16 @@ Repositorio oficial de proyectos de ingeniería de software de **Fredy Martinez*
 
 ---
 
-## 🌟 Selección Curada de Proyectos Profesionales (20 Proyectos)
+## 🌟 Selección Curada de Proyectos Profesionales (16 Proyectos)
 
-El repositorio está estructurado exclusivamente con los **20 proyectos más completos y relevantes a nivel profesional**, descartando ejercicios básicos de aula para ofrecer una presentación ejecutiva enfocada en arquitectura real, Web APIs avanzadas, calidad visual y código limpio.
+El repositorio está estructurado exclusivamente con los **16 proyectos más completos y relevantes a nivel profesional**, descartando ejercicios básicos de aula y clones estáticos de relleno para ofrecer una presentación ejecutiva enfocada en arquitectura real, Backend Node.js/TypeScript, Web APIs avanzadas, calidad visual y código limpio.
 
 ### 1. 🌟 Aplicaciones Full-Stack & Productos Integradores
 
 | Proyecto | Stack Principal | Arquitectura y Funcionalidades Clave |
 | :--- | :--- | :--- |
 | **[`App de citas/`](./App%20de%20citas/public/index.html)**<br>*Amour & Planes — App de Citas y Álbum SQL* | Node.js, SQLite3, PHP/MySQL, REST API, Vanilla JS SPA | • Servidor HTTP REST en [`server.js`](./App%20de%20citas/server.js) con base de datos relacional SQLite3 ([`database/schema.sql`](./App%20de%20citas/database/schema.sql)) y soporte alternativo en PHP/MySQL ([`public/api.php`](./App%20de%20citas/public/api.php)).<br>• Catálogo de planes, creador de planes propios, agendamiento con fecha/hora, bitácora y álbum de hasta 10 fotografías por cita con respaldo automático en `localStorage`. |
+| **[`Gestor-Tareas-Node/`](./Gestor-Tareas-Node/public/index.html)**<br>*Gestor de Tareas Full-Stack en Node.js Nativo* | Node.js (`node:http`), JSON/NDJSON, `EventEmitter`, `node:test`, SPA | • Servidor HTTP nativo sin dependencias externas ([`src/server.js`](./Gestor-Tareas-Node/src/server.js)), persistencia JSON + bitácora NDJSON ([`src/storage.js`](./Gestor-Tareas-Node/src/storage.js)), bus de eventos ([`src/bus.js`](./Gestor-Tareas-Node/src/bus.js)), pruebas unitarias en [`tests/tareas.test.js`](./Gestor-Tareas-Node/tests/tareas.test.js) y frontend SPA con respaldo en `localStorage`. |
 | **[`proyectoBit/`](./proyectoBit/index.html)**<br>*Procrastination Nightmare — Suite SaaS (6 Módulos)* | HTML5, CSS3, Bootstrap 5, JavaScript POO | • **Pomodoro Focus** ([`index.html`](./proyectoBit/index.html), [`pomodoro.html`](./proyectoBit/pomodoro.html)), **Gestor To-Do** ([`to-do-list.html`](./proyectoBit/to-do-list.html)), **Calendario Mensual** ([`calendario.html`](./proyectoBit/calendario.html)), **Tracker de Hábitos** ([`habitos.html`](./proyectoBit/habitos.html)), **Roadmap de Tareas POO** ([`roadMapTareas.html`](./proyectoBit/roadMapTareas.html)) y **Landing Page Corporativa** ([`landing-full-bootstrap/index.html`](./proyectoBit/landing-full-bootstrap/index.html)). |
 | **[`Finanzas APP/`](./Finanzas%20APP/index.html)**<br>*Dashboard de Control Financiero & Gráfico Canvas 2D* | HTML5 Canvas 2D, JavaScript ES6+, LocalStorage, COP | • Control de ingresos, gastos y balance en tiempo real con separador automático de miles (`es-CO`), gráfico de dona proporcional dibujado nativamente en Canvas 2D y filtros dinámicos. |
 | **[`Tablero Kanban/`](./Tablero%20Kanban/index.html)**<br>*Tablero Kanban Scrum con Drag & Drop Nativo* | HTML5 Drag & Drop API, LocalStorage, CSS Grid | • Tablero ágil de 3 columnas (*Por Hacer*, *En Progreso*, *Completado*) con transferencia de tarjetas arrastrables mediante `dataTransfer` y persistencia en `localStorage`. |
@@ -36,7 +37,7 @@ El repositorio está estructurado exclusivamente con los **20 proyectos más com
 
 ---
 
-### 3. ⚡ JavaScript Avanzado, HTML5 Web APIs & Consumo de APIs REST
+### 3. ⚡ JavaScript Avanzado, HTML5 Web APIs & CSS Motion
 
 | Proyecto | Stack Principal | Arquitectura y Funcionalidades Clave |
 | :--- | :--- | :--- |
@@ -45,16 +46,4 @@ El repositorio está estructurado exclusivamente con los **20 proyectos más com
 | **[`Gestor-Offline-IndexedDB/`](./Gestor-Offline-IndexedDB/index.html)**<br>*NotesDB — Gestor Transaccional Offline-First* | IndexedDB API, IDBTransaction, IDBCursor, Blob JSON | • Base de datos transaccional en el navegador con **IndexedDB** (operaciones CRUD asíncronas, edición en línea `contentEditable`, búsqueda en tiempo real mediante cursores y **Exportación de backup a JSON**). |
 | **[`Visor-Archivos-DragDrop/`](./Visor-Archivos-DragDrop/index.html)**<br>*FileDrop Inspector — Analizador Multimedia* | Drag & Drop API, FileReader, ObjectURL, Clipboard API | • Inspector de archivos con soporte **Drag & Drop**, barra de progreso de lectura binaria, metadatos (MIME y tamaño), previsualización de imagen/audio/video/código, botón de archivo demo y copia al portapapeles. |
 | **[`rickandmorty_api/`](./rickandmorty_api/index.html)**<br>*Multiverse Character Explorer (REST API)* | Fetch API, Async/Await, URLSearchParams, Bootstrap 5 | • Explorador asíncrono conectado a la API oficial de Rick & Morty con búsqueda por nombre, filtros por estado vital (*Alive*, *Dead*, *Unknown*), paginación dinámica y modo offline de respaldo. |
-| **[`Formulario/`](./Formulario/index.html)**<br>*TalentHub — Portal HR de Postulación JSON* | JavaScript ES6+, Form Validation, Live JSON Inspector | • Portal corporativo de registro de aspirantes con validación de campos, activación condicional de cargos, estilo dinámico por género y visor JSON en tiempo real. |
-| **[`Navbar-todolist/`](./Navbar-todolist/index.html)**<br>*Dashboard Administrativo BIT + Task Manager* | Bootstrap 5, Material Icons, CSS Transitions, JS | • Panel administrativo con barra superior, menú lateral expandible animado y módulo interactivo de gestión de tareas. |
-
----
-
-### 4. 🎨 Clones UI de Alta Fidelidad & CV Ejecutivo
-
-| Proyecto | Stack Principal | Arquitectura y Funcionalidades Clave |
-| :--- | :--- | :--- |
-| **[`My CV/`](./My%20CV/index.html)**<br>*CV Ejecutivo & Perfil Profesional* | HTML5, CSS3 Flexbox, Material Icons | • Currículum web ejecutivo de Fredy Martinez con navegación moderna, retrato profesional, tarjetas de especialidad y formulario de contacto directo. |
-| **[`Spotify/`](./Spotify/index.html)**<br>*Clon de Spotify Premium Colombia* | HTML5 Semántico, CSS3 Flexbox, Font Awesome | • Landing page promocional con hero banner, grilla de beneficios, pasarelas de pago y comparativa de 4 planes de suscripción. |
-| **[`Instagram/`](./Instagram/index.html)**<br>*Clon de Instagram Desktop Login* | HTML5, CSS3 Positioning, Validación JS | • Maquetación precisa de la pantalla de acceso de Instagram Desktop con marco móvil superpuesto y validación interactiva. |
-| **[`Microsoft_Login/`](./Microsoft_Login/index.html)** y **[`Snapchat/`](./Snapchat/index.html)**<br>*Clones Corporativos Fluent UI & Snapchat Web* | HTML5, CSS3, Bootstrap 5, Material Symbols | • Réplicas de la tarjeta de autenticación de Microsoft Account (Fluent Design) y de la landing page de Snapchat Web. |
+| **[`Web-Page-Animations/`](./Web-Page-Animations/index.html)**<br>*Portfolio UI & Motion — Animaciones CSS3 a 60 FPS* | CSS3 `@keyframes`, 3D GPU Transforms, Scroll-Driven | • Interfaz futurista con barra de progreso ligada al scroll, órbitas rotatorias, gradiente cinético, marquee infinito, tarjetas 3D, soporte `prefers-reduced-motion` y menú responsive sin JavaScript. |
