@@ -456,11 +456,21 @@ function updatePortfolioMetrics() {
   const totalEl = document.getElementById("statTotalProjects");
   const liveEl = document.getElementById("statLiveDemos");
   const filterAllEl = document.getElementById("filterAllBtn");
+  const filterFullstackEl = document.getElementById("filterFullstackBtn");
+  const filterBackendEl = document.getElementById("filterBackendBtn");
+  const filterJsEl = document.getElementById("filterJsBtn");
+
   const liveCount = PORTFOLIO_PROJECTS.filter((p) => Boolean(p.previewUrl)).length;
+  const fullstackCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "fullstack").length;
+  const backendCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "backend").length;
+  const jsCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "js").length;
 
   if (totalEl) totalEl.textContent = String(PORTFOLIO_PROJECTS.length);
   if (liveEl) liveEl.textContent = String(liveCount);
   if (filterAllEl) filterAllEl.textContent = `Todos (${PORTFOLIO_PROJECTS.length})`;
+  if (filterFullstackEl) filterFullstackEl.textContent = `🌟 Full-Stack & Productos (${fullstackCount})`;
+  if (filterBackendEl) filterBackendEl.textContent = `⚙️ Backend APIs & Angular (${backendCount})`;
+  if (filterJsEl) filterJsEl.textContent = `⚡ Web APIs, JS & CSS Motion (${jsCount})`;
 }
 
 function renderPortfolio() {
@@ -484,7 +494,10 @@ function renderPortfolio() {
   if (filtered.length === 0) {
     gridContainer.innerHTML = `
       <div class="col-12 text-center py-5">
-        <h4 class="text-secondary">No se encontraron proyectos con ese criterio.</h4>
+        <h4 class="text-secondary mb-3">No se encontraron proyectos con ese criterio.</h4>
+        <button type="button" class="btn btn-outline-info btn-sm rounded-pill px-4" onclick="resetPortfolioFilters()">
+          Restablecer filtros
+        </button>
       </div>
     `;
     return;
@@ -554,9 +567,27 @@ function renderPortfolio() {
     .join("");
 }
 
+window.resetPortfolioFilters = function () {
+  currentCategory = "all";
+  currentSearch = "";
+  if (searchInput) searchInput.value = "";
+  filterButtons.forEach((b) => b.classList.toggle("active", b.getAttribute("data-category") === "all"));
+  renderPortfolio();
+};
+
+const modalEl = document.getElementById("portfolioModal");
+const previewIframeEl = document.getElementById("previewIframe");
+const iframeLoaderEl = document.getElementById("iframeLoader");
+const copyCodeBtnEl = document.getElementById("copyCodeBtn");
+
+if (previewIframeEl && iframeLoaderEl) {
+  previewIframeEl.addEventListener("load", () => {
+    iframeLoaderEl.classList.add("loaded");
+  });
+}
+
 window.openPreviewModal = function (title, url) {
   const modalTitle = document.getElementById("previewModalTitle");
-  const iframe = document.getElementById("previewIframe");
   const externalLink = document.getElementById("previewExternalLink");
   const codeContainer = document.getElementById("codeInspectorContainer");
   const iframeContainer = document.getElementById("iframeContainer");
@@ -565,11 +596,13 @@ window.openPreviewModal = function (title, url) {
   modalTitle.textContent = title;
   externalLink.href = safeUrl;
   externalLink.classList.remove("d-none");
+  if (copyCodeBtnEl) copyCodeBtnEl.classList.add("d-none");
   codeContainer.classList.add("d-none");
   iframeContainer.classList.remove("d-none");
-  iframe.src = safeUrl;
+  if (iframeLoaderEl) iframeLoaderEl.classList.remove("loaded");
+  previewIframeEl.src = safeUrl;
 
-  const modal = new bootstrap.Modal(document.getElementById("portfolioModal"));
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
   modal.show();
 };
 
@@ -586,19 +619,45 @@ window.openCodeModal = function (projectId) {
 
   modalTitle.textContent = `${proj.title} (${proj.folder})`;
   externalLink.classList.add("d-none");
+  if (copyCodeBtnEl) copyCodeBtnEl.classList.remove("d-none");
   iframeContainer.classList.add("d-none");
   codeContainer.classList.remove("d-none");
 
   reviewNotes.textContent = proj.review;
   codeBlock.textContent = proj.codeSnippet || "// Código documentado en la carpeta " + proj.folder;
 
-  const modal = new bootstrap.Modal(document.getElementById("portfolioModal"));
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
   modal.show();
 };
 
-document.getElementById("portfolioModal").addEventListener("hidden.bs.modal", () => {
-  document.getElementById("previewIframe").src = "about:blank";
-});
+if (copyCodeBtnEl) {
+  copyCodeBtnEl.addEventListener("click", async () => {
+    const codeText = document.getElementById("codeBlockContent")?.textContent || "";
+    if (!codeText) return;
+    await navigator.clipboard.writeText(codeText);
+    copyCodeBtnEl.textContent = "✅ ¡Copiado!";
+    setTimeout(() => {
+      copyCodeBtnEl.textContent = "📋 Copiar Código";
+    }, 1500);
+  });
+}
+
+if (modalEl) {
+  modalEl.addEventListener("hidden.bs.modal", () => {
+    if (previewIframeEl) previewIframeEl.src = "about:blank";
+  });
+}
+
+// Botón flotante Volver Arriba
+const backToTopBtn = document.getElementById("backToTopBtn");
+if (backToTopBtn) {
+  window.addEventListener("scroll", () => {
+    backToTopBtn.classList.toggle("visible", window.scrollY > 400);
+  }, { passive: true });
+  backToTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
 
 filterButtons.forEach((btn) => {
   btn.addEventListener("click", () => {

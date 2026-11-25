@@ -2,7 +2,8 @@
   ============================================================================
   PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL — FREDY MARTINEZ (index.html)
   ============================================================================
-  Propósito: Portafolio ejecutivo con la selección curada de proyectos de
+  Propósito: Portafolio ejecutivo optimizado (Core Web Vitals, SEO, OpenGraph,
+  accesibilidad y carga diferida) con la selección curada de proyectos de
   ingeniería de software Full-Stack (MEAN, SQL, Node.js nativo, TypeScript,
   APIs REST con JWT, Angular 15 SPAs, HTML5 Web APIs y CSS Motion).
 -->
@@ -11,13 +12,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Portafolio Profesional de Fredy Martinez — Full-Stack Software Developer (MEAN Stack, SQL, Node.js, Angular 15, TypeScript, JWT) & Certified Scrum Master.">
+  <meta name="author" content="Fredy Martinez">
+  <meta name="theme-color" content="#0b0f19">
   <title>Fredy Martinez | Full-Stack Software Developer &amp; Scrum Master</title>
+
   <!-- Favicon Flaticon: Portafolio de Desarrollo Web (< />) -->
   <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png">
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png">
   <link rel="canonical" href="https://portafoliofredy.netlify.app/">
+
+  <!-- Metadatos OpenGraph para LinkedIn / WhatsApp -->
+  <meta property="og:type" content="website">
   <meta property="og:url" content="https://portafoliofredy.netlify.app/">
   <meta property="og:title" content="Fredy Martinez | Portafolio Profesional Full-Stack MEAN &amp; SQL">
+  <meta property="og:description" content="Explora 16 proyectos reales de ingeniería: aplicaciones Full-Stack SQL/NoSQL, APIs REST con JWT, TypeScript, Angular 15 SPAs y HTML5 Web APIs.">
+  <meta property="og:image" content="https://portafoliofredy.netlify.app/My%20CV/assets/img/my-image.jpg">
+
+  <!-- Resource Hints & Preconnect para máximo rendimiento -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <!-- Bootstrap 5.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Estilos del Portafolio Maestro -->
@@ -32,7 +49,7 @@
         <span class="brand-gradient">&lt;FredyMartinez /&gt;</span>
         <span class="badge bg-info text-dark ms-2 fs-6">Full-Stack Dev</span>
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navLinks" aria-label="Alternar navegación">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navLinks">
@@ -42,8 +59,8 @@
           <li class="nav-item"><a class="nav-link text-light" href="#arquitectura">Arquitectura</a></li>
           <li class="nav-item"><a class="nav-link text-light" href="#contacto">Contacto</a></li>
           <li class="nav-item">
-            <button class="btn btn-outline-info btn-sm rounded-pill px-3" onclick="openPreviewModal('CV Ejecutivo — Fredy Martinez', 'My CV/index.html')">
-              Ver Mi CV Clásico
+            <button class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold" onclick="openPreviewModal('CV Ejecutivo — Fredy Martinez', 'My CV/index.html')">
+              📄 Ver Mi CV Ejecutivo
             </button>
           </li>
         </ul>
@@ -57,7 +74,7 @@
       <div class="row align-items-center g-4">
         <div class="col-lg-3 text-center">
           <div class="avatar-ring mx-auto">
-            <img src="My%20CV/assets/img/my-image.jpg" alt="Fredy Martinez" class="avatar-img">
+            <img src="My%20CV/assets/img/my-image.jpg" alt="Fredy Martinez" width="155" height="155" fetchpriority="high" decoding="async" class="avatar-img">
           </div>
         </div>
         <div class="col-lg-9">
@@ -87,6 +104,9 @@
             <a href="#catalogo" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill shadow-sm">
               Explorar Proyectos Seleccionados ↓
             </a>
+            <button type="button" onclick="openPreviewModal('CV Ejecutivo — Fredy Martinez', 'My CV/index.html')" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
+              📄 Abrir CV Ejecutivo &amp; PDF
+            </button>
             <a href="#contacto" class="btn btn-outline-light px-4 py-2 rounded-pill">
               Contactar Ahora
             </a>
@@ -142,13 +162,13 @@
         <div class="col-lg-8">
           <div class="d-flex flex-wrap gap-2">
             <button class="filter-btn active" id="filterAllBtn" data-category="all">Todos (16)</button>
-            <button class="filter-btn" data-category="fullstack">🌟 Full-Stack &amp; Productos</button>
-            <button class="filter-btn" data-category="backend">⚙️ Backend APIs &amp; Angular</button>
-            <button class="filter-btn" data-category="js">⚡ Web APIs, JS &amp; CSS Motion</button>
+            <button class="filter-btn" id="filterFullstackBtn" data-category="fullstack">🌟 Full-Stack &amp; Productos</button>
+            <button class="filter-btn" id="filterBackendBtn" data-category="backend">⚙️ Backend APIs &amp; Angular</button>
+            <button class="filter-btn" id="filterJsBtn" data-category="js">⚡ Web APIs, JS &amp; CSS Motion</button>
           </div>
         </div>
         <div class="col-lg-4">
-          <input type="search" id="projectSearch" class="form-control search-input" placeholder="🔍 Filtrar por tecnología o proyecto...">
+          <input type="search" id="projectSearch" class="form-control search-input" placeholder="🔍 Filtrar por tecnología, lenguaje o proyecto..." aria-label="Buscar proyecto">
         </div>
       </div>
 
@@ -290,6 +310,9 @@
     </div>
   </footer>
 
+  <!-- Botón Flotante Volver Arriba -->
+  <button type="button" id="backToTopBtn" class="back-to-top-btn" aria-label="Volver arriba" title="Volver arriba">↑</button>
+
   <!-- Modal para Vista Previa Interactiva (Iframe) e Inspector de Código -->
   <div class="modal fade modal-dark" id="portfolioModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -297,13 +320,15 @@
         <div class="modal-header border-secondary border-opacity-25">
           <h5 class="modal-title fw-bold text-info" id="previewModalTitle">Vista Previa</h5>
           <div class="ms-auto d-flex align-items-center gap-2">
-            <a id="previewExternalLink" href="#" target="_blank" class="btn btn-sm btn-outline-info">Abrir en Pestaña Nueva ↗</a>
+            <button type="button" id="copyCodeBtn" class="btn btn-sm btn-outline-warning d-none">📋 Copiar Código</button>
+            <a id="previewExternalLink" href="#" target="_blank" rel="noopener" class="btn btn-sm btn-outline-info">Abrir en Pestaña Nueva ↗</a>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           </div>
         </div>
         <div class="modal-body p-3">
-          <div id="iframeContainer">
-            <iframe id="previewIframe" class="preview-iframe" src="about:blank"></iframe>
+          <div id="iframeContainer" class="position-relative">
+            <div id="iframeLoader" class="iframe-loader">Cargando aplicación interactiva...</div>
+            <iframe id="previewIframe" class="preview-iframe" src="about:blank" loading="lazy"></iframe>
           </div>
           <div id="codeInspectorContainer" class="d-none">
             <div class="alert alert-info bg-opacity-10 border-info text-light mb-3">
@@ -316,9 +341,9 @@
     </div>
   </div>
 
-  <!-- Bootstrap 5.3 Bundle JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- Script del Portafolio Maestro -->
-  <script src="portfolio-app.js"></script>
+  <!-- Bootstrap 5.3 Bundle JS (Carga Diferida) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+  <!-- Script del Portafolio Maestro (Carga Diferida) -->
+  <script src="portfolio-app.js" defer></script>
 </body>
 </html>
