@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuestros Planes Juntos | Agenda de Citas y Álbum de Recuerdos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Fondo decorativo ambiental luminoso -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Encabezado compacto: Título a la izquierda y Menú a la derecha -->
+  <header class="top-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="brand-logo">💘</div>
+        <div class="brand-text">
+          <h1>Nuestros Planes Juntos</h1>
+          <span class="brand-subtitle">Agenda &amp; Álbum de Recuerdos</span>
+        </div>
+      </div>
+
+      <!-- Menú Principal a la Derecha -->
+      <nav class="main-tabs" role="tablist">
+        <button class="tab-btn active" data-tab="tab-planes" role="tab">
+          📖 Menú de Planes
+        </button>
+        <button class="tab-btn" data-tab="tab-crear-plan" role="tab">
+          ✍️ Plan Propio
+        </button>
+        <button class="tab-btn" data-tab="tab-agendar" role="tab">
+          🗓️ Fecha, Hora y Fotos
+        </button>
+        <button class="tab-btn" data-tab="tab-citas" role="tab">
+          📸 Nuestro Álbum <span class="tab-pill" id="statTotalCitas">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <!-- ================================================================== -->
+    <!-- SECCIÓN 1: MENÚ INTERACTIVO DE PLANES Y TARJETA DE DETALLE         -->
+    <!-- ================================================================== -->
+    <section id="tab-planes" class="tab-panel active">
+      <div class="section-header">
+        <span class="badge-accent">Experiencias para Dos</span>
+        <h2>✨ Menú de Planes para Hacer Juntos</h2>
+        <p>Abre o desliza el menú para explorar nuestras opciones —bolos, karts, parque de diversiones, cine, picnic, mirador y más— o elige uno al azar.</p>
+
+        <div class="menu-top-controls">
+          <div class="filter-chips" id="categoryFilters">
+            <button class="chip active" data-cat="Todos">Todos</button>
+            <button class="chip" data-cat="Romántico">🌹 Románticos</button>
+            <button class="chip" data-cat="Divertido">🎳 Divertidos</button>
+            <button class="chip" data-cat="Aventura">🏎️ Aventura</button>
+            <button class="chip" data-cat="Gastronómico">🍕 Gastronómicos</button>
+            <button class="chip" data-cat="Creativo">🎨 Creativos</button>
+          </div>
+          <button id="btnRandomPlan" class="btn btn-glass btn-sm" title="Elegir un plan al azar">
+            🎲 ¡Sorpréndeme al Azar!
+          </button>
+        </div>
+      </div>
+
+      <!-- Contenedor Estético del Menú de Planes + Vista Previa del Plan Activo -->
+      <div class="plans-menu-showcase">
+        <!-- Menú Desplegable y Lista Interactiva de Opciones -->
+        <div class="plans-menu-box">
+          <div class="plans-menu-header">
+            <span class="plans-menu-label">📋 Selecciona una opción del menú</span>
+            <button type="button" id="btnToggleMenuDropdown" class="plans-dropdown-trigger">
+              <span id="currentMenuSelectionText">🎳 Tarde de Bolos, Retos y Malteadas</span>
+              <span class="dropdown-arrow">▾</span>
+            </button>
+          </div>
+
+          <!-- Lista del Menú de Planes -->
+          <div id="planesMenuList" class="planes-menu-list">
+            <!-- Renderizado dinámicamente como un menú estético -->
+          </div>
+
+          <div class="plans-menu-footer">
+            <button type="button" id="btnOpenCustomPlan" class="btn btn-glass btn-full">
+              ✍️ ¿Quieres un plan distinto? Escríbelo aquí
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjeta Estética del Plan Seleccionado en el Menú -->
+        <div id="planActiveDetailCard" class="plan-showcase-card">
+          <!-- Renderizado dinámicamente al elegir una opción del menú -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SECCIÓN 2: ESCRIBIR UN PLAN CUALQUIERA DIFERENTE A LOS SUGERIDOS   -->
+    <!-- ================================================================== -->
+    <section id="tab-crear-plan" class="tab-panel">
+      <div class="scheduler-card">
+        <div class="scheduler-header">
+          <span class="badge-accent">Hecho a Nuestra Medida</span>
+          <h2>✍️ Escribir un Plan Diferente</h2>
+          <p>Escribe aquí cualquier plan propio que quieran vivir juntos, escoge su fecha y hora, y agrega manualmente tus 10 fotos cuando quieras.</p>
+        </div>
+
+        <form id="formPlanPropio" class="scheduler-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="customPlanTitulo">¿Cuál es el plan que tienen en mente? *</label>
+              <input type="text" id="customPlanTitulo" placeholder="Ej. Ir a ver las estrellas a la playa / Concierto / Tarde de patinaje" required />
+            </div>
+
+            <div class="form-group">
+              <label for="customPlanCategoria">Estilo del Plan</label>
+              <select id="customPlanCategoria">
+                <option value="Romántico">🌹 Romántico</option>
+                <option value="Divertido">🎳 Divertido</option>
+                <option value="Aventura">🏎️ Aventura</option>
+                <option value="Gastronómico">🍕 Gastronómico</option>
+                <option value="Creativo">🎨 Creativo</option>
+                <option value="Relajante">🧖‍♀️ Relajante</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label>Elige un ícono para tu plan</label>
+              <input type="hidden" id="customPlanIcono" value="💑" />
+              <div class="emoji-picker-row" id="customEmojiPicker">
+                <button type="button" class="emoji-choice active" data-emoji="💑">💑</button>
+                <button type="button" class="emoji-choice" data-emoji="🎳">🎳</button>
+                <button type="button" class="emoji-choice" data-emoji="🏎️">🏎️</button>
+                <button type="button" class="emoji-choice" data-emoji="🎡">🎡</button>
+                <button type="button" class="emoji-choice" data-emoji="🍿">🍿</button>
+                <button type="button" class="emoji-choice" data-emoji="🌙">🌙</button>
+                <button type="button" class="emoji-choice" data-emoji="🏖️">🏖️</button>
+                <button type="button" class="emoji-choice" data-emoji="🎶">🎶</button>
+                <button type="button" class="emoji-choice" data-emoji="🍷">🍷</button>
+                <button type="button" class="emoji-choice" data-emoji="🏕️">🏕️</button>
+                <button type="button" class="emoji-choice" data-emoji="🍣">🍣</button>
+                <button type="button" class="emoji-choice" data-emoji="✈️">✈️</button>
+              </div>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="customPlanDescripcion">Describe de qué trata este plan *</label>
+              <textarea id="customPlanDescripcion" rows="3" placeholder="Escribe todos los detalles de lo que quieren hacer juntos en este plan..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="customPlanLugar">¿Dónde les gustaría hacerlo?</label>
+              <input type="text" id="customPlanLugar" placeholder="Ej. Centro histórico / Cabaña / Nuestro rincón favorito" />
+            </div>
+
+            <div class="form-group">
+              <label for="customPlanDuracion">Tiempo aproximado</label>
+              <input type="text" id="customPlanDuracion" placeholder="Ej. Toda la tarde / 3 horas / Fin de semana" />
+            </div>
+
+            <div class="form-group full-width">
+              <label for="customPlanTips">Detalle especial o sorpresa para ese día</label>
+              <input type="text" id="customPlanTips" placeholder="Ej. Llevar nuestra canción favorita o un postre sorpresa" />
+            </div>
+
+            <div class="form-group full-width custom-schedule-toggle-box">
+              <label class="checkbox-label">
+                <input type="checkbox" id="chkAgendarCustomAhora" checked />
+                <span>📅 <strong>Escoger de una vez la Fecha y la Hora y habilitar sus 10 espacios de fotos</strong></span>
+              </label>
+
+              <div id="customPlanDateTimeFields" class="form-grid" style="margin-top: 14px;">
+                <div class="form-group date-time-box">
+                  <label for="customPlanFecha">📅 Escoge la Fecha</label>
+                  <input type="date" id="customPlanFecha" />
+                </div>
+                <div class="form-group date-time-box">
+                  <label for="customPlanHora">⏰ Escoge la Hora</label>
+                  <input type="time" id="customPlanHora" value="19:30" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-lg">
+              💖 Guardar en Nuestros Planes Juntos
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SECCIÓN 3: ESCOGER FECHA, HORA Y SUBIR LAS 10 FOTOS MANUALMENTE     -->
+    <!-- ================================================================== -->
+    <section id="tab-agendar" class="tab-panel">
+      <div class="scheduler-card">
+        <div class="scheduler-header">
+          <span class="badge-accent">Nueva Cita Juntos</span>
+          <h2>🗓️ Escoge el Plan, la Fecha, la Hora y Sube tus 10 Fotos</h2>
+          <p>Elige un plan del menú desplegable o escribe uno diferente, selecciona el día y la hora exacta, y sube manualmente tus <strong>10 fotos</strong> en las casillas de abajo.</p>
+        </div>
+
+        <form id="formNuevaCita" class="scheduler-form">
+          <div class="form-grid">
+            <!-- Selector de modo: Menú de Planes vs Escribir plan libre -->
+            <div class="form-group full-width">
+              <label>¿Qué plan van a realizar?</label>
+              <div class="plan-mode-switch">
+                <button type="button" id="btnModeSugerido" class="mode-btn active">
+                  📖 Elegir del Menú de Planes
+                </button>
+                <button type="button" id="btnModeLibre" class="mode-btn">
+                  ✍️ Escribir un Plan Cualquiera Diferente
+                </button>
+              </div>
+            </div>
+
+            <!-- Bloque A: Elegir del Menú Desplegable Estético -->
+            <div id="bloquePlanSugerido" class="form-group full-width">
+              <label for="selectPlanId">Menú de Planes *</label>
+              <div class="aesthetic-select-wrap">
+                <select id="selectPlanId"></select>
+              </div>
+              <div id="selectedPlanPreview" class="selected-plan-preview"></div>
+            </div>
+
+            <!-- Bloque B: Escribir un plan libre directamente aquí -->
+            <div id="bloquePlanLibre" class="form-group full-width hidden">
+              <div class="custom-inline-box">
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="inlineLibreTitulo">Escribe tu Plan Diferente *</label>
+                    <input type="text" id="inlineLibreTitulo" placeholder="Ej. Noche de Karaoke y Tacos / Paseo en Bicicleta" />
+                  </div>
+                  <div class="form-group">
+                    <label for="inlineLibreCategoria">Estilo del Plan</label>
+                    <select id="inlineLibreCategoria">
+                      <option value="Romántico">🌹 Romántico</option>
+                      <option value="Divertido">🎳 Divertido</option>
+                      <option value="Aventura">🏎️ Aventura</option>
+                      <option value="Gastronómico">🍕 Gastronómico</option>
+                      <option value="Creativo">🎨 Creativo</option>
+                      <option value="Relajante">🧖‍♀️ Relajante</option>
+                    </select>
+                  </div>
+                  <div class="form-group full-width">
+                    <label for="inlineLibreDescripcion">¿En qué consiste este plan?</label>
+                    <textarea id="inlineLibreDescripcion" rows="2" placeholder="Describe brevemente lo que harán en este plan especial..."></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Título personalizado -->
+            <div class="form-group">
+              <label for="inputTituloCita">Nombre especial para esta cita</label>
+              <input type="text" id="inputTituloCita" placeholder="Ej. Nuestra Tarde de Bolos y Malteadas" required />
+            </div>
+
+            <!-- Lugar -->
+            <div class="form-group">
+              <label for="inputLugarCita">Lugar o Punto de Encuentro</label>
+              <input type="text" id="inputLugarCita" placeholder="Ej. Bolera / Parque / Cine / Mirador" required />
+            </div>
+
+            <!-- Selector de FECHA -->
+            <div class="form-group date-time-box">
+              <label for="inputFechaCita">📅 Escoge la Fecha *</label>
+              <input type="date" id="inputFechaCita" required />
+              <div class="quick-presets">
+                <button type="button" class="preset-btn" data-date-preset="today">Hoy</button>
+                <button type="button" class="preset-btn" data-date-preset="tomorrow">Mañana</button>
+                <button type="button" class="preset-btn" data-date-preset="friday">Próximo Viernes</button>
+                <button type="button" class="preset-btn" data-date-preset="saturday">Este Sábado</button>
+              </div>
+            </div>
+
+            <!-- Selector de HORA -->
+            <div class="form-group date-time-box">
+              <label for="inputHoraCita">⏰ Escoge la Hora *</label>
+              <input type="time" id="inputHoraCita" required />
+              <div class="quick-presets">
+                <button type="button" class="preset-btn" data-time-preset="11:00">11:00 Mañana</button>
+                <button type="button" class="preset-btn" data-time-preset="16:00">16:00 Tarde</button>
+                <button type="button" class="preset-btn" data-time-preset="17:30">17:30 Atardecer</button>
+                <button type="button" class="preset-btn" data-time-preset="19:30">19:30 Cena</button>
+                <button type="button" class="preset-btn" data-time-preset="21:00">21:00 Noche</button>
+              </div>
+            </div>
+
+            <!-- Estado inicial -->
+            <div class="form-group">
+              <label for="selectEstadoCita">Momento del Plan</label>
+              <select id="selectEstadoCita">
+                <option value="Programada">⏳ Próximo Plan (Por realizar)</option>
+                <option value="Completada">💖 Plan Vivido (Con recuerdos)</option>
+              </select>
+            </div>
+
+            <!-- Calificación -->
+            <div class="form-group">
+              <label for="selectCalificacionCita">Nivel de Ilusión / Calificación</label>
+              <select id="selectCalificacionCita">
+                <option value="5">❤️❤️❤️❤️❤️ (Inolvidable)</option>
+                <option value="4">❤️❤️❤️❤️ (Muy especial)</option>
+                <option value="3">❤️❤️❤️ (Divertido)</option>
+              </select>
+            </div>
+
+            <!-- Notas y Bitácora -->
+            <div class="form-group full-width">
+              <label for="inputNotasCita">Notas, Sorpresas o Dedicatoria</label>
+              <textarea id="inputNotasCita" rows="2" placeholder="Escribe qué llevarán, canciones, detalles sorpresa o qué fue lo más lindo del plan..."></textarea>
+            </div>
+
+            <!-- SUBIDA MANUAL DE LAS 10 FOTOS (CASILLAS INDIVIDUALES 1 A 10) -->
+            <div class="form-group full-width upload-zone-wrapper">
+              <div class="upload-zone-header">
+                <div>
+                  <label>📸 Subir Manualmente las 10 Fotos del Plan</label>
+                  <p class="field-hint">Haz clic en cada casilla (<strong>Foto #1</strong> a <strong>Foto #10</strong>) para subir tu propia foto desde tu computadora o celular, o usa el botón para elegir varias a la vez.</p>
+                </div>
+                <div style="display:flex; align-items:center; justify-content:center; gap:10px; flex-wrap:wrap;">
+                  <span id="newCitaPhotoCounter" class="photo-counter-badge">0 / 10 fotos subidas</span>
+                  <label for="inputFotosMultiplesNueva" class="btn btn-glass btn-sm" style="cursor:pointer;">
+                    📤 Seleccionar varias fotos juntas
+                    <input type="file" id="inputFotosMultiplesNueva" accept="image/*" multiple hidden />
+                  </label>
+                </div>
+              </div>
+
+              <!-- 10 Casillas Manuales de Subida -->
+              <div id="manualFiveSlotsNewCita" class="polaroid-slots-grid"></div>
+            </div>
+          </div>
+
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-lg">
+              💖 Guardar Plan y Fotos
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- SECCIÓN 4: NUESTROS PLANES AGENDADOS Y ÁLBUM MANUAL DE 10 FOTOS    -->
+    <!-- ================================================================== -->
+    <section id="tab-citas" class="tab-panel">
+      <div class="section-header">
+        <span class="badge-accent">Nuestra Galería</span>
+        <h2>📸 Nuestros Planes Agendados &amp; Álbum de 10 Fotos</h2>
+        <p>En cada plan tienes <strong>10 espacios manuales</strong> para subir, cambiar o borrar tus propias fotografías desde tu dispositivo.</p>
+        <div class="filter-chips" id="citaStatusFilters">
+          <button class="chip active" data-status="Todas">Todos</button>
+          <button class="chip" data-status="Programada">⏳ Próximos</button>
+          <button class="chip" data-status="Completada">💖 Vividos</button>
+        </div>
+      </div>
+
+      <div id="citasList" class="citas-list"></div>
+    </section>
+  </main>
+
+  <!-- ==================================================================== -->
+  <!-- MODAL PARA EDITAR FECHA, HORA Y BITÁCORA DE UNA CITA                 -->
+  <!-- ==================================================================== -->
+  <div id="modalEditarCita" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>✏️ Editar Fecha, Hora y Recuerdo del Plan</h3>
+        <button type="button" class="btn-close-modal" data-close="modalEditarCita">✕</button>
+      </div>
+      <form id="formEditarCita" class="modal-body">
+        <input type="hidden" id="editCitaId" />
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="editTituloCita">Nombre del Plan</label>
+            <input type="text" id="editTituloCita" required />
+          </div>
+          <div class="form-group">
+            <label for="editFechaCita">📅 Fecha</label>
+            <input type="date" id="editFechaCita" required />
+          </div>
+          <div class="form-group">
+            <label for="editHoraCita">⏰ Hora</label>
+            <input type="time" id="editHoraCita" required />
+          </div>
+          <div class="form-group">
+            <label for="editLugarCita">📍 Lugar</label>
+            <input type="text" id="editLugarCita" required />
+          </div>
+          <div class="form-group">
+            <label for="editEstadoCita">Momento</label>
+            <select id="editEstadoCita">
+              <option value="Programada">⏳ Próximo Plan</option>
+              <option value="Completada">💖 Plan Vivido</option>
+              <option value="Cancelada">❌ Pospuesto</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label for="editNotasCita">Notas y preparativos</label>
+            <textarea id="editNotasCita" rows="2"></textarea>
+          </div>
+          <div class="form-group full-width">
+            <label for="editBitacoraCita">💖 Nuestra Historia de este Recuerdo</label>
+            <textarea id="editBitacoraCita" rows="3" placeholder="¿Qué fue lo más lindo y divertido de vivir este plan juntos?"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-glass" data-close="modalEditarCita">Cancelar</button>
+          <button type="submit" class="btn btn-primary">💖 Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================================================================== -->
+  <!-- VISOR LIGHTBOX POLAROID PARA LAS 10 FOTOS DE RECORDATORIO            -->
+  <!-- ==================================================================== -->
+  <div id="modalLightbox" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+    <div class="lightbox-card">
+      <button type="button" class="btn-close-modal lightbox-close" data-close="modalLightbox">✕</button>
+      <div class="lightbox-image-wrap">
+        <button type="button" id="btnPrevPhoto" class="lightbox-nav prev" title="Foto anterior">❮</button>
+        <img id="lightboxImg" src="" alt="Foto de recuerdo" />
+        <button type="button" id="btnNextPhoto" class="lightbox-nav next" title="Siguiente foto">❯</button>
+      </div>
+      <div class="lightbox-meta">
+        <div class="lightbox-meta-top">
+          <span id="lightboxSlotBadge" class="badge-accent">Recuerdo #1 de 10</span>
+          <span id="lightboxCitaTitle" class="lightbox-cita-title"></span>
+        </div>
+        <div class="lightbox-caption-edit">
+          <input type="text" id="lightboxCaptionInput" placeholder="Escribe una dedicatoria o nota para esta foto..." />
+          <button type="button" id="btnSaveCaption" class="btn btn-primary btn-sm">💖 Guardar Dedicatoria</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inputs de archivo ocultos para subida manual desde el dispositivo -->
+  <input type="file" id="hiddenCitaPhotoInput" accept="image/*" multiple hidden />
+  <input type="file" id="hiddenNewCitaSingleSlotInput" accept="image/*" hidden />
+
+  <!-- Contenedor de notificaciones Toast -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

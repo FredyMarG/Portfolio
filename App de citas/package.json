@@ -1,0 +1,12 @@
+{
+  "name": "app-de-citas-sql",
+  "version": "1.0.0",
+  "description": "Aplicativo web de citas románticas y divertidas con base de datos SQL (SQLite 3), selector de fecha y hora, 10 planes sugeridos y álbum de 4 a 5 fotos de recordatorio por plan.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --no-warnings server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
