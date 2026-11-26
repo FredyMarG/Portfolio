@@ -2,14 +2,46 @@
  * ============================================================================
  * MOTOR DEL PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL (portfolio-app.js)
  * ============================================================================
- * Selección curada de los 16 proyectos de ingeniería de software y aplicaciones
- * reales de Fredy Martinez, organizados por impacto técnico para selección.
+ * Selección curada de proyectos de ingeniería de software Full-Stack (MEAN,
+ * SQL, TypeScript, Node.js nativo, Angular 16, HTML5 Web APIs y Testing) de
+ * Fredy Martinez, con renderizado seguro (escapeHtml + delegación de eventos).
  */
 
 const PORTFOLIO_PROJECTS = [
   // ==========================================================================
   // 1. APLICACIONES FULL-STACK & PRODUCTOS INTEGRADORES
   // ==========================================================================
+  {
+    id: "turismo-mean",
+    title: "Turismo MEAN — Plataforma Full-Stack (MongoDB + Express + Angular 16)",
+    folder: "Turismo_MEAN/",
+    category: "fullstack",
+    categoryLabel: "Full-Stack MEAN",
+    stack: ["MongoDB & Mongoose 7", "Express.js", "Angular 16", "Node.js", "node:test (4 tests)", "JSON Fallback"],
+    description: "Plataforma Full-Stack desacoplada para gestión de destinos turísticos con API REST CRUD, filtros por categoría, endpoint de métricas agregadas (/stats/resumen), cliente SPA en Angular 16 y respaldo automático offline.",
+    review: "Dividido en `TurismoBack/` (Express, Mongoose 7, rutas `/api/destinos`, almacenamiento dual MongoDB/JSON y 4 pruebas automatizadas en `tests/*.test.js`) y `TurismoFront/` (SPA Angular 16 con componentes modulares).",
+    runCmd: "cd Turismo_MEAN/TurismoBack && npm run dev\ncd Turismo_MEAN/TurismoFront && npm run dev",
+    testCmd: "cd Turismo_MEAN/TurismoBack && npm test",
+    codeSnippet: `// Turismo_MEAN/TurismoBack/routes/routes.js
+const express = require('express');
+const router = express.Router();
+const Destino = require('../models/Destino');
+
+// GET /api/destinos — Consultar destinos ordenados por precio
+router.get('/destinos', async (req, res) => {
+  const destinos = await Destino.find().sort({ precio: 1 });
+  res.status(200).json({ ok: true, destinos });
+});
+
+// POST /api/destinos — Registrar nuevo destino turístico
+router.post('/destinos', async (req, res) => {
+  const nuevoDestino = new Destino(req.body);
+  const guardado = await nuevoDestino.save();
+  res.status(201).json({ ok: true, data: guardado });
+});
+
+module.exports = router;`
+  },
   {
     id: "app-de-citas",
     title: "Amour & Planes — App de Citas y Álbum de Recuerdos (Full-Stack SQL)",
@@ -45,18 +77,6 @@ CREATE TABLE IF NOT EXISTS citas_programadas (
     calificacion INTEGER DEFAULT 5 CHECK(calificacion BETWEEN 1 AND 5),
     bitacora_recuerdo TEXT DEFAULT '',
     FOREIGN KEY (plan_id) REFERENCES planes_sugeridos(id) ON DELETE RESTRICT
-);
-
-CREATE TABLE IF NOT EXISTS fotos_cita (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    cita_id INTEGER NOT NULL,
-    slot_numero INTEGER NOT NULL CHECK(slot_numero BETWEEN 1 AND 10),
-    nombre_archivo TEXT NOT NULL,
-    ruta_url TEXT NOT NULL,
-    datos_imagen TEXT DEFAULT NULL,
-    pie_foto TEXT DEFAULT '',
-    FOREIGN KEY (cita_id) REFERENCES citas_programadas(id) ON DELETE CASCADE,
-    UNIQUE(cita_id, slot_numero)
 );`
   },
   {
@@ -65,13 +85,16 @@ CREATE TABLE IF NOT EXISTS fotos_cita (
     folder: "Gestor-Tareas-Node/",
     category: "fullstack",
     categoryLabel: "Node.js Nativo & Testing",
-    stack: ["Node.js (node:http)", "REST API Nativa", "JSON & NDJSON Audit", "EventEmitter", "node:test", "SPA Fallback"],
+    stack: ["Node.js (node:http)", "REST API Nativa", "JSON & NDJSON Audit", "EventEmitter", "node:test (2 tests)", "SPA Fallback"],
     description: "Aplicación Full-Stack construida sin dependencias externas: servidor HTTP nativo con API REST CRUD, persistencia en JSON, bitácora de auditoría en NDJSON, bus de eventos con EventEmitter, pruebas unitarias con node:test y SPA con respaldo en localStorage.",
     review: "Arquitectura modular en `src/` (`server.js`, `tareas.js`, `storage.js`, `bus.js`, `index.js`), pruebas automatizadas en `tests/tareas.test.js`, protección contra Path Traversal y límite de payload de 1 MB.",
     previewUrl: "Gestor-Tareas-Node/public/index.html",
+    runCmd: "cd Gestor-Tareas-Node && npm start",
+    testCmd: "cd Gestor-Tareas-Node && npm test",
     codeSnippet: `// Gestor-Tareas-Node/src/server.js (API REST Nativa con node:http y seguridad)
 import http from 'node:http';
-import { crear, listar, completar, eliminar } from './tareas.js';
+import { resolve, extname } from 'node:path';
+import { readFile } from 'node:fs/promises';
 
 // Protección contra Path Traversal al servir archivos estáticos
 async function intentarEnviarArchivo(baseDir, relPath, res) {
@@ -88,19 +111,20 @@ async function intentarEnviarArchivo(baseDir, relPath, res) {
   },
   {
     id: "proyecto-bit",
-    title: "Procrastination Nightmare — Suite de Productividad en Equipo (6 Módulos)",
+    title: "Procrastination Nightmare — Suite de Productividad en Equipo (7 Módulos)",
     folder: "proyectoBit/",
     category: "fullstack",
     categoryLabel: "Producto SaaS Integrador",
-    stack: ["HTML5", "CSS3 Variables", "Bootstrap 5", "JavaScript POO", "Pomodoro Focus", "Landing Page"],
-    description: "Plataforma integral de gestión del tiempo y productividad colaborativa con 6 módulos interactivos conectados mediante barra de navegación lateral expandible y landing page corporativa.",
-    review: "Incluye: Temporizador Pomodoro Focus (`index.html`, `pomodoro.html`, `js/carlos.js`), Gestor de Tareas (`to-do-list.html`, `js/main.js`), Calendario Mensual de Eventos (`calendario.html`), Tracker Semanal de Hábitos (`habitos.html`), Tablero Roadmap con POO y ordenamiento (`roadMapTareas.html`, `js/roadMapTareas.js`) y Landing Page SaaS (`landing-full-bootstrap/index.html`).",
+    stack: ["HTML5", "CSS3 Variables", "Bootstrap 5", "JavaScript POO", "Pomodoro Focus", "Backup JSON"],
+    description: "Plataforma integral de gestión del tiempo y productividad colaborativa con 7 módulos interactivos conectados mediante barra lateral expandible, notas rápidas, respaldo JSON y landing page corporativa.",
+    review: "Incluye: Pomodoro Focus (`index.html`, `pomodoro.html`), Gestor To-Do (`to-do-list.html`), Calendario Mensual (`calendario.html`), Tracker de Hábitos (`habitos.html`), Notas (`notas.html`), Roadmap POO (`roadMapTareas.html`), respaldo (`js/backup.js`) y Landing Page SaaS (`landing-full-bootstrap/index.html`).",
     previewUrl: "proyectoBit/index.html",
     extraLinks: [
       { label: "Landing Page SaaS", url: "proyectoBit/landing-full-bootstrap/index.html" },
       { label: "Roadmap Tareas POO", url: "proyectoBit/roadMapTareas.html" },
       { label: "Tracker Hábitos", url: "proyectoBit/habitos.html" },
       { label: "Calendario", url: "proyectoBit/calendario.html" },
+      { label: "Notas", url: "proyectoBit/notas.html" },
       { label: "To-Do List", url: "proyectoBit/to-do-list.html" }
     ]
   },
@@ -121,14 +145,12 @@ function dibujarGrafico(totalIngresos, totalGastos) {
   const anguloInicial = -Math.PI / 2;
   const anguloFinIngresos = anguloInicial + proporcionIngresos * Math.PI * 2;
 
-  // Arco de Ingresos (#10b981)
   contextoGrafico.beginPath();
   contextoGrafico.arc(90, 90, 66, anguloInicial, anguloFinIngresos);
   contextoGrafico.strokeStyle = '#10b981';
   contextoGrafico.lineWidth = 22;
   contextoGrafico.stroke();
 
-  // Arco de Gastos (#fb7185)
   contextoGrafico.beginPath();
   contextoGrafico.arc(90, 90, 66, anguloFinIngresos, anguloInicial + Math.PI * 2);
   contextoGrafico.strokeStyle = '#fb7185';
@@ -183,13 +205,7 @@ buscadorInput.addEventListener('input', (evento) => {
   debounceTimer = setTimeout(() => {
     buscarPeliculas(busqueda);
   }, 500);
-});
-
-async function verDetalles(imdbID) {
-  const res = await fetch(\`https://www.omdbapi.com/?i=\${imdbID}&plot=full&apikey=\${API_KEY}\`);
-  const pelicula = await res.json();
-  modal.showModal();
-}`
+});`
   },
   {
     id: "tienda-online",
@@ -202,117 +218,106 @@ async function verDetalles(imdbID) {
     review: "Contiene catálogo interactivo (`index.html`), hoja de estilos (`style.css`) y motor de comercio electrónico (`script.js`) con gestión de cantidades, descuentos promocionales y checkout.",
     previewUrl: "Tienda_Online/index.html"
   },
-  {
-    id: "proyecto-bit-turismo",
-    title: "Plataforma de Turismo Full-Stack (Arquitectura MEAN)",
-    folder: "Proyecto_Bit/",
-    category: "fullstack",
-    categoryLabel: "Full-Stack MEAN",
-    stack: ["MongoDB", "Express.js", "Angular 15", "Node.js", "Mongoose", "CORS"],
-    description: "Arquitectura Full-Stack desacoplada para gestión de destinos turísticos compuesta por API REST en Node.js + Express + MongoDB y cliente SPA en Angular 15.",
-    review: "Dividido en `TurismoBack/` (servidor Express en `index.js`, conexión Mongoose en `config/db.js`, modelo `models/Destino.js` y endpoints CRUD `/api/destinos` en `routes/routes.js`) y `TurismoFront/` (cliente SPA en Angular 15).",
-    codeSnippet: `// Proyecto_Bit/TurismoBack/routes/routes.js
-const express = require('express');
-const router = express.Router();
-const Destino = require('../models/Destino');
-
-// GET /api/destinos — Consultar destinos turísticos
-router.get('/destinos', async (req, res) => {
-    const destinos = await Destino.find().sort({ fechaCreacion: -1 });
-    res.status(200).json({ ok: true, destinos });
-});
-
-// POST /api/destinos — Registrar nuevo destino turístico
-router.post('/destinos', async (req, res) => {
-    const nuevoDestino = new Destino(req.body);
-    const guardado = await nuevoDestino.save();
-    res.status(201).json({ ok: true, msg: 'Destino registrado correctamente', data: guardado });
-});
-
-module.exports = router;`
-  },
 
   // ==========================================================================
-  // 2. BACKEND REST APIS (NODE.JS, EXPRESS, TYPESCRIPT, MONGODB, JWT) & ANGULAR
+  // 2. BACKEND REST APIS (NODE.JS, TYPESCRIPT, MONGODB, JWT) & ANGULAR 16
   // ==========================================================================
   {
-    id: "is-error-main",
-    title: "Bit-Shop REST API — Autenticación JWT & Control de Roles (RBAC)",
-    folder: "is-Error-main/",
+    id: "bitshop-api",
+    title: "BitShop REST API — JWT, Hashing scrypt, RBAC & Docs Interactivos",
+    folder: "BitShop_API/",
     category: "backend",
-    categoryLabel: "Backend Node.js & JWT",
-    stack: ["Node.js", "Express.js", "MongoDB Atlas", "Mongoose", "JWT Auth", "Morgan", "CORS"],
-    description: "API RESTful de comercio electrónico con autenticación basada en JSON Web Tokens (JWT), protección de rutas privadas mediante middleware y validación de permisos de administrador.",
-    review: "Arquitectura MVC en `src/`: servidor Express (`app.js`), conexión a MongoDB Atlas (`database.js`), esquemas Mongoose (`Models/Product.js`, `Models/User.js`), controladores (`ProductsController.js`, `UsersController.js`) y middleware de seguridad (`middlewares/auth.js`).",
-    codeSnippet: `// is-Error-main/src/middlewares/auth.js
+    categoryLabel: "Backend Security & JWT",
+    stack: ["Node.js", "Express.js", "JWT Auth", "scrypt Hashing", "RBAC (admin/client)", "node:test (3 tests)"],
+    description: "API RESTful de comercio electrónico orientada a producción: autenticación JWT, hashing criptográfico de contraseñas con Node crypto scrypt, control de acceso basado en roles (RBAC), panel Login-first en /, documentación interactiva en /docs y respaldo JSON.",
+    review: "Arquitectura MVC en `src/`: servidor Express (`app.js`), autenticación y firma JWT, middleware RBAC (`middlewares/auth.js`), panel visual y pruebas automatizadas en `tests/*.test.js`.",
+    runCmd: "cd BitShop_API && npm run dev\n# Panel Login-first: http://localhost:5000 (y /docs)",
+    testCmd: "cd BitShop_API && npm test",
+    codeSnippet: `// BitShop_API/src/middlewares/auth.js
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
   try {
     let token = req.headers.authorization;
-    if (!token) throw "Acceso denegado: Se requiere un token JWT válido.";
+    if (!token) return res.status(401).json({ error: "Token JWT requerido" });
     if (token.startsWith("Bearer ")) token = token.slice(7).trim();
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    req.pato = decoded; // Payload con user_id, email y permissions
+    req.user = jwt.verify(token, process.env.JWT_SECRET_KEY);
     return next();
   } catch (error) {
-    res.status(401).json({ error });
+    return res.status(401).json({ error: "Token inválido o expirado" });
   }
-};
-
-module.exports = verifyToken;`
+};`
   },
   {
     id: "ts-api",
-    title: "Enterprise Modular REST API en TypeScript & Express",
+    title: "Enterprise Modular REST API en TypeScript Estricto & Express",
     folder: "ts_api/",
     category: "backend",
     categoryLabel: "Backend TypeScript",
-    stack: ["TypeScript", "Express.js", "Static Typing", "Modular Routing", "Barrel Exports"],
-    description: "Servidor RESTful fuertemente tipado en TypeScript estructurado bajo arquitectura modular de controladores, validación de parámetros y exportación por barriles (`index.ts`).",
-    review: "Contiene punto de entrada (`app.ts`), configuración estricta (`tsconfig.json`), 4 controladores tipados en `controllers/` (`login.controller.ts`, `math.controller.ts`, `operaciones.controller.ts`, `user.controller.ts`) y enrutadores modulares en `routes/`.",
+    stack: ["TypeScript 5", "Express.js", "Static Typing", "Login-First UI", "node:test (4 tests)"],
+    description: "Servidor RESTful fuertemente tipado en TypeScript estricto bajo arquitectura modular de controladores, rutas tipadas, interfaz Login-first en `/` y suite de pruebas automatizadas.",
+    review: "Incluye punto de entrada (`app.ts`), configuración estricta (`tsconfig.json`), panel cliente (`public/`), controladores en `controllers/`, rutas modulares en `routes/` y 4 pruebas en `tests/`.",
+    runCmd: "cd ts_api && npm run dev\n# Panel visual: http://localhost:3000",
+    testCmd: "cd ts_api && npm test",
     codeSnippet: `// ts_api/controllers/operaciones.controller.ts
 import Express from "express";
 
 export function validar(num1: number, num2: number, res: Express.Response): boolean {
-    if (Number.isNaN(num1) || Number.isNaN(num2)) {
-        res.status(400).json({ msg: "Uno o ambos parámetros no son números válidos" });
-        return false;
-    }
-    return true;
+  if (Number.isNaN(num1) || Number.isNaN(num2)) {
+    res.status(400).json({ msg: "Uno o ambos parámetros no son números válidos" });
+    return false;
+  }
+  return true;
 }
 
 export const division = (req: Express.Request, res: Express.Response) => {
-    const num1 = parseFloat(req.params.num1);
-    const num2 = parseFloat(req.params.num2);
-    if (!validar(num1, num2, res)) return;
-    if (num2 === 0) return res.status(400).json({ msg: "No es posible dividir entre cero" });
-    res.status(200).json({ msg: \`La división es igual a \${num1 / num2}\`, resultado: num1 / num2 });
+  const num1 = parseFloat(req.params.num1);
+  const num2 = parseFloat(req.params.num2);
+  if (!validar(num1, num2, res)) return;
+  if (num2 === 0) return res.status(400).json({ msg: "No es posible dividir entre cero" });
+  res.status(200).json({ resultado: num1 / num2 });
 };`
   },
   {
-    id: "procastination-nightmare-angular",
-    title: "Procrastination Nightmare SPA (Angular 15 + FullCalendar v6)",
-    folder: "procastination-nightmare/",
+    id: "mongo-crud-playground",
+    title: "MongoDB CRUD & Query Operators Engine + Playground Web (DBZ-V2)",
+    folder: "Mongo/",
     category: "backend",
-    categoryLabel: "Frontend Angular 15",
-    stack: ["Angular 15", "TypeScript", "FullCalendar v6", "ng-bootstrap", "SweetAlert2"],
-    description: "Versión Single Page Application (SPA) en Angular 15 de la suite de productividad con integración de calendario interactivo FullCalendar y modales reactivos.",
-    review: "Incluye configuración de Angular CLI (`angular.json`, `package.json`, `tsconfig.json`), módulo raíz (`src/app/app.module.ts`, `app-routing.module.ts`) e integración con `@fullcalendar/angular` (`daygrid`, `timegrid`, `interaction`), `@ng-bootstrap/ng-bootstrap` y `sweetalert2`.",
-    codeSnippet: `// procastination-nightmare/package.json (Arquitectura Angular 15)
+    categoryLabel: "NoSQL MongoDB & Testing",
+    stack: ["MongoDB", "mongosh", "Query Operators ($in/$or/$gte)", "Update ($set/$inc/$push)", "node:test (3 tests)"],
+    description: "Motor y laboratorio interactivo de consultas NoSQL con implementación local de operadores MongoDB ($eq, $ne, $gte, $lt, $in, $or, $set, $inc, $unset, $push), scripts mongosh, Playground Web en puerto 3002 y pruebas unitarias.",
+    review: "Contiene `run-mongo-demo.js`, dataset `dbz-v2.json`, interfaz Playground Web (`public/`) y 3 suites de verificación de operadores en `tests/*.test.js`.",
+    runCmd: "cd Mongo && npm run dev\n# Playground Web: http://localhost:3002",
+    testCmd: "cd Mongo && npm test",
+    codeSnippet: `// Mongo/tests/ — Verificación de operadores MongoDB ($gte, $in, $or, $inc)
+const guerreros = await db.find({
+  $or: [
+    { raza: { $in: ["Saiyan", "Namekiano"] } },
+    { poder: { $gte: 9000 } }
+  ]
+});
+await db.updateOne({ nombre: "Goku" }, { $inc: { poder: 500 }, $push: { tecnicas: "Genkidama" } });`
+  },
+  {
+    id: "procrastination-nightmare-angular",
+    title: "Procrastination Nightmare SPA (Angular 16 + FullCalendar v6)",
+    folder: "procrastination-nightmare/",
+    category: "backend",
+    categoryLabel: "Frontend Angular 16",
+    stack: ["Angular 16", "TypeScript 5", "FullCalendar v6", "PrimeNG 16", "RxJS 7"],
+    description: "Single Page Application (SPA) en Angular 16 con calendario interactivo FullCalendar v6, gestión de estado reactivo con RxJS, decodificación JWT y componentes UI empresariales.",
+    review: "Incluye configuración de Angular 16 (`angular.json`, `package.json`, `tsconfig.json`), integración con `@fullcalendar/angular` (`daygrid`, `timegrid`, `interaction`), `primeng`, `@ng-bootstrap/ng-bootstrap` y `jwt-decode`.",
+    runCmd: "cd procrastination-nightmare && npm run dev",
+    codeSnippet: `// procrastination-nightmare/package.json (Stack Angular 16)
 {
-  "name": "procrastination-nightmare-spa",
   "dependencies": {
-    "@angular/core": "^15.2.0",
-    "@angular/router": "^15.2.0",
-    "@fullcalendar/angular": "^6.1.6",
-    "@fullcalendar/daygrid": "^6.1.6",
-    "@fullcalendar/interaction": "^6.1.6",
-    "@fullcalendar/timegrid": "^6.1.6",
-    "@ng-bootstrap/ng-bootstrap": "^14.1.1",
-    "bootstrap": "^5.2.3",
-    "sweetalert2": "^11.7.3"
+    "@angular/core": "^16.0.0",
+    "@fullcalendar/angular": "^6.1.8",
+    "@ng-bootstrap/ng-bootstrap": "^15.0.1",
+    "primeng": "^16.0.2",
+    "jwt-decode": "^3.1.2",
+    "rxjs": "~7.8.0"
   }
 }`
   },
@@ -331,25 +336,16 @@ export const division = (req: Express.Request, res: Express.Response) => {
     review: "Aplicación standalone autocontenida (`index.html`, `style.css`, `app.js`) que manipula buffers de píxeles con `ctx.getImageData()` y `ctx.putImageData()` para previsualizar figuras sin destruir las capas previas.",
     previewUrl: "SketchPad-Canvas-2D/index.html",
     codeSnippet: `// SketchPad-Canvas-2D/app.js
-// Gestión de pila de historial (Undo Ctrl+Z) con snapshots ImageData
 function saveHistory() {
-    history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
-    if (history.length > 25) history.shift();
+  history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+  if (history.length > 25) history.shift();
 }
 
 function undo() {
-    if (history.length <= 1) return;
-    history.pop();
-    ctx.putImageData(history[history.length - 1], 0, 0);
-}
-
-// Exportación del lienzo a archivo PNG descargable
-document.getElementById('btnExport').addEventListener('click', () => {
-    const link = document.createElement('a');
-    link.download = \`sketchpad-\${Date.now()}.png\`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-});`
+  if (history.length <= 1) return;
+  history.pop();
+  ctx.putImageData(history[history.length - 1], 0, 0);
+}`
   },
   {
     id: "notesdb-indexeddb",
@@ -364,24 +360,10 @@ document.getElementById('btnExport').addEventListener('click', () => {
     codeSnippet: `// Gestor-Offline-IndexedDB/app.js
 const req = indexedDB.open('NotesDB_Portfolio', 1);
 req.addEventListener('upgradeneeded', () => {
-    const database = req.result;
-    if (!database.objectStoreNames.contains('notas')) {
-        database.createObjectStore('notas', { autoIncrement: true });
-    }
-});
-
-// Exportación completa de la base de datos IndexedDB a archivo JSON
-document.getElementById('btnExportJson').addEventListener('click', () => {
-    const allReq = db.transaction('notas', 'readonly').objectStore('notas').getAll();
-    allReq.addEventListener('success', () => {
-        const blob = new Blob([JSON.stringify(allReq.result, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = \`notesdb-backup-\${Date.now()}.json\`;
-        a.click();
-        URL.revokeObjectURL(url);
-    });
+  const database = req.result;
+  if (!database.objectStoreNames.contains('notas')) {
+    database.createObjectStore('notas', { autoIncrement: true });
+  }
 });`
   },
   {
@@ -397,23 +379,9 @@ document.getElementById('btnExportJson').addEventListener('click', () => {
     codeSnippet: `// Visor-Archivos-DragDrop/app.js
 const reader = new FileReader();
 reader.addEventListener('progress', (e) => {
-    if (e.lengthComputable) {
-        const pct = Math.round((e.loaded / e.total) * 100);
-        progressFill.style.width = \`\${pct}%\`;
-    }
-});
-
-reader.addEventListener('load', () => {
-    if (file.type.startsWith('image/')) {
-        const img = document.createElement('img');
-        img.src = reader.result;
-        previewBox.appendChild(img);
-    } else if (file.type.startsWith('video/') || file.type.startsWith('audio/')) {
-        const media = document.createElement(file.type.startsWith('video/') ? 'video' : 'audio');
-        media.controls = true;
-        media.src = URL.createObjectURL(file);
-        previewBox.appendChild(media);
-    }
+  if (e.lengthComputable) {
+    progressFill.style.width = \`\${Math.round((e.loaded / e.total) * 100)}%\`;
+  }
 });`
   },
   {
@@ -439,6 +407,19 @@ reader.addEventListener('load', () => {
     previewUrl: "Web-Page-Animations/index.html"
   }
 ];
+
+// ============================================================================
+// UTILIDADES DE SEGURIDAD Y RENDERIZADO
+// ============================================================================
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 // ============================================================================
 // LÓGICA DE RENDERIZADO Y FILTRADO DEL PORTAFOLIO
@@ -474,6 +455,8 @@ function updatePortfolioMetrics() {
 }
 
 function renderPortfolio() {
+  if (!gridContainer) return;
+
   const filtered = PORTFOLIO_PROJECTS.filter((proj) => {
     const matchesCategory = currentCategory === "all" || proj.category === currentCategory;
     const query = currentSearch.toLowerCase();
@@ -495,7 +478,7 @@ function renderPortfolio() {
     gridContainer.innerHTML = `
       <div class="col-12 text-center py-5">
         <h4 class="text-secondary mb-3">No se encontraron proyectos con ese criterio.</h4>
-        <button type="button" class="btn btn-outline-info btn-sm rounded-pill px-4" onclick="resetPortfolioFilters()">
+        <button type="button" class="btn btn-outline-info btn-sm rounded-pill px-4" data-action="reset">
           Restablecer filtros
         </button>
       </div>
@@ -505,52 +488,60 @@ function renderPortfolio() {
 
   gridContainer.innerHTML = filtered
     .map((proj) => {
+      const safeTitle = escapeHtml(proj.title);
+      const safeFolder = escapeHtml(proj.folder);
+      const safeCategory = escapeHtml(proj.category);
+      const safeCategoryLabel = escapeHtml(proj.categoryLabel);
+      const safeDesc = escapeHtml(proj.description);
+      const safeReview = escapeHtml(proj.review);
+      const safeId = escapeHtml(proj.id);
+
       const stackBadges = proj.stack
-        .map((tech) => `<span class="tech-tag">${tech}</span>`)
+        .map((tech) => `<span class="tech-tag">${escapeHtml(tech)}</span>`)
         .join("");
 
       const extraLinksHtml = (proj.extraLinks || [])
         .map(
           (lnk) =>
-            `<button type="button" class="btn btn-sm btn-outline-info py-1 px-2" onclick="openPreviewModal('${proj.title} — ${lnk.label}', '${lnk.url}')">${lnk.label}</button>`
+            `<button type="button" class="btn btn-sm btn-outline-info py-1 px-2" data-action="preview" data-title="${safeTitle} — ${escapeHtml(lnk.label)}" data-url="${escapeHtml(lnk.url)}">${escapeHtml(lnk.label)}</button>`
         )
         .join("");
 
       const encodedPreviewUrl = proj.previewUrl ? encodeURI(proj.previewUrl) : "";
       const actionButton = proj.previewUrl
         ? `<div class="d-flex flex-wrap gap-2 mt-auto pt-3">
-             <button type="button" class="btn btn-info btn-sm fw-bold text-dark flex-grow-1" onclick="openPreviewModal('${proj.title}', '${proj.previewUrl}')">
+             <button type="button" class="btn btn-info btn-sm fw-bold text-dark flex-grow-1" data-action="preview" data-title="${safeTitle}" data-url="${escapeHtml(proj.previewUrl)}">
                ▶ Vista Previa Interactiva
              </button>
              ${
-               proj.codeSnippet
-                 ? `<button type="button" class="btn btn-outline-warning btn-sm fw-semibold" onclick="openCodeModal('${proj.id}')" title="Inspeccionar Código y Arquitectura">&lt;/&gt; Código</button>`
+               proj.codeSnippet || proj.runCmd
+                 ? `<button type="button" class="btn btn-outline-warning btn-sm fw-semibold" data-action="code" data-id="${safeId}" title="Inspeccionar Código, Arquitectura y Comandos">&lt;/&gt; Código</button>`
                  : ""
              }
-             <a href="${encodedPreviewUrl}" target="_blank" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
+             <a href="${encodedPreviewUrl}" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm" title="Abrir en pestaña nueva">
                ↗ Abrir
              </a>
            </div>`
         : `<div class="d-flex flex-wrap gap-2 mt-auto pt-3">
-             <button type="button" class="btn btn-outline-warning btn-sm fw-semibold w-100" onclick="openCodeModal('${proj.id}')">
-               &lt;/&gt; Inspeccionar Código y Arquitectura
+             <button type="button" class="btn btn-outline-warning btn-sm fw-semibold w-100" data-action="code" data-id="${safeId}">
+               &lt;/&gt; Inspeccionar Código, CLI y Tests
              </button>
            </div>`;
 
       return `
       <div class="col-lg-4 col-md-6">
         <article class="project-card">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <span class="cat-badge cat-${proj.category}">${proj.categoryLabel}</span>
-            <span class="file-path-tag">📁 ${proj.folder}</span>
+          <div class="d-flex justify-content-between align-items-center mb-2 gap-2">
+            <span class="cat-badge cat-${safeCategory}">${safeCategoryLabel}</span>
+            <span class="file-path-tag">📁 ${safeFolder}</span>
           </div>
 
-          <h5 class="fw-bold mb-2 text-white">${proj.title}</h5>
-          <p class="small text-secondary mb-2">${proj.description}</p>
+          <h5 class="fw-bold mb-2 text-white">${safeTitle}</h5>
+          <p class="small text-secondary mb-2">${safeDesc}</p>
 
           <div class="review-box">
             <strong class="text-info d-block mb-1">📦 Arquitectura &amp; Componentes:</strong>
-            ${proj.review}
+            ${safeReview}
           </div>
 
           <div class="d-flex flex-wrap gap-1 mb-2">
@@ -624,11 +615,47 @@ window.openCodeModal = function (projectId) {
   codeContainer.classList.remove("d-none");
 
   reviewNotes.textContent = proj.review;
-  codeBlock.textContent = proj.codeSnippet || "// Código documentado en la carpeta " + proj.folder;
+  const cliHeader = [
+    proj.runCmd ? `# Ejecución local:\n${proj.runCmd}` : "",
+    proj.testCmd ? `# Pruebas automatizadas:\n${proj.testCmd}` : ""
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+
+  const snippet = proj.codeSnippet || `// Código fuente documentado en ${proj.folder}`;
+  codeBlock.textContent = cliHeader ? `${cliHeader}\n\n${snippet}` : snippet;
 
   const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
   modal.show();
 };
+
+// Delegación de eventos segura en la grilla (sin handlers inline)
+if (gridContainer) {
+  gridContainer.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-action]");
+    if (!button) return;
+
+    const action = button.dataset.action;
+    if (action === "preview") {
+      openPreviewModal(button.dataset.title || "Vista Previa", button.dataset.url || "");
+    } else if (action === "code") {
+      openCodeModal(button.dataset.id || "");
+    } else if (action === "reset") {
+      window.resetPortfolioFilters();
+    }
+  });
+}
+
+// Botones de apertura de CV en navbar y hero
+const btnNavCv = document.getElementById("btnNavCv");
+const btnHeroCv = document.getElementById("btnHeroCv");
+[btnNavCv, btnHeroCv].forEach((btn) => {
+  if (btn) {
+    btn.addEventListener("click", () => {
+      window.openPreviewModal("CV Ejecutivo — Fredy Martinez", "My CV/index.html");
+    });
+  }
+});
 
 if (copyCodeBtnEl) {
   copyCodeBtnEl.addEventListener("click", async () => {
@@ -651,9 +678,13 @@ if (modalEl) {
 // Botón flotante Volver Arriba
 const backToTopBtn = document.getElementById("backToTopBtn");
 if (backToTopBtn) {
-  window.addEventListener("scroll", () => {
-    backToTopBtn.classList.toggle("visible", window.scrollY > 400);
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      backToTopBtn.classList.toggle("visible", window.scrollY > 400);
+    },
+    { passive: true }
+  );
   backToTopBtn.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
@@ -665,7 +696,7 @@ filterButtons.forEach((btn) => {
     btn.classList.add("active");
     currentCategory = btn.getAttribute("data-category");
     updatePortfolioMetrics();
-renderPortfolio();
+    renderPortfolio();
   });
 });
 
@@ -673,7 +704,7 @@ if (searchInput) {
   searchInput.addEventListener("input", (e) => {
     currentSearch = e.target.value.trim();
     updatePortfolioMetrics();
-renderPortfolio();
+    renderPortfolio();
   });
 }
 
@@ -695,7 +726,6 @@ function getPortfolioFormValues() {
   return { name, email, subject, msg };
 }
 
-// 1. Envío directo a WhatsApp (+57 315 238 8315)
 if (btnSendWhatsApp) {
   btnSendWhatsApp.addEventListener("click", () => {
     if (portfolioContactForm && !portfolioContactForm.reportValidity()) return;
@@ -713,23 +743,21 @@ if (btnSendWhatsApp) {
   });
 }
 
-// 2. Envío a Correo Electrónico (FormSubmit AJAX + respaldo mailto:)
 if (portfolioContactForm && pContactFeedback) {
-  portfolioContactForm.addEventListener("submit", async (e) => {
+  portfolioContactForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const { name, email, subject, msg } = getPortfolioFormValues();
     if (!name || !email || !msg) return;
 
     pContactFeedback.textContent = "⏳ Preparando envío a " + CONTACT_EMAIL + "...";
 
-    // Abrir cliente de correo con el asunto y cuerpo prellenados (funciona 100% sin servidor)
     const mailtoSubject = encodeURIComponent(`[Portafolio] ${subject} — ${name}`);
     const mailtoBody = encodeURIComponent(
       `Hola Fredy,\n\n` +
-      `Nombre / Empresa: ${name}\n` +
-      `Correo de contacto: ${email}\n` +
-      `Motivo: ${subject}\n\n` +
-      `Mensaje:\n${msg}\n`
+        `Nombre / Empresa: ${name}\n` +
+        `Correo de contacto: ${email}\n` +
+        `Motivo: ${subject}\n\n` +
+        `Mensaje:\n${msg}\n`
     );
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=${mailtoSubject}&body=${mailtoBody}`;
 

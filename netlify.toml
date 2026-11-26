@@ -1,5 +1,5 @@
 # ============================================================================
-# CONFIGURACIÓN DE DESPLIEGUE Y OPTIMIZACIÓN EN NETLIFY (netlify.toml)
+# CONFIGURACIÓN DE DESPLIEGUE, SEGURIDAD Y CACHÉ EN NETLIFY (netlify.toml)
 # ============================================================================
 [build]
   publish = "."
@@ -10,13 +10,14 @@
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
 
 [[headers]]
   for = "/*.css"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=3600, must-revalidate"
 
 [[headers]]
   for = "/*.js"
   [headers.values]
-    Cache-Control = "public, max-age=31536000, immutable"
+    Cache-Control = "public, max-age=3600, must-revalidate"

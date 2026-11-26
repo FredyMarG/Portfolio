@@ -1,0 +1,28 @@
+name: Portfolio & Backend CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install backend dependencies
+        run: |
+          npm --prefix BitShop_API install --no-audit --no-fund
+          npm --prefix Turismo_MEAN/TurismoBack install --no-audit --no-fund
+          npm --prefix ts_api install --no-audit --no-fund
+
+      - name: Run portfolio integrity and backend test suites
+        run: npm test

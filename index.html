@@ -12,7 +12,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Portafolio Profesional de Fredy Martinez — Full-Stack Software Developer (MEAN Stack, SQL, Node.js, Angular 15, TypeScript, JWT) & Certified Scrum Master.">
+  <meta name="description" content="Portafolio Profesional de Fredy Martinez — Full-Stack Software Developer (MEAN Stack, SQL, Node.js, Angular 16, TypeScript, JWT, Testing) & Certified Scrum Master.">
   <meta name="author" content="Fredy Martinez">
   <meta name="theme-color" content="#0b0f19">
   <title>Fredy Martinez | Full-Stack Software Developer &amp; Scrum Master</title>
@@ -26,7 +26,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://portafoliofredy.netlify.app/">
   <meta property="og:title" content="Fredy Martinez | Portafolio Profesional Full-Stack MEAN &amp; SQL">
-  <meta property="og:description" content="Explora 16 proyectos reales de ingeniería: aplicaciones Full-Stack SQL/NoSQL, APIs REST con JWT, TypeScript, Angular 15 SPAs y HTML5 Web APIs.">
+  <meta property="og:description" content="Explora 17 proyectos reales de ingeniería: aplicaciones Full-Stack MEAN/SQL, APIs REST con JWT/scrypt/RBAC, TypeScript estricto, Angular 16, pruebas automatizadas y HTML5 Web APIs.">
   <meta property="og:image" content="https://portafoliofredy.netlify.app/My%20CV/assets/img/my-image.jpg">
 
   <!-- Resource Hints & Preconnect para máximo rendimiento -->
@@ -59,7 +59,10 @@
           <li class="nav-item"><a class="nav-link text-light" href="#arquitectura">Arquitectura</a></li>
           <li class="nav-item"><a class="nav-link text-light" href="#contacto">Contacto</a></li>
           <li class="nav-item">
-            <button class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold" onclick="openPreviewModal('CV Ejecutivo — Fredy Martinez', 'My CV/index.html')">
+            <a class="nav-link text-light" href="https://github.com/FredyMarG" target="_blank" rel="noopener">GitHub ↗</a>
+          </li>
+          <li class="nav-item">
+            <button type="button" id="btnNavCv" class="btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold">
               📄 Ver Mi CV Ejecutivo
             </button>
           </li>
@@ -85,7 +88,7 @@
             Ingeniería de Software <span class="brand-gradient">Full-Stack MEAN &amp; SQL</span>
           </h1>
           <p class="lead text-secondary mb-4">
-            Desarrollador de Software Full-Stack especializado en la construcción de aplicaciones web escalables, APIs RESTful seguras con autenticación <strong>JWT en Node.js, Express y TypeScript</strong>, modelado de bases de datos relacionales (<strong>SQLite / MySQL</strong>) y NoSQL (<strong>MongoDB / Mongoose</strong>), e interfaces modernas en <strong>Angular 15 y JavaScript ES6+</strong>.
+            Desarrollador de Software Full-Stack especializado en aplicaciones web escalables, APIs RESTful seguras con <strong>JWT, hashing scrypt y RBAC en Node.js, Express y TypeScript</strong>, bases de datos relacionales (<strong>SQLite / MySQL</strong>) y NoSQL (<strong>MongoDB / Mongoose</strong>), pruebas automatizadas (<strong>node:test + CI</strong>) e interfaces modernas en <strong>Angular 16 y JavaScript ES6+</strong>.
           </p>
 
           <!-- Píldoras de Tecnologías -->
@@ -93,10 +96,11 @@
             <span class="stack-pill">🍃 MongoDB &amp; Mongoose</span>
             <span class="stack-pill">🗄️ SQL (SQLite &amp; MySQL)</span>
             <span class="stack-pill">⚡ Express.js &amp; REST APIs</span>
-            <span class="stack-pill">🅰️ Angular 15 SPA</span>
+            <span class="stack-pill">🅰️ Angular 16 SPA</span>
             <span class="stack-pill">🟢 Node.js</span>
-            <span class="stack-pill">🔷 TypeScript</span>
-            <span class="stack-pill">🔐 JWT Auth &amp; RBAC</span>
+            <span class="stack-pill">🔷 TypeScript 5</span>
+            <span class="stack-pill">🔐 JWT, scrypt &amp; RBAC</span>
+            <span class="stack-pill">🧪 Testing (node:test) &amp; CI</span>
             <span class="stack-pill">🔄 Certified Scrum Master</span>
           </div>
 
@@ -104,9 +108,12 @@
             <a href="#catalogo" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill shadow-sm">
               Explorar Proyectos Seleccionados ↓
             </a>
-            <button type="button" onclick="openPreviewModal('CV Ejecutivo — Fredy Martinez', 'My CV/index.html')" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
+            <button type="button" id="btnHeroCv" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
               📄 Abrir CV Ejecutivo &amp; PDF
             </button>
+            <a href="https://github.com/FredyMarG" target="_blank" rel="noopener" class="btn btn-outline-light px-4 py-2 rounded-pill">
+              💻 GitHub (@FredyMarG)
+            </a>
             <a href="#contacto" class="btn btn-outline-light px-4 py-2 rounded-pill">
               Contactar Ahora
             </a>
@@ -116,20 +123,20 @@
           <div class="row g-3">
             <div class="col-6 col-sm-3">
               <div class="stat-card">
-                <div class="stat-number" id="statTotalProjects">16</div>
+                <div class="stat-number" id="statTotalProjects">17</div>
                 <div class="stat-label">Proyectos Curados</div>
               </div>
             </div>
             <div class="col-6 col-sm-3">
               <div class="stat-card">
-                <div class="stat-number" id="statLiveDemos">13</div>
+                <div class="stat-number" id="statLiveDemos">12</div>
                 <div class="stat-label">Demos Interactivas</div>
               </div>
             </div>
             <div class="col-6 col-sm-3">
               <div class="stat-card">
-                <div class="stat-number">100%</div>
-                <div class="stat-label">Arquitectura Documentada</div>
+                <div class="stat-number">16+</div>
+                <div class="stat-label">Tests Automatizados</div>
               </div>
             </div>
             <div class="col-6 col-sm-3">
@@ -186,15 +193,15 @@
           <div class="project-card">
             <h5 class="text-info fw-bold mb-2">1. Arquitectura Frontend &amp; SPAs</h5>
             <p class="small text-secondary mb-0">
-              Diseño de aplicaciones Single Page Application (SPA) en Angular 15 y JavaScript ES6+ modular, integrando librerías empresariales como FullCalendar v6, Bootstrap 5, gestión de estado persistente y diseño responsivo orientado a la experiencia de usuario.
+              Diseño de aplicaciones Single Page Application (SPA) en Angular 16 y JavaScript ES6+ modular, integrando librerías empresariales como FullCalendar v6, PrimeNG, Bootstrap 5, gestión de estado persistente, HTML5 Web APIs y diseño responsivo accesible.
             </p>
           </div>
         </div>
         <div class="col-md-4">
           <div class="project-card">
-            <h5 class="text-info fw-bold mb-2">2. Backend RESTful, Seguridad JWT &amp; TypeScript</h5>
+            <h5 class="text-info fw-bold mb-2">2. Seguridad, Backend REST &amp; Testing</h5>
             <p class="small text-secondary mb-0">
-              Desarrollo de servidores desacoplados con Node.js, Express y TypeScript bajo arquitectura MVC y patrón de barriles, con protección de endpoints mediante JSON Web Tokens (JWT), control de acceso basado en roles (RBAC) y validación estricta de datos.
+              Servidores desacoplados con Node.js, Express y TypeScript estricto bajo arquitectura MVC: autenticación JWT, hashing criptográfico <code>scrypt</code>, control de acceso RBAC, protección Path Traversal/XSS y suites de pruebas automatizadas con <code>node:test</code> + GitHub Actions CI.
             </p>
           </div>
         </div>
@@ -202,7 +209,7 @@
           <div class="project-card">
             <h5 class="text-info fw-bold mb-2">3. Persistencia Políglota (SQL &amp; NoSQL)</h5>
             <p class="small text-secondary mb-0">
-              Modelado de esquemas relacionales con integridad referencial en SQLite3 y MySQL (como en la App de Citas), junto con colecciones documentales NoSQL en MongoDB Atlas y Mongoose para plataformas de comercio electrónico y turismo.
+              Modelado de esquemas relacionales con integridad referencial en SQLite3 y MySQL (App de Citas), junto con colecciones documentales NoSQL en MongoDB Atlas, Mongoose 7 y respaldos JSON/IndexedDB Offline-First.
             </p>
           </div>
         </div>
@@ -246,6 +253,14 @@
                 <div>
                   <div class="text-secondary small">Rol &amp; Especialidad</div>
                   <span class="text-light fw-semibold">Full-Stack MEAN / SQL Developer &amp; Scrum Master</span>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-3 bg-dark bg-opacity-50 border border-secondary border-opacity-25 d-flex align-items-center gap-3">
+                <span class="fs-4">💻</span>
+                <div>
+                  <div class="text-secondary small">GitHub &amp; Repositorios</div>
+                  <a href="https://github.com/FredyMarG" target="_blank" rel="noopener" class="text-info fw-semibold text-decoration-none">github.com/FredyMarG</a>
                 </div>
               </div>
 
