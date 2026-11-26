@@ -46,3 +46,6 @@
 {"ts":"2026-11-26T18:20:13.487Z","tipo":"tarea:creada","id":"d4e3b998-8ff1-4799-a855-c9e691657f7e","descripcion":"Tarea de prueba automatizada"}
 {"ts":"2026-11-26T18:20:13.490Z","tipo":"tarea:completada","id":"d4e3b998-8ff1-4799-a855-c9e691657f7e"}
 {"ts":"2026-11-26T18:20:13.492Z","tipo":"tarea:eliminada","id":"d4e3b998-8ff1-4799-a855-c9e691657f7e"}
+{"ts":"2026-11-26T18:47:21.041Z","tipo":"tarea:creada","id":"2d6f3ee9-fb53-4c8a-a95a-17730c615e3a","descripcion":"Tarea de prueba automatizada"}
+{"ts":"2026-11-26T18:47:21.045Z","tipo":"tarea:completada","id":"2d6f3ee9-fb53-4c8a-a95a-17730c615e3a"}
+{"ts":"2026-11-26T18:47:21.047Z","tipo":"tarea:eliminada","id":"2d6f3ee9-fb53-4c8a-a95a-17730c615e3a"}
