@@ -174,6 +174,7 @@ formularioTransaccion.addEventListener('submit', (evento) => {
 
   transacciones.push(nuevaTransaccion); // Añade la nueva transacción al final del arreglo
   renderizarTransacciones(); // Redibuja la lista, actualiza totales/gráfico y guarda en localStorage
+  guardarTransaccionEnBD(nuevaTransaccion); // Persiste en la Base de Datos Real SQL/Mongo
   formularioTransaccion.reset(); // Limpia los campos del formulario para el próximo registro
 });
 
@@ -198,7 +199,40 @@ function borrar(idTransaccion) {
   // Crea un nuevo arreglo excluyendo la transacción cuyo id coincida con el recibido
   transacciones = transacciones.filter((transaccion) => transaccion.id !== idTransaccion);
   renderizarTransacciones(); // Actualiza la interfaz, el gráfico y el almacenamiento local
+  eliminarTransaccionEnBD(idTransaccion); // Elimina el registro en la Base de Datos Real SQL/Mongo
 }
 
-// 9. INICIALIZACIÓN DE LA APLICACIÓN
+// 9. SINCRONIZACIÓN CON BASE DE DATOS REAL SQL / MONGODB (/api/finanzas/transacciones)
+async function cargarTransaccionesDesdeBD() {
+  if (location.protocol === 'file:') return;
+  try {
+    const res = await fetch('/api/finanzas/transacciones');
+    const data = await res.json();
+    if (res.ok && data.ok && Array.isArray(data.transacciones) && data.transacciones.length > 0) {
+      transacciones = data.transacciones;
+      renderizarTransacciones();
+    }
+  } catch {}
+}
+
+async function guardarTransaccionEnBD(tx) {
+  if (location.protocol === 'file:') return;
+  try {
+    await fetch('/api/finanzas/transacciones', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tx)
+    });
+  } catch {}
+}
+
+async function eliminarTransaccionEnBD(id) {
+  if (location.protocol === 'file:') return;
+  try {
+    await fetch(`/api/finanzas/transacciones/${encodeURIComponent(id)}`, { method: 'DELETE' });
+  } catch {}
+}
+
+// 10. INICIALIZACIÓN DE LA APLICACIÓN
 renderizarTransacciones(); // Dibuja al instante los movimientos guardados al cargar la página
+cargarTransaccionesDesdeBD(); // Sincroniza con la Base de Datos Real SQL/Mongo

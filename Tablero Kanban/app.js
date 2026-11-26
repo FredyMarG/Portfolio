@@ -20,9 +20,29 @@ let estadoKanban = JSON.parse(localStorage.getItem('kanban_estado')) || {
   ]
 };
 
-// Guarda el objeto "estadoKanban" en localStorage convirtiéndolo primero a texto JSON.
+// Guarda el objeto "estadoKanban" en localStorage y sincroniza con la Base de Datos Real SQL/Mongo (/api/kanban/tareas).
 function guardarEstado() {
   localStorage.setItem('kanban_estado', JSON.stringify(estadoKanban)); // Persiste los datos entre recargas
+  if (location.protocol !== 'file:') {
+    fetch('/api/kanban/tareas', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ estado: estadoKanban })
+    }).catch(() => {});
+  }
+}
+
+async function cargarKanbanDesdeBD() {
+  if (location.protocol === 'file:') return;
+  try {
+    const res = await fetch('/api/kanban/tareas');
+    const data = await res.json();
+    if (res.ok && data.ok && data.estado) {
+      estadoKanban = data.estado;
+      localStorage.setItem('kanban_estado', JSON.stringify(estadoKanban));
+      renderizarTablero();
+    }
+  } catch {}
 }
 
 // 2. RENDERIZADO DEL TABLERO
@@ -133,3 +153,4 @@ document.getElementById('texto-tarea').addEventListener('keydown', (e) => {
 });
 
 renderizarTablero(); // Dibuja las columnas y tareas guardadas apenas carga la página
+cargarKanbanDesdeBD(); // Sincroniza las tarjetas desde la Base de Datos Real SQL/Mongo

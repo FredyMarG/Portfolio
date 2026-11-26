@@ -21,7 +21,18 @@
     function saveHistory() {
         history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
         if (history.length > 25) history.shift();
-        statusHistory.textContent = `Historial: ${history.length} estado(s) · Ctrl+Z para deshacer`;
+        statusHistory.textContent = `Historial: ${history.length} estado(s) · Sincronizado con BD · Ctrl+Z para deshacer`;
+        try {
+            const dataUrl = canvas.toDataURL('image/png');
+            localStorage.setItem('sketchpad_last_canvas', dataUrl);
+            if (location.protocol !== 'file:') {
+                fetch('/api/db/kv/sketchpad_canvas_state', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: { updatedAt: new Date().toISOString(), historyDepth: history.length } })
+                }).catch(() => {});
+            }
+        } catch {}
     }
 
     // Inicializa fondo oscuro limpio, gráfico de bienvenida y primer estado

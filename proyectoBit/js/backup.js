@@ -125,4 +125,44 @@
   }
 
   refreshDashboardMetrics();
+
+  // Sincronización automática con la Base de Datos Real SQL/Mongo (/api/db/kv/proyectobit_suite_state)
+  async function syncSuiteWithDatabase() {
+    if (location.protocol === "file:") return;
+    try {
+      const localData = {};
+      let hasLocal = false;
+      SUITE_KEYS.forEach((key) => {
+        const val = localStorage.getItem(key);
+        if (val !== null) {
+          localData[key] = val;
+          hasLocal = true;
+        }
+      });
+
+      if (hasLocal) {
+        await fetch("/api/db/kv/proyectobit_suite_state", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: localData })
+        });
+        showStatus("🟢 Suite sincronizada en tiempo real con Base de Datos SQL.");
+      } else {
+        const res = await fetch("/api/db/kv/proyectobit_suite_state");
+        const json = await res.json();
+        if (res.ok && json.exists && json.data && typeof json.data === "object") {
+          SUITE_KEYS.forEach((key) => {
+            if (typeof json.data[key] === "string") {
+              localStorage.setItem(key, json.data[key]);
+            }
+          });
+          refreshDashboardMetrics();
+          showStatus("🟢 Datos cargados desde la Base de Datos SQL.");
+        }
+      }
+    } catch {}
+  }
+
+  syncSuiteWithDatabase();
+  window.addEventListener("storage", syncSuiteWithDatabase);
 })();

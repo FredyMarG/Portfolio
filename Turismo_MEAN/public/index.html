@@ -1,0 +1,347 @@
+<!--
+  ============================================================================
+  TURISMO MEAN — PLATAFORMA FULL-STACK DE DESTINOS TURÍSTICOS
+  (Turismo_MEAN/public/index.html)
+  ============================================================================
+  Conectada en tiempo real a la Base de Datos SQL/MongoDB (/api/destinos)
+  con respaldo híbrido automático en localStorage.
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turismo MEAN — Plataforma Full-Stack de Destinos de Colombia</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #0b1120 70%);
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+    .turismo-card {
+      background: #111827;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 1rem;
+      box-shadow: 0 16px 36px rgba(2, 6, 23, 0.45);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .turismo-card:hover {
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+    .dest-item-card {
+      background: #1e293b;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 0.9rem;
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container">
+    <!-- Cabecera principal -->
+    <header class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary gap-2">
+      <div>
+        <span class="badge bg-info text-dark fw-bold mb-1">Full-Stack MEAN + Base de Datos Real</span>
+        <h2 class="fw-bold text-white mb-0">✈️ Turismo MEAN — Destinos de Colombia</h2>
+        <small class="text-secondary">Gestión CRUD en tiempo real con persistencia en Base de Datos SQL / MongoDB y métricas agregadas</small>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span id="dbStatusBadge" class="badge bg-success px-3 py-2">🟢 Conectando a Base de Datos...</span>
+        <span id="totalBadge" class="badge bg-primary fs-6">0 Destinos</span>
+      </div>
+    </header>
+
+    <!-- Tarjetas de Métricas Agregadas -->
+    <div class="row g-3 mb-4">
+      <div class="col-md-4">
+        <div class="turismo-card p-3">
+          <small class="text-secondary d-block">Total Destinos Activos</small>
+          <h3 id="statTotal" class="fw-bold mb-0 text-info">0</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="turismo-card p-3">
+          <small class="text-secondary d-block">Precio Promedio del Catálogo</small>
+          <h3 id="statAvgPrice" class="fw-bold mb-0 text-success">$0 COP</h3>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="turismo-card p-3">
+          <small class="text-secondary d-block">Calificación Promedio</small>
+          <h3 id="statAvgRating" class="fw-bold mb-0 text-warning">★ 5.0</h3>
+        </div>
+      </div>
+    </div>
+
+    <div id="alertBox" class="alert d-none py-2 small mb-3"></div>
+
+    <div class="row g-4">
+      <!-- Columna izquierda: Formulario Crear / Editar -->
+      <div class="col-lg-4">
+        <div class="turismo-card p-3">
+          <h5 id="formTitle" class="fw-bold mb-3 text-info">➕ Registrar Nuevo Destino</h5>
+          <form id="destinoForm" class="d-flex flex-column gap-2">
+            <div>
+              <label for="destNombre" class="form-label small text-secondary mb-1">Nombre del Destino *</label>
+              <input id="destNombre" type="text" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ej. Parque Nacional Tayrona" required />
+            </div>
+            <div>
+              <label for="destCiudad" class="form-label small text-secondary mb-1">Ciudad / Región *</label>
+              <input id="destCiudad" type="text" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ej. Santa Marta" required />
+            </div>
+            <div class="row g-2">
+              <div class="col-7">
+                <label for="destPrecio" class="form-label small text-secondary mb-1">Precio (COP) *</label>
+                <input id="destPrecio" type="number" min="0" class="form-control form-control-sm bg-dark text-white border-secondary" value="850000" required />
+              </div>
+              <div class="col-5">
+                <label for="destCalif" class="form-label small text-secondary mb-1">Estrellas (1-5)</label>
+                <input id="destCalif" type="number" min="1" max="5" step="0.1" class="form-control form-control-sm bg-dark text-white border-secondary" value="4.9" required />
+              </div>
+            </div>
+            <div>
+              <label for="destDesc" class="form-label small text-secondary mb-1">Descripción de la experiencia</label>
+              <textarea id="destDesc" rows="3" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Describe qué incluye el plan turístico..."></textarea>
+            </div>
+            <div class="d-grid gap-2 mt-2">
+              <button id="btnSubmit" type="submit" class="btn btn-info text-dark fw-bold btn-sm">+ Guardar en Base de Datos</button>
+              <button id="btnCancel" type="button" class="btn btn-outline-secondary btn-sm d-none">Cancelar edición</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Columna derecha: Buscador, Filtros por Ciudad y Tarjetas -->
+      <div class="col-lg-8">
+        <div class="turismo-card p-3">
+          <div class="row g-2 mb-3">
+            <div class="col-md-7">
+              <input id="searchInput" type="search" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="🔍 Buscar destino por nombre, ciudad o descripción..." />
+            </div>
+            <div class="col-md-5">
+              <select id="sortSelect" class="form-select form-select-sm bg-dark text-white border-secondary">
+                <option value="recientes">Ordenar: Más recientes</option>
+                <option value="precio_asc">Precio: Menor a Mayor</option>
+                <option value="precio_desc">Precio: Mayor a Menor</option>
+                <option value="calificacion">Mejor Calificación (★)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="cityPills" class="d-flex flex-wrap gap-1 mb-3"></div>
+          <div id="destinosGrid" class="row g-3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LS_KEY = "turismo_mean_destinos_db_v1";
+    const INITIAL_DESTINOS = [
+      { _id: "65f1a1000000000000000001", nombre: "Parque Nacional Natural Tayrona", ciudad: "Santa Marta", descripcion: "Playas cristalinas rodeadas de selva tropical y senderos ancestrales en la Sierra Nevada.", precio: 980000, calificacion: 4.9 },
+      { _id: "65f1a1000000000000000002", nombre: "Ciudad Amurallada & Islas del Rosario", ciudad: "Cartagena", descripcion: "Recorrido histórico colonial, gastronomía caribeña y pasadía en aguas turquesas.", precio: 1250000, calificacion: 4.8 },
+      { _id: "65f1a1000000000000000003", nombre: "Valle de Cocora & Paisaje Cafetero", ciudad: "Salento", descripcion: "Caminata entre palmas de cera gigantes, degustación de café de origen y pueblos patrimoniales.", precio: 760000, calificacion: 4.9 },
+      { _id: "65f1a1000000000000000004", nombre: "Mar de los Siete Colores & Johnny Cay", ciudad: "San Andrés", descripcion: "Snorkel en arrecifes de coral, acuario natural y cultura isleña.", precio: 1490000, calificacion: 4.7 },
+      { _id: "65f1a1000000000000000005", nombre: "Piedra del Peñol & Embalse de Guatapé", ciudad: "Guatapé", descripcion: "Ascenso de 740 escalones con vista panorámica 360° de la represa y zócalos coloridos.", precio: 620000, calificacion: 4.8 }
+    ];
+
+    let destinos = [];
+    let editingId = null;
+    let activeCity = "";
+    let useServerDb = false;
+
+    const dbStatusBadge = document.getElementById("dbStatusBadge");
+    const alertBox = document.getElementById("alertBox");
+
+    function escapeHtml(v) {
+      return String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    function showNotice(msg, type = "success") {
+      alertBox.className = `alert alert-${type} py-2 small mb-3`;
+      alertBox.textContent = msg;
+      setTimeout(() => alertBox.classList.add("d-none"), 3200);
+    }
+
+    function syncLocalCache() {
+      localStorage.setItem(LS_KEY, JSON.stringify(destinos));
+    }
+
+    async function loadDestinos() {
+      try {
+        if (location.protocol === "file:") throw new Error("file");
+        const res = await fetch("/api/destinos");
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.destinos)) {
+          destinos = data.destinos;
+          useServerDb = true;
+          dbStatusBadge.className = "badge bg-success px-3 py-2";
+          dbStatusBadge.textContent = "🟢 Base de Datos SQL/Mongo Conectada";
+          syncLocalCache();
+          render();
+          return;
+        }
+      } catch {}
+
+      useServerDb = false;
+      const saved = localStorage.getItem(LS_KEY);
+      destinos = saved ? JSON.parse(saved) : [...INITIAL_DESTINOS];
+      syncLocalCache();
+      dbStatusBadge.className = "badge bg-info text-dark px-3 py-2";
+      dbStatusBadge.textContent = "⚡ Persistencia Híbrida Activa (BD Local)";
+      render();
+    }
+
+    function render() {
+      const q = document.getElementById("searchInput").value.trim().toLowerCase();
+      const sort = document.getElementById("sortSelect").value;
+
+      const cities = Array.from(new Set(destinos.map((d) => d.ciudad.trim()).filter(Boolean)));
+      document.getElementById("cityPills").innerHTML = [
+        `<button type="button" class="btn btn-sm rounded-pill ${activeCity === "" ? "btn-info text-dark fw-bold" : "btn-outline-secondary text-light"}" data-city="">Todas (${destinos.length})</button>`,
+        ...cities.map((c) => `<button type="button" class="btn btn-sm rounded-pill ${activeCity === c ? "btn-info text-dark fw-bold" : "btn-outline-secondary text-light"}" data-city="${escapeHtml(c)}">${escapeHtml(c)}</button>`)
+      ].join("");
+
+      let filtered = destinos.filter((d) => {
+        const matchCity = !activeCity || d.ciudad.trim() === activeCity;
+        const matchQ = !q || d.nombre.toLowerCase().includes(q) || d.ciudad.toLowerCase().includes(q) || (d.descripcion || "").toLowerCase().includes(q);
+        return matchCity && matchQ;
+      });
+
+      if (sort === "precio_asc") filtered.sort((a, b) => a.precio - b.precio);
+      if (sort === "precio_desc") filtered.sort((a, b) => b.precio - a.precio);
+      if (sort === "calificacion") filtered.sort((a, b) => b.calificacion - a.calificacion);
+
+      const total = filtered.length;
+      const avgPrice = total ? Math.round(filtered.reduce((a, d) => a + Number(d.precio || 0), 0) / total) : 0;
+      const avgRating = total ? (filtered.reduce((a, d) => a + Number(d.calificacion || 5), 0) / total).toFixed(1) : "0.0";
+
+      document.getElementById("totalBadge").textContent = `${total} Destinos`;
+      document.getElementById("statTotal").textContent = String(total);
+      document.getElementById("statAvgPrice").textContent = `$${avgPrice.toLocaleString("es-CO")} COP`;
+      document.getElementById("statAvgRating").textContent = `★ ${avgRating}`;
+
+      document.getElementById("destinosGrid").innerHTML = filtered.length
+        ? filtered.map((d) => {
+            const stars = "★".repeat(Math.round(d.calificacion || 5));
+            return `
+              <div class="col-md-6">
+                <div class="dest-item-card p-3 h-100 d-flex flex-column">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="badge bg-info text-dark">${escapeHtml(d.ciudad)}</span>
+                    <span class="text-warning fw-bold small">${stars} (${Number(d.calificacion).toFixed(1)})</span>
+                  </div>
+                  <h6 class="fw-bold text-white mb-1">${escapeHtml(d.nombre)}</h6>
+                  <p class="small text-secondary flex-grow-1 mb-3">${escapeHtml(d.descripcion)}</p>
+                  <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary">
+                    <strong class="text-success">$${Number(d.precio).toLocaleString("es-CO")} COP</strong>
+                    <div class="btn-group btn-group-sm">
+                      <button type="button" class="btn btn-outline-info edit-btn" data-id="${escapeHtml(d._id)}">Editar</button>
+                      <button type="button" class="btn btn-outline-danger del-btn" data-id="${escapeHtml(d._id)}">Eliminar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("")
+        : `<div class="col-12 text-center text-secondary py-4">No se encontraron destinos con ese criterio.</div>`;
+    }
+
+    function resetForm() {
+      editingId = null;
+      document.getElementById("destinoForm").reset();
+      document.getElementById("destPrecio").value = "850000";
+      document.getElementById("destCalif").value = "4.9";
+      document.getElementById("formTitle").textContent = "➕ Registrar Nuevo Destino";
+      document.getElementById("btnSubmit").textContent = "+ Guardar en Base de Datos";
+      document.getElementById("btnCancel").classList.add("d-none");
+    }
+
+    document.getElementById("destinoForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const payload = {
+        nombre: document.getElementById("destNombre").value.trim(),
+        ciudad: document.getElementById("destCiudad").value.trim(),
+        precio: Number(document.getElementById("destPrecio").value),
+        calificacion: Number(document.getElementById("destCalif").value),
+        descripcion: document.getElementById("destDesc").value.trim() || "Destino turístico destacado en Colombia"
+      };
+
+      if (useServerDb) {
+        const url = editingId ? `/api/destinos/${encodeURIComponent(editingId)}` : "/api/destinos";
+        const method = editingId ? "PUT" : "POST";
+        const res = await fetch(url, {
+          method,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          showNotice(editingId ? "✓ Destino actualizado en la Base de Datos" : "✓ Nuevo destino guardado en la Base de Datos");
+          resetForm();
+          await loadDestinos();
+          return;
+        }
+      }
+
+      if (editingId) {
+        destinos = destinos.map((d) => (d._id === editingId ? { ...d, ...payload } : d));
+        showNotice("✓ Destino actualizado correctamente");
+      } else {
+        destinos.unshift({ _id: `dest-${Date.now()}`, ...payload });
+        showNotice("✓ Nuevo destino registrado correctamente");
+      }
+      syncLocalCache();
+      resetForm();
+      render();
+    });
+
+    document.getElementById("btnCancel").addEventListener("click", resetForm);
+
+    document.getElementById("cityPills").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-city]");
+      if (!btn) return;
+      activeCity = btn.dataset.city;
+      render();
+    });
+
+    document.getElementById("destinosGrid").addEventListener("click", async (e) => {
+      const editBtn = e.target.closest(".edit-btn");
+      if (editBtn) {
+        const item = destinos.find((d) => d._id === editBtn.dataset.id);
+        if (!item) return;
+        editingId = item._id;
+        document.getElementById("destNombre").value = item.nombre;
+        document.getElementById("destCiudad").value = item.ciudad;
+        document.getElementById("destPrecio").value = item.precio;
+        document.getElementById("destCalif").value = item.calificacion;
+        document.getElementById("destDesc").value = item.descripcion;
+        document.getElementById("formTitle").textContent = "✏️ Editar Destino en BD";
+        document.getElementById("btnSubmit").textContent = "Actualizar Destino";
+        document.getElementById("btnCancel").classList.remove("d-none");
+        return;
+      }
+
+      const delBtn = e.target.closest(".del-btn");
+      if (delBtn) {
+        const id = delBtn.dataset.id;
+        if (useServerDb) {
+          await fetch(`/api/destinos/${encodeURIComponent(id)}`, { method: "DELETE" });
+          showNotice("🗑️ Destino eliminado de la Base de Datos", "warning");
+          await loadDestinos();
+          return;
+        }
+        destinos = destinos.filter((d) => d._id !== id);
+        syncLocalCache();
+        showNotice("🗑️ Destino eliminado", "warning");
+        render();
+      }
+    });
+
+    document.getElementById("searchInput").addEventListener("input", render);
+    document.getElementById("sortSelect").addEventListener("change", render);
+
+    loadDestinos();
+  </script>
+</body>
+</html>

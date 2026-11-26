@@ -103,6 +103,13 @@
             } else {
                 notesList.innerHTML = '';
                 countLabel.textContent = `${items.length} registro(s)`;
+                if (location.protocol !== 'file:') {
+                    fetch('/api/db/kv/notesdb_indexeddb_sync', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ data: items })
+                    }).catch(() => {});
+                }
                 items.reverse().forEach((item) => {
                     const card = document.createElement('article');
                     card.className = 'note-item';

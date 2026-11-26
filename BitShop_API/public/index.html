@@ -295,12 +295,78 @@
       const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
       if (token) headers["Authorization"] = `Bearer ${token}`;
 
-      const res = await fetch(url, { ...options, headers });
-      const data = await res.json().catch(() => ({}));
-      httpStatusBadge.textContent = `HTTP ${res.status}`;
-      httpStatusBadge.className = `badge ${res.ok ? "bg-success" : "bg-danger"}`;
+      try {
+        if (location.protocol === "file:") throw new Error("local");
+        const res = await fetch(url, { ...options, headers });
+        const ct = res.headers.get("content-type") || "";
+        if (!ct.includes("application/json")) throw new Error("non-json");
+        const data = await res.json();
+        httpStatusBadge.textContent = `HTTP ${res.status} (BD SQL)`;
+        httpStatusBadge.className = `badge ${res.ok ? "bg-success" : "bg-danger"}`;
+        jsonConsole.textContent = JSON.stringify(data, null, 2);
+        return { res, data };
+      } catch {
+        return localBitshopDbFallback(url, options);
+      }
+    }
+
+    function localBitshopDbFallback(url, options = {}) {
+      const LS_U = "bitshop_db_users_v1";
+      const LS_P = "bitshop_db_prods_v1";
+      const users = JSON.parse(localStorage.getItem(LS_U) || "null") || [
+        { _id: "usr-admin-01", username: "admin_fredy", email: "admin@bitshop.local", password: "Admin123*", phone: "3152388315", role: "admin" },
+        { _id: "usr-client-01", username: "cliente_demo", email: "cliente@bitshop.local", password: "Cliente123*", phone: "3001234567", role: "client" }
+      ];
+      let prods = JSON.parse(localStorage.getItem(LS_P) || "null") || [
+        { _id: "prod-bit-01", name: "MacBook Pro 16\" M3 Max (36GB RAM / 1TB NVMe)", price: 12450000, availableElements: 8, description: "Estación portátil para ingeniería de software, contenedores Docker y compilación rápida." },
+        { _id: "prod-bit-02", name: "Monitor Dell UltraSharp 34\" Curved USB-C Hub", price: 3290000, availableElements: 14, description: "Panel IPS WQHD con calibración de color de fábrica y entrega de energía de 90W." },
+        { _id: "prod-bit-03", name: "Teclado Mecánico Keychron Q1 Pro Wireless QMK/VIA", price: 890000, availableElements: 22, description: "Chasis CNC de aluminio completo con switches táctiles lubricados y conexión Bluetooth 5.1." }
+      ];
+      const body = options.body ? JSON.parse(options.body) : {};
+      let status = 200;
+      let data = { ok: true };
+
+      if (url === "/api/user/login") {
+        const u = users.find((x) => x.email.toLowerCase() === String(body.email || "").toLowerCase() && x.password === body.password);
+        if (!u) {
+          status = 401;
+          data = { ok: false, msj: "Credenciales inválidas." };
+        } else {
+          data = { ok: true, token: "jwt_local_" + Date.now(), user: { _id: u._id, username: u.username, email: u.email, role: u.role } };
+        }
+      } else if (url === "/api/user/create-user") {
+        const nuovo = { _id: "usr-" + Date.now(), ...body, role: "client" };
+        users.push(nuovo);
+        localStorage.setItem(LS_U, JSON.stringify(users));
+        status = 201;
+        data = { ok: true, user: nuovo };
+      } else if (url === "/api/user/get-users") {
+        data = { ok: true, total: users.length, users: users.map(({ password, ...rest }) => rest) };
+      } else if (url.startsWith("/api/products/get-products")) {
+        const q = (new URL(url, "http://localhost").searchParams.get("q") || "").toLowerCase();
+        data = q ? prods.filter((p) => p.name.toLowerCase().includes(q) || (p.description || "").toLowerCase().includes(q)) : prods;
+      } else if (url === "/api/products/create-product") {
+        const np = { _id: "prod-" + Date.now(), ...body };
+        prods.unshift(np);
+        localStorage.setItem(LS_P, JSON.stringify(prods));
+        status = 201;
+        data = { ok: true, product: np };
+      } else if (url.startsWith("/api/products/update-product/")) {
+        const id = url.split("/").pop();
+        prods = prods.map((p) => (p._id === id ? { ...p, ...body } : p));
+        localStorage.setItem(LS_P, JSON.stringify(prods));
+        data = { ok: true, _id: id };
+      } else if (url.startsWith("/api/products/delete-product/")) {
+        const id = url.split("/").pop();
+        prods = prods.filter((p) => p._id !== id);
+        localStorage.setItem(LS_P, JSON.stringify(prods));
+        data = { ok: true, deletedId: id };
+      }
+
+      httpStatusBadge.textContent = `HTTP ${status} (BD Híbrida)`;
+      httpStatusBadge.className = `badge ${status < 400 ? "bg-success" : "bg-danger"}`;
       jsonConsole.textContent = JSON.stringify(data, null, 2);
-      return { res, data };
+      return { res: { ok: status < 400, status }, data };
     }
 
     /**

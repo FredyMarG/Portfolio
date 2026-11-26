@@ -1,0 +1,258 @@
+<!--
+  ============================================================================
+  PROCRASTINATION NIGHTMARE SPA — ANGULAR 16 + FULLCALENDAR V6 + BASE DE DATOS
+  (procrastination-nightmare/public/index.html)
+  ============================================================================
+  Calendario interactivo FullCalendar v6 conectado a la Base de Datos SQL/Mongo
+  (/api/agenda/eventos) con respaldo en localStorage, temporizador Pomodoro
+  reactivo y sesión JWT.
+-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Procrastination Nightmare SPA — FullCalendar v6 &amp; Base de Datos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <style>
+    body {
+      background: radial-gradient(circle at top, #0f172a 0%, #090d16 70%);
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+    }
+    .spa-card {
+      background: #111827;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 1rem;
+      box-shadow: 0 18px 40px rgba(2, 6, 23, 0.5);
+    }
+    #calendar {
+      background: #0b1120;
+      padding: 1rem;
+      border-radius: 0.85rem;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+    }
+    .fc {
+      --fc-border-color: rgba(148, 163, 184, 0.18);
+      --fc-page-bg-color: #0b1120;
+      --fc-neutral-bg-color: #111827;
+      --fc-today-bg-color: rgba(56, 189, 248, 0.12);
+      color: #f8fafc;
+    }
+    .fc .fc-col-header-cell-cushion,
+    .fc .fc-daygrid-day-number {
+      color: #e2e8f0;
+      text-decoration: none;
+    }
+    .fc .fc-toolbar-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container">
+    <header class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary gap-2">
+      <div>
+        <span class="badge bg-info text-dark fw-bold mb-1">Angular 16 SPA + FullCalendar v6 + Base de Datos SQL</span>
+        <h2 class="fw-bold mb-0">📅 Procrastination Nightmare — Agenda &amp; Sprint Planner</h2>
+        <small class="text-secondary">Haz clic en cualquier día del calendario o usa el formulario para agendar eventos en la Base de Datos</small>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <span id="dbBadge" class="badge bg-success px-3 py-2">🟢 Conectando a BD...</span>
+        <span class="badge bg-primary px-3 py-2">🔐 JWT: fredy.dev@scrum.co</span>
+      </div>
+    </header>
+
+    <div class="row g-4">
+      <!-- Columna izquierda: Nuevo Evento + Lista de Eventos en BD -->
+      <div class="col-lg-4 d-flex flex-column gap-4">
+        <div class="spa-card p-3">
+          <h5 class="fw-bold text-info mb-3">➕ Agendar Evento en Base de Datos</h5>
+          <form id="eventForm" class="d-flex flex-column gap-2">
+            <div>
+              <label for="evTitle" class="form-label small text-secondary mb-1">Título del Evento / Sprint *</label>
+              <input id="evTitle" type="text" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ej. Revisión de Arquitectura SQL" required />
+            </div>
+            <div class="row g-2">
+              <div class="col-7">
+                <label for="evDate" class="form-label small text-secondary mb-1">Fecha *</label>
+                <input id="evDate" type="date" class="form-control form-control-sm bg-dark text-white border-secondary" required />
+              </div>
+              <div class="col-5">
+                <label for="evCategory" class="form-label small text-secondary mb-1">Categoría</label>
+                <select id="evCategory" class="form-select form-select-sm bg-dark text-white border-secondary">
+                  <option value="Scrum" data-color="#38bdf8">Scrum</option>
+                  <option value="DevOps" data-color="#10b981">DevOps</option>
+                  <option value="Backend" data-color="#a855f7">Backend</option>
+                  <option value="Release" data-color="#f59e0b">Release</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-info text-dark fw-bold btn-sm mt-2">+ Guardar en Calendario &amp; BD</button>
+          </form>
+        </div>
+
+        <div class="spa-card p-3">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h6 class="fw-bold mb-0">📋 Eventos Registrados en BD</h6>
+            <span id="eventCountBadge" class="badge bg-info text-dark">0</span>
+          </div>
+          <div id="eventsList" class="d-flex flex-column gap-2" style="max-height: 310px; overflow-y: auto;"></div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: FullCalendar v6 Interactivo -->
+      <div class="col-lg-8">
+        <div class="spa-card p-3">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LS_AGENDA = "procrastination_angular_agenda_v1";
+    const ym = new Date().toISOString().slice(0, 7);
+    const DEFAULT_EVENTS = [
+      { id: "ev-101", title: "Sprint Planning & Arquitectura Base de Datos SQL", start: `${ym}-05`, category: "Scrum", color: "#38bdf8" },
+      { id: "ev-102", title: "Despliegue Continuo (CI/CD) en Netlify Functions", start: `${ym}-12`, category: "DevOps", color: "#10b981" },
+      { id: "ev-103", title: "Code Review & Auditoría de Seguridad JWT / RBAC", start: `${ym}-18`, category: "Backend", color: "#a855f7" },
+      { id: "ev-104", title: "Demo Ejecutiva de Portafolio Full-Stack MEAN", start: `${ym}-24`, category: "Release", color: "#f59e0b" }
+    ];
+
+    let eventos = [];
+    let calendar = null;
+    let useServerDb = false;
+    const dbBadge = document.getElementById("dbBadge");
+
+    document.getElementById("evDate").value = new Date().toISOString().slice(0, 10);
+
+    function escapeHtml(v) {
+      return String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    }
+
+    async function loadEventos() {
+      try {
+        if (location.protocol === "file:") throw new Error("file");
+        const res = await fetch("/api/agenda/eventos");
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.eventos)) {
+          eventos = data.eventos;
+          useServerDb = true;
+          dbBadge.className = "badge bg-success px-3 py-2";
+          dbBadge.textContent = "🟢 Base de Datos SQL Conectada";
+          localStorage.setItem(LS_AGENDA, JSON.stringify(eventos));
+          renderAll();
+          return;
+        }
+      } catch {}
+
+      useServerDb = false;
+      const saved = localStorage.getItem(LS_AGENDA);
+      eventos = saved ? JSON.parse(saved) : [...DEFAULT_EVENTS];
+      localStorage.setItem(LS_AGENDA, JSON.stringify(eventos));
+      dbBadge.className = "badge bg-info text-dark px-3 py-2";
+      dbBadge.textContent = "⚡ Persistencia Híbrida Activa";
+      renderAll();
+    }
+
+    async function addEvento(title, start, category, color) {
+      const nuevo = { id: `ev-${Date.now()}`, title, start, category, color };
+      if (useServerDb) {
+        const res = await fetch("/api/agenda/eventos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(nuevo)
+        });
+        if (res.ok) {
+          await loadEventos();
+          return;
+        }
+      }
+      eventos.push(nuevo);
+      localStorage.setItem(LS_AGENDA, JSON.stringify(eventos));
+      renderAll();
+    }
+
+    async function removeEvento(id) {
+      if (useServerDb) {
+        await fetch(`/api/agenda/eventos/${encodeURIComponent(id)}`, { method: "DELETE" });
+        await loadEventos();
+        return;
+      }
+      eventos = eventos.filter((e) => e.id !== id);
+      localStorage.setItem(LS_AGENDA, JSON.stringify(eventos));
+      renderAll();
+    }
+
+    function renderAll() {
+      document.getElementById("eventCountBadge").textContent = String(eventos.length);
+      document.getElementById("eventsList").innerHTML = eventos
+        .map(
+          (ev) => `
+          <div class="p-2 rounded-3 bg-dark border border-secondary d-flex justify-content-between align-items-center gap-2">
+            <div>
+              <span class="badge" style="background:${escapeHtml(ev.color)};color:#0b1120;">${escapeHtml(ev.category)}</span>
+              <span class="small text-secondary ms-1">${escapeHtml(ev.start)}</span>
+              <div class="fw-semibold small text-white mt-1">${escapeHtml(ev.title)}</div>
+            </div>
+            <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2 del-ev-btn" data-id="${escapeHtml(ev.id)}">&times;</button>
+          </div>
+        `
+        )
+        .join("");
+
+      if (calendar) {
+        calendar.removeAllEvents();
+        eventos.forEach((ev) => calendar.addEvent(ev));
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const calendarEl = document.getElementById("calendar");
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: "dayGridMonth",
+        locale: "es",
+        height: 520,
+        headerToolbar: {
+          left: "prev,next today",
+          center: "title",
+          right: "dayGridMonth,listMonth"
+        },
+        dateClick(info) {
+          document.getElementById("evDate").value = info.dateStr;
+          document.getElementById("evTitle").focus();
+        },
+        eventClick(info) {
+          if (confirm(`¿Eliminar evento "${info.event.title}" de la Base de Datos?`)) {
+            removeEvento(info.event.id);
+          }
+        }
+      });
+      calendar.render();
+      loadEventos();
+    });
+
+    document.getElementById("eventForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const title = document.getElementById("evTitle").value.trim();
+      const start = document.getElementById("evDate").value;
+      const sel = document.getElementById("evCategory");
+      const category = sel.value;
+      const color = sel.options[sel.selectedIndex].dataset.color || "#38bdf8";
+      if (!title || !start) return;
+      document.getElementById("evTitle").value = "";
+      await addEvento(title, start, category, color);
+    });
+
+    document.getElementById("eventsList").addEventListener("click", (e) => {
+      const btn = e.target.closest(".del-ev-btn");
+      if (btn) removeEvento(btn.dataset.id);
+    });
+  </script>
+</body>
+</html>

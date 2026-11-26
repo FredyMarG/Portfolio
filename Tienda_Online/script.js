@@ -63,7 +63,7 @@ const PRODUCTS = [
   }
 ];
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem("bitshop_cart_v1") || "[]");
 let activeFilter = "all";
 let searchQuery = "";
 
@@ -154,6 +154,15 @@ window.removeFromCart = function (productId) {
 };
 
 function renderCart() {
+  localStorage.setItem("bitshop_cart_v1", JSON.stringify(cart));
+  if (location.protocol !== "file:") {
+    fetch("/api/db/kv/tienda_online_cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data: cart })
+    }).catch(() => {});
+  }
+
   const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
   const totalPrice = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
 
@@ -204,12 +213,25 @@ if (searchInput) {
 
 const checkoutBtn = document.getElementById("checkoutBtn");
 if (checkoutBtn) {
-  checkoutBtn.addEventListener("click", () => {
+  checkoutBtn.addEventListener("click", async () => {
     if (cart.length === 0) {
       alert("Agrega al menos un producto al carrito antes de finalizar la compra.");
       return;
     }
-    alert("¡Pedido confirmado en BIT Shop! Gracias por tu compra.");
+    const total = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
+    let orderId = "ORD-" + Date.now().toString().slice(-6);
+    if (location.protocol !== "file:") {
+      try {
+        const res = await fetch("/api/tienda/pedidos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cliente: "Cliente BIT Shop", items: cart, total })
+        });
+        const data = await res.json();
+        if (res.ok && data.pedido?.id) orderId = data.pedido.id;
+      } catch {}
+    }
+    alert(`✅ ¡Pedido #${orderId} registrado en la Base de Datos de BIT Shop por ${formatCOP(total)}!`);
     cart = [];
     renderCart();
   });

@@ -1,0 +1,43 @@
+{
+  "database": "portafolio_fredy",
+  "collections": {
+    "turismo_destinos": [
+      { "_id": "65f1a1000000000000000001", "nombre": "Parque Nacional Natural Tayrona", "ciudad": "Santa Marta", "descripcion": "Playas cristalinas rodeadas de selva tropical y senderos ancestrales en la Sierra Nevada.", "precio": 980000, "calificacion": 4.9, "fechaCreacion": "2026-11-26T10:00:00.000Z" },
+      { "_id": "65f1a1000000000000000002", "nombre": "Ciudad Amurallada & Islas del Rosario", "ciudad": "Cartagena", "descripcion": "Recorrido histórico colonial, gastronomía caribeña y pasadía en aguas turquesas.", "precio": 1250000, "calificacion": 4.8, "fechaCreacion": "2026-11-26T10:05:00.000Z" },
+      { "_id": "65f1a1000000000000000003", "nombre": "Valle de Cocora & Paisaje Cafetero", "ciudad": "Salento", "descripcion": "Caminata entre palmas de cera gigantes, degustación de café de origen y pueblos patrimoniales.", "precio": 760000, "calificacion": 4.9, "fechaCreacion": "2026-11-26T10:10:00.000Z" },
+      { "_id": "65f1a1000000000000000004", "nombre": "Mar de los Siete Colores & Johnny Cay", "ciudad": "San Andrés", "descripcion": "Snorkel en arrecifes de coral, acuario natural y cultura isleña.", "precio": 1490000, "calificacion": 4.7, "fechaCreacion": "2026-11-26T10:15:00.000Z" },
+      { "_id": "65f1a1000000000000000005", "nombre": "Piedra del Peñol & Embalse de Guatapé", "ciudad": "Guatapé", "descripcion": "Ascenso de 740 escalones con vista panorámica 360° de la represa y zócalos coloridos.", "precio": 620000, "calificacion": 4.8, "fechaCreacion": "2026-11-26T10:20:00.000Z" }
+    ],
+    "finanzas_transacciones": [
+      { "id": 101, "concepto": "Salario Desarrollo Full-Stack MEAN & SQL", "monto": 5800000, "tipo": "ingreso" },
+      { "id": 102, "concepto": "Consultoría Arquitectura API REST & Base de Datos", "monto": 1450000, "tipo": "ingreso" },
+      { "id": 103, "concepto": "Infraestructura Cloud, Dominio & Hosting BD", "monto": 380000, "tipo": "gasto" },
+      { "id": 104, "concepto": "Licencias JetBrains, Copilot & Herramientas Dev", "monto": 220000, "tipo": "gasto" }
+    ],
+    "kanban_tareas": [
+      { "id": "k-1", "texto": "Diseñar esquema relacional SQLite/MySQL/PostgreSQL y migraciones", "columna": "completado" },
+      { "id": "k-2", "texto": "Desplegar Portafolio Full-Stack en producción (Netlify + BD Real)", "columna": "completado" },
+      { "id": "k-3", "texto": "Integrar middleware de autenticación JWT y roles RBAC en BitShop", "columna": "progreso" },
+      { "id": "k-4", "texto": "Conectar sincronización en tiempo real en todos los módulos del portafolio", "columna": "pendiente" }
+    ],
+    "bitshop_products": [
+      { "_id": "prod-bit-01", "name": "MacBook Pro 16\" M3 Max (36GB RAM / 1TB NVMe)", "price": 12450000, "availableElements": 8, "description": "Estación portátil para ingeniería de software, contenedores Docker y compilación rápida." },
+      { "_id": "prod-bit-02", "name": "Monitor Dell UltraSharp 34\" Curved USB-C Hub", "price": 3290000, "availableElements": 14, "description": "Panel IPS WQHD con calibración de color de fábrica y entrega de energía de 90W." },
+      { "_id": "prod-bit-03", "name": "Teclado Mecánico Keychron Q1 Pro Wireless QMK/VIA", "price": 890000, "availableElements": 22, "description": "Chasis CNC de aluminio completo con switches táctiles lubricados y conexión Bluetooth 5.1." },
+      { "_id": "prod-bit-04", "name": "Silla Ergonómica Herman Miller Aeron Remastered", "price": 5400000, "availableElements": 5, "description": "Soporte lumbar PostureFit SL diseñado para jornadas intensivas de desarrollo." }
+    ],
+    "mongo_characters": [
+      { "_id": "dbz-01", "name": "Son Goku (Ultra Instinct)", "species": "Saiyan", "edad": 44, "powerLevel": 950000000 },
+      { "_id": "dbz-02", "name": "Vegeta (Ultra Ego)", "species": "Saiyan", "edad": 48, "powerLevel": 940000000 },
+      { "_id": "dbz-03", "name": "Piccolo (Orange Form)", "species": "Namekian", "edad": 31, "powerLevel": 780000000 },
+      { "_id": "dbz-04", "name": "Son Gohan (Beast Mode)", "species": "Saiyan", "edad": 27, "powerLevel": 960000000 },
+      { "_id": "dbz-05", "name": "Broly (Full Power)", "species": "Saiyan", "edad": 48, "powerLevel": 930000000 }
+    ],
+    "agenda_eventos": [
+      { "id": "ev-101", "title": "Sprint Planning & Arquitectura Base de Datos SQL", "start": "2026-11-26", "category": "Scrum", "color": "#38bdf8" },
+      { "id": "ev-102", "title": "Despliegue Continuo (CI/CD) en Netlify Functions", "start": "2026-11-27", "category": "DevOps", "color": "#10b981" },
+      { "id": "ev-103", "title": "Code Review & Auditoría de Seguridad JWT / RBAC", "start": "2026-11-28", "category": "Backend", "color": "#a855f7" },
+      { "id": "ev-104", "title": "Demo Ejecutiva de Portafolio Full-Stack MEAN", "start": "2026-11-30", "category": "Release", "color": "#f59e0b" }
+    ]
+  }
+}
