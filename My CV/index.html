@@ -1,469 +1,220 @@
-<!--
-  ============================================================================
-  CURRÍCULUM VITAE EJECUTIVO FULL-STACK — FREDY MARTINEZ (My CV/index.html)
-  ============================================================================
-  Propósito: CV interactivo de alto impacto para procesos de selección técnica.
-  Incluye perfil ejecutivo, matriz de habilidades por capa tecnológica, línea de
-  tiempo de arquitectura de proyectos reales, pilares Scrum/Full-Stack, exportación
-  a PDF (window.print) y formulario de contacto directo por WhatsApp y Correo.
--->
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Favicon Flaticon: Portafolio de Desarrollo Web (< />) -->
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>Fredy Martinez | CV Ejecutivo Full-Stack MEAN &amp; Scrum Master</title>
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hoja de Vida — Fredy Leonardo Martinez Galeano</title>
+  <!-- Favicon Flaticon: Portafolio de Desarrollo Web (< />) -->
+  <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" />
+  <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="print-bar no-print">
+    <button type="button" class="print-btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  </div>
 
-    <!-- Barra de Navegación Ejecutiva -->
-    <nav class="navbar no-print">
-      <div class="nav-brand">
-        <span class="material-icons brand-icon">terminal</span>
-        <span class="brand-name">Fredy Martinez</span>
-        <span class="brand-tag">Curriculum Vitae</span>
+  <div class="page">
+    <!-- Barra lateral azul -->
+    <aside class="sidebar">
+      <div>
+        <div class="photo-placeholder">
+          <img src="assets/img/my-image.jpg" alt="Fredy Leonardo Martinez Galeano" />
+        </div>
+        <div class="doc-label">Hoja de Vida</div>
       </div>
 
-      <ul class="nav-options">
-        <li><a class="navlink" href="#sobre-mi">Perfil</a></li>
-        <li><a class="navlink" href="#stack-tecnico">Stack Técnico</a></li>
-        <li><a class="navlink" href="#experiencia">Proyectos &amp; Arquitectura</a></li>
-        <li><a class="navlink" href="#portafolio">Especialidades</a></li>
-        <li><a class="navlink" href="#contacto">Contacto</a></li>
-      </ul>
-
-      <div class="right">
-        <button type="button" class="btn-print" onclick="window.print()" title="Imprimir o Guardar como PDF">
-          <span class="material-icons" style="font-size: 18px;">picture_as_pdf</span>
-          Guardar PDF
-        </button>
-        <a href="#contacto" class="btn-contact">
-          <span class="material-icons" style="font-size: 18px;">mail_outline</span>
-          Contactar
-        </a>
+      <div>
+        <h2>Datos personales</h2>
+        <ul class="info-list">
+          <li>
+            <span class="info-label">Nombre</span>
+            Fredy Leonardo Martinez Galeano
+          </li>
+          <li>
+            <span class="info-label">Puesto deseado</span>
+            Full-Stack Software Developer
+          </li>
+          <li>
+            <span class="info-label">Correo electrónico</span>
+            <a href="mailto:fredymartinezquinto@hotmail.com">fredymartinezquinto@hotmail.com</a>
+          </li>
+          <li>
+            <span class="info-label">Teléfono / WhatsApp</span>
+            <a href="https://wa.me/573152388315" target="_blank" rel="noopener">+57 315 238 8315</a>
+          </li>
+          <li>
+            <span class="info-label">Ubicación</span>
+            Bogotá, Colombia (Remoto / Híbrido / Presencial)
+          </li>
+          <li>
+            <span class="info-label">GitHub</span>
+            <a href="https://github.com/FredyMarG" target="_blank" rel="noopener">github.com/FredyMarG</a>
+          </li>
+          <li>
+            <span class="info-label">LinkedIn</span>
+            <a href="https://www.linkedin.com/in/fredy-leonardo-martinez-galeano-84b5511a0" target="_blank" rel="noopener">linkedin.com/in/fredy-leonardo-martinez-galeano-84b5511a0</a>
+          </li>
+        </ul>
       </div>
-    </nav>
 
-    <!-- Sección Hero / Perfil Ejecutivo -->
-    <main id="sobre-mi" class="hero-cv">
-      <div class="hero-grid">
-        <!-- Columna Izquierda: Retrato & Datos Rápidos -->
-        <aside class="profile-card">
-          <div class="status-pill">
-            <span class="status-dot"></span> Disponible para Contratación
+      <div>
+        <h2>Idiomas</h2>
+        <div class="lang-item">
+          <span>Español nativo</span>
+          <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot active"></span>
           </div>
-
-          <div class="photo-frame">
-            <img src="assets/img/my-image.jpg" alt="Foto de perfil de Fredy Martinez" class="my-image">
+        </div>
+        <div class="lang-item">
+          <span>Inglés intermedio</span>
+          <div class="dots">
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
           </div>
-
-          <h1 class="my-name">Fredy Martinez</h1>
-          <p class="profession">
-            Full-Stack Software Developer (MEAN &amp; SQL) &amp; Certified Scrum Master
-          </p>
-
-          <div class="quick-meta">
-            <div class="meta-row">
-              <span class="material-icons">email</span>
-              <a href="mailto:fredymartinezquinto@hotmail.com">fredymartinezquinto@hotmail.com</a>
-            </div>
-            <div class="meta-row">
-              <span class="material-icons">code</span>
-              <a href="https://github.com/FredyMarG" target="_blank" rel="noopener">github.com/FredyMarG</a>
-            </div>
-            <div class="meta-row">
-              <span class="material-icons">phone_iphone</span>
-              <a href="https://wa.me/573152388315" target="_blank" rel="noopener">+57 315 238 8315 (WhatsApp)</a>
-            </div>
-            <div class="meta-row">
-              <span class="material-icons">location_on</span>
-              <span>Colombia • Remoto / Híbrido / Presencial</span>
-            </div>
-            <div class="meta-row">
-              <span class="material-icons">verified</span>
-              <span>Scrum Master Certified • Agile Delivery</span>
-            </div>
-          </div>
-        </aside>
-
-        <!-- Columna Derecha: Resumen Ejecutivo & KPIs -->
-        <section class="summary-card">
-          <div class="summary-header">
-            <span class="section-eyebrow">Resumen Ejecutivo</span>
-            <h2>Ingeniería de Software Escalable, Arquitectura Limpia &amp; Liderazgo Ágil</h2>
-          </div>
-
-          <p class="summary-text">
-            Desarrollador de Software Full-Stack con más de <strong>3 años de trayectoria</strong> diseñando y desplegando aplicaciones web completas, APIs RESTful seguras con autenticación <strong>JWT, hashing scrypt y RBAC en Node.js, Express y TypeScript</strong>, bases de datos relacionales (<strong>SQLite3 / MySQL</strong>) y NoSQL (<strong>MongoDB Atlas / Mongoose</strong>), pruebas automatizadas con <code>node:test</code> + CI/CD, e interfaces SPA reactivas en <strong>Angular 16 y JavaScript ES6+</strong>.
-          </p>
-          <p class="summary-text">
-            Como <strong>Scrum Master certificado</strong>, combino la ejecución técnica de código limpio con la facilitación de equipos ágiles, gestión de tableros Kanban/Scrum, priorización de entregables y enfoque continuo en valor de negocio.
-          </p>
-
-          <!-- Indicadores Clave (KPIs) -->
-          <div class="kpi-grid">
-            <div class="kpi-box">
-              <span class="kpi-num">3+ Años</span>
-              <span class="kpi-label">Experiencia en Desarrollo</span>
-            </div>
-            <div class="kpi-box">
-              <span class="kpi-num">16+</span>
-              <span class="kpi-label">Apps &amp; APIs en Portafolio</span>
-            </div>
-            <div class="kpi-box">
-              <span class="kpi-num">MEAN + SQL</span>
-              <span class="kpi-label">Persistencia Políglota</span>
-            </div>
-            <div class="kpi-box">
-              <span class="kpi-num">Scrum</span>
-              <span class="kpi-label">Certificación Ágil</span>
-            </div>
-          </div>
-
-          <!-- Competencias Nucleares -->
-          <div class="core-badges">
-            <span class="core-tag">⚡ Arquitectura MVC &amp; REST</span>
-            <span class="core-tag">🔐 Seguridad JWT &amp; RBAC</span>
-            <span class="core-tag">🗄️ Modelado Relacional SQL &amp; NoSQL</span>
-            <span class="core-tag">🎨 HTML5 Web APIs (Canvas 2D, IndexedDB, Drag &amp; Drop)</span>
-            <span class="core-tag">🅰️ Angular 15 SPA &amp; TypeScript</span>
-          </div>
-        </section>
+        </div>
       </div>
+
+      <div>
+        <h2>Pasatiempos e intereses</h2>
+        <ul class="hobby-list">
+          <li>Programación de proyectos personales</li>
+          <li>Contribución a código abierto</li>
+          <li>Baloncesto</li>
+          <li>Ejercicio</li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Columna principal -->
+    <main class="main">
+      <header class="header-title">
+        <h1>Fredy Leonardo Martinez Galeano</h1>
+        <div class="role">Full-Stack Software Developer &amp; Certified Scrum Master</div>
+      </header>
+
+      <section class="section">
+        <h2>Perfil</h2>
+        <p class="profile-text">
+          Ingeniero de Software y Desarrollador Full-Stack especializado en aplicaciones web escalables, APIs RESTful seguras con autenticación JWT, hashing <code>scrypt</code> y RBAC en Node.js, Express, TypeScript 5 y PHP, junto con modelado de bases de datos relacionales (MySQL, SQLite3) y NoSQL (MongoDB Atlas, Mongoose 7). Experiencia en Angular 16 (RxJS, PrimeNG), JavaScript ES6+, HTML5 Web APIs avanzadas (Canvas 2D, IndexedDB, Drag &amp; Drop) y pruebas automatizadas (<code>node:test</code> + GitHub Actions CI), bajo metodologías ágiles (Scrum).
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>Competencias Técnicas</h2>
+        <div class="skills-grid">
+          <span class="skill-tag">Angular 16 / RxJS</span>
+          <span class="skill-tag">TypeScript 5</span>
+          <span class="skill-tag">JavaScript (ES6+)</span>
+          <span class="skill-tag">Node.js / Express.js</span>
+          <span class="skill-tag">PHP</span>
+          <span class="skill-tag">MySQL / SQLite3</span>
+          <span class="skill-tag">MongoDB / Mongoose 7</span>
+          <span class="skill-tag">JWT, scrypt &amp; RBAC</span>
+          <span class="skill-tag">Testing (node:test) &amp; CI</span>
+          <span class="skill-tag">HTML5 Web APIs</span>
+          <span class="skill-tag">CSS3 / Bootstrap 5</span>
+          <span class="skill-tag">Arquitectura MVC</span>
+          <span class="skill-tag">Git / GitHub / Netlify</span>
+          <span class="skill-tag">Scrum</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Formación</h2>
+
+        <div class="entry">
+          <div class="entry-date">feb 2021 - jun 2026</div>
+          <div class="entry-content">
+            <div class="entry-title">Ingeniero de Software</div>
+            <div class="entry-subtitle">Universidad de Cundinamarca, Soacha</div>
+            <ul>
+              <li>Formación integral enfocada en el ciclo de vida del software, metodologías ágiles (Scrum), arquitectura de sistemas y gestión de proyectos tecnológicos.</li>
+              <li>Desarrollo de competencias en ingeniería de requisitos, patrones de diseño, calidad de software y optimización de algoritmos.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-date">feb 2023 - jun 2023</div>
+          <div class="entry-content">
+            <div class="entry-title">Bootcamp de Desarrollo Web Full Stack</div>
+            <div class="entry-subtitle">BIT (Bogotá Institute of Technology), Chapinero</div>
+            <ul>
+              <li>Desarrollo intensivo de aplicaciones web dinámicas utilizando <strong>Angular</strong> para el frontend y <strong>Express.js</strong> para el backend.</li>
+              <li>Diseño e implementación de modelos de datos flexibles con <strong>MongoDB</strong> e integración de servicios mediante <strong>APIs REST</strong>.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-date">feb 2018 - nov 2019</div>
+          <div class="entry-content">
+            <div class="entry-title">Técnico en Programación de Software</div>
+            <div class="entry-subtitle">SENA (Servicio Nacional de Aprendizaje), Suba</div>
+            <ul>
+              <li><strong>Enfoque técnico:</strong> Desarrollo de aplicaciones web completas (Full Stack) utilizando arquitectura cliente-servidor.</li>
+              <li><strong>Competencias clave:</strong> Diseño de bases de datos relacionales con <strong>SQL y MySQL</strong>, desarrollo backend con <strong>PHP</strong> y maquetación responsive con <strong>HTML5, CSS3 y Bootstrap</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>Proyectos Destacados</h2>
+
+        <div class="entry">
+          <div class="entry-date">2026</div>
+          <div class="entry-content">
+            <div class="entry-title">Amour &amp; Planes — App de Citas y Álbum de Recuerdos</div>
+            <div class="entry-subtitle">Full-Stack SQL &amp; SPA • Node.js, SQLite3, PHP/MySQL, Vanilla JS</div>
+            <p class="entry-desc">
+              Arquitectura híbrida con servidor HTTP REST en Node.js y SQLite3, soporte alternativo en PHP/MySQL y cliente SPA con catálogo de planes, agendamiento, bitácora y álbum fotográfico con respaldo offline en <code>localStorage</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-date">2025 - 2026</div>
+          <div class="entry-content">
+            <div class="entry-title">BitShop REST API &amp; Enterprise TypeScript API</div>
+            <div class="entry-subtitle">Backend &amp; Seguridad • TypeScript 5, Express.js, JWT, scrypt, RBAC, node:test</div>
+            <p class="entry-desc">
+              APIs RESTful desacopladas bajo arquitectura MVC: <em>BitShop_API</em> con autenticación JWT, hashing criptográfico <code>scrypt</code>, control RBAC (admin/client) y documentación en <code>/docs</code>; junto a <em>ts_api</em> en TypeScript 5 estricto, panel Login-first y suites automatizadas en <code>node:test</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-date">2023 - 2026</div>
+          <div class="entry-content">
+            <div class="entry-title">Turismo MEAN &amp; Procrastination Nightmare (Angular 16)</div>
+            <div class="entry-subtitle">Full-Stack MEAN • Angular 16, MongoDB, Express.js, PrimeNG, FullCalendar v6</div>
+            <p class="entry-desc">
+              Plataforma <em>Turismo_MEAN</em> con API Express/Mongoose 7, almacenamiento dual MongoDB/JSON, 4 tests en <code>node:test</code> y SPA en Angular 16; además de <em>Procrastination Nightmare</em> (SPA Angular 16 + FullCalendar v6 + RxJS y suite colaborativa de 7 módulos en JS POO).
+            </p>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-date">2023 - 2026</div>
+          <div class="entry-content">
+            <div class="entry-title">Node.js Nativo &amp; Aplicaciones con HTML5 Web APIs</div>
+            <div class="entry-subtitle">node:http, NDJSON, Canvas 2D, IndexedDB, Drag &amp; Drop, FileReader, OMDb API</div>
+            <p class="entry-desc">
+              <em>Gestor-Tareas-Node</em> (servidor <code>node:http</code> sin dependencias, auditoría NDJSON, <code>EventEmitter</code>, protección Path Traversal y <code>node:test</code>) y apps interactivas: <em>NotesDB</em> (IndexedDB), <em>Finanzas APP</em> y <em>SketchPad 2D</em> (Canvas 2D), <em>FileDrop Inspector</em>, <em>Tablero Kanban</em> y <em>CineSearch</em>.
+            </p>
+          </div>
+        </div>
+      </section>
     </main>
-
-    <!-- Sección 2: Matriz de Stack Técnico por Capas -->
-    <section id="stack-tecnico" class="cv-section">
-      <div class="section-heading">
-        <span class="section-eyebrow">Dominio Tecnológico</span>
-        <h2>Matriz de Habilidades &amp; Stack de Ingeniería</h2>
-        <p>Tecnologías aplicadas en proyectos reales del portafolio, organizadas por capa arquitectónica.</p>
-      </div>
-
-      <div class="skills-grid">
-        <!-- Frontend & Web APIs -->
-        <article class="skill-card">
-          <div class="skill-card-head">
-            <span class="material-icons skill-icon">web</span>
-            <div>
-              <h3>Frontend, SPAs &amp; Web APIs</h3>
-              <small>Interfaces reactivas y APIs nativas</small>
-            </div>
-          </div>
-          <div class="skill-bars">
-            <div class="skill-item">
-              <div class="skill-meta"><span>JavaScript ES6+ / DOM / Async-Await</span><span>95%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 95%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>Angular 15 SPA / TypeScript / Router</span><span>88%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 88%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>HTML5 Canvas 2D / Drag &amp; Drop / FileReader</span><span>92%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 92%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>CSS3 Flexbox / Grid / Bootstrap 5 / Glassmorphism</span><span>95%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 95%;"></div></div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Backend & APIs -->
-        <article class="skill-card">
-          <div class="skill-card-head">
-            <span class="material-icons skill-icon">dns</span>
-            <div>
-              <h3>Backend &amp; Arquitectura de APIs</h3>
-              <small>Servidores escalables y seguridad</small>
-            </div>
-          </div>
-          <div class="skill-bars">
-            <div class="skill-item">
-              <div class="skill-meta"><span>Node.js &amp; Express.js (REST APIs)</span><span>92%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 92%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>TypeScript en Backend (Modular / Barrel Exports)</span><span>88%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 88%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>Autenticación JWT, Middlewares &amp; Roles (RBAC)</span><span>90%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 90%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>Python 3 &amp; PHP (APIs Híbridas)</span><span>85%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 85%;"></div></div>
-            </div>
-          </div>
-        </article>
-
-        <!-- Bases de Datos & Persistencia -->
-        <article class="skill-card">
-          <div class="skill-card-head">
-            <span class="material-icons skill-icon">storage</span>
-            <div>
-              <h3>Bases de Datos SQL, NoSQL &amp; Offline</h3>
-              <small>Modelado relacional, documental y local</small>
-            </div>
-          </div>
-          <div class="skill-bars">
-            <div class="skill-item">
-              <div class="skill-meta"><span>MongoDB Atlas &amp; Mongoose ODM</span><span>92%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 92%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>SQL Relacional (SQLite3 &amp; MySQL / Foreign Keys)</span><span>90%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 90%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>IndexedDB Transaccional &amp; LocalStorage Offline</span><span>94%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 94%;"></div></div>
-            </div>
-            <div class="skill-item">
-              <div class="skill-meta"><span>Scrum Master / Git / GitHub / Netlify CI-CD</span><span>95%</span></div>
-              <div class="skill-track"><div class="skill-fill" style="width: 95%;"></div></div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- Sección 3: Experiencia Práctica & Proyectos Destacados -->
-    <section id="experiencia" class="cv-section">
-      <div class="section-heading">
-        <span class="section-eyebrow">Casos de Éxito en el Portafolio</span>
-        <h2>Experiencia en Arquitectura &amp; Desarrollo de Proyectos</h2>
-        <p>Sistemas reales diseñados, programados y documentados dentro de este portafolio profesional.</p>
-      </div>
-
-      <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-top">
-              <h3>Arquitecto Full-Stack SQL &amp; SPA — Amour &amp; Planes (App de Citas)</h3>
-              <span class="timeline-badge">Node.js · SQLite3 · PHP/MySQL · SPA</span>
-            </div>
-            <p>
-              Diseño e implementación de una plataforma Full-Stack con esquema relacional de 3 tablas (`planes_sugeridos`, `citas_programadas`, `fotos_cita` con restricción `UNIQUE` de hasta 10 fotografías por cita), API REST en Node.js y PHP, y modo híbrido inteligente con respaldo automático en `localStorage`.
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-top">
-              <h3>Líder de Producto &amp; Desarrollador — Suite SaaS "Procrastination Nightmare" &amp; Kanban Scrum</h3>
-              <span class="timeline-badge">Angular 15 · FullCalendar v6 · JS POO · Drag &amp; Drop</span>
-            </div>
-            <p>
-              Construcción de una suite colaborativa de 6 módulos (Temporizador Pomodoro Focus, Gestor To-Do, Calendario Mensual, Tracker de Hábitos, Roadmap con Programación Orientada a Objetos y Landing Page SaaS), además de su versión SPA en Angular 15 y un Tablero Kanban Scrum con Drag &amp; Drop nativo.
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-top">
-              <h3>Ingeniero Backend REST — Bit-Shop E-Commerce API, Turismo MEAN &amp; TypeScript API</h3>
-              <span class="timeline-badge">Express.js · MongoDB Atlas · JWT · TypeScript</span>
-            </div>
-            <p>
-              Desarrollo de servidores RESTful desacoplados con autenticación mediante JSON Web Tokens (`verifyToken`), control de acceso por roles de administrador, modelos Mongoose para comercio electrónico y turismo, y arquitectura modular en TypeScript con exportación por barriles (`index.ts`).
-            </p>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <div class="timeline-top">
-              <h3>Especialista en Web APIs &amp; FinTech UI — Finanzas APP, CineSearch, SketchPad 2D &amp; NotesDB</h3>
-              <span class="timeline-badge">Canvas 2D · IndexedDB · OMDb Debounce · FileReader</span>
-            </div>
-            <p>
-              Implementación de aplicaciones sin dependencias externas: dashboard financiero con gráfico de dona renderizado en HTML5 Canvas 2D y formato COP, buscador de películas con patrón Debounce (500ms) y modal `&lt;dialog&gt;`, estudio de dibujo vectorial con pila Undo (`ImageData`), base de datos Offline-First en `IndexedDB` e inspector multimedia con `FileReader`.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sección 4: Pilares de Especialidad -->
-    <section id="portafolio" class="cv-section">
-      <div class="section-heading">
-        <span class="section-eyebrow">Valor Diferencial</span>
-        <h2>Pilares de Especialidad Profesional</h2>
-      </div>
-
-      <div class="pillars-grid">
-        <div class="cont">
-          <div class="icon-circle">
-            <img src="assets/img/gestion_proyectos.png" class="imgtop" alt="Gestión de proyectos">
-          </div>
-          <div class="title">Gestión Ágil &amp; Scrum Master</div>
-          <div class="text">Scrum Master certificado con experiencia guiando equipos bajo marcos ágiles, eliminando impedimentos, facilitando ceremonias Scrum y asegurando entregas iterativas de alto valor.</div>
-        </div>
-
-        <div class="cont">
-          <div class="icon-circle">
-            <img src="assets/img/pila_completa.png" class="imgtop" alt="Ingeniería de pila completa">
-          </div>
-          <div class="title">Ingeniería de Pila Completa</div>
-          <div class="text">Más de 3 años construyendo software de extremo a extremo con Angular, Express.js, Node.js, MongoDB, SQL, TypeScript y Python 3, integrando frontend reactivo con backends sólidos.</div>
-        </div>
-
-        <div class="cont">
-          <div class="icon-circle">
-            <img src="assets/img/full_stack.png" class="imgtop" alt="Web Full-stack Especializado">
-          </div>
-          <div class="title">Arquitectura Web Moderna</div>
-          <div class="text">Especialista en patrones modernos de desarrollo web para aplicaciones SPA y Full-Stack (MEAN / MERN / SQL), priorizando rendimiento, experiencia de usuario, seguridad JWT y código mantenible.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sección 5: Contacto Directo -->
-    <section id="contacto" class="contact-section">
-      <div class="contact-wrapper">
-        <div class="contact-info">
-          <span class="contact-badge">Disponible para Proyectos &amp; Oportunidades</span>
-          <h2 class="contact-title">Hablemos de tu próximo proyecto</h2>
-          <p class="contact-subtitle">
-            ¿Buscas un Desarrollador Full-Stack MEAN/SQL o Scrum Master para tu equipo o proyecto tecnológico? Contáctame directamente por cualquiera de estos canales o envíame un mensaje.
-          </p>
-
-          <div class="contact-cards">
-            <a href="mailto:fredymartinezquinto@hotmail.com" class="contact-card-item">
-              <span class="material-icons contact-icon">email</span>
-              <div>
-                <strong>Correo Electrónico</strong>
-                <span>fredymartinezquinto@hotmail.com</span>
-              </div>
-            </a>
-
-            <a href="https://wa.me/573152388315" target="_blank" rel="noopener" class="contact-card-item">
-              <span class="material-icons contact-icon">phone_iphone</span>
-              <div>
-                <strong>Teléfono / WhatsApp</strong>
-                <span>+57 315 238 8315</span>
-              </div>
-            </a>
-
-            <div class="contact-card-item">
-              <span class="material-icons contact-icon">location_on</span>
-              <div>
-                <strong>Ubicación &amp; Modalidad</strong>
-                <span>Colombia • Remoto / Híbrido / Presencial</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="contact-form-box no-print">
-          <h3>Envíame un mensaje directo</h3>
-          <form id="cvContactForm" onsubmit="return false;">
-            <div class="form-group">
-              <label for="cName">Nombre completo o Empresa</label>
-              <input type="text" id="cName" placeholder="Ej. Ana Gómez / Empresa Tech" required>
-            </div>
-            <div class="form-group">
-              <label for="cEmail">Correo electrónico</label>
-              <input type="email" id="cEmail" placeholder="correo@empresa.com" required>
-            </div>
-            <div class="form-group">
-              <label for="cSubject">Asunto</label>
-              <select id="cSubject">
-                <option value="Oferta Laboral Full-Stack">Oferta Laboral Full-Stack / MEAN</option>
-                <option value="Proyecto Freelance / Desarrollo Web">Proyecto Freelance / Desarrollo Web</option>
-                <option value="Consultoría Ágil / Scrum Master">Consultoría Ágil / Scrum Master</option>
-                <option value="Otro motivo">Otro motivo</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="cMessage">Mensaje</label>
-              <textarea id="cMessage" rows="4" placeholder="Cuéntame sobre el proyecto, vacante o colaboración..." required></textarea>
-            </div>
-            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-              <button type="button" id="cvWhatsAppBtn" class="btn-submit-contact" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669);">
-                <span class="material-icons" style="font-size: 19px;">chat</span>
-                Enviar por WhatsApp
-              </button>
-              <button type="submit" class="btn-submit-contact" style="flex: 1;">
-                <span class="material-icons" style="font-size: 19px;">send</span>
-                Enviar por Correo
-              </button>
-            </div>
-            <p id="cvContactFeedback" class="contact-feedback"></p>
-          </form>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        © 2026 <strong>Fredy Martinez</strong> • Full-Stack MEAN &amp; SQL Software Developer &amp; Certified Scrum Master.
-      </div>
-    </section>
-
-    <script>
-      const cvForm = document.getElementById('cvContactForm');
-      const cvFeedback = document.getElementById('cvContactFeedback');
-      const cvWhatsAppBtn = document.getElementById('cvWhatsAppBtn');
-
-      function getCvValues() {
-        return {
-          name: document.getElementById('cName').value.trim(),
-          email: document.getElementById('cEmail').value.trim(),
-          subject: document.getElementById('cSubject').value,
-          msg: document.getElementById('cMessage').value.trim()
-        };
-      }
-
-      if (cvWhatsAppBtn && cvForm) {
-        cvWhatsAppBtn.addEventListener('click', () => {
-          if (!cvForm.reportValidity()) return;
-          const { name, email, subject, msg } = getCvValues();
-          const text =
-            'Hola Fredy, vi tu CV Ejecutivo y quiero contactarte:%0A%0A' +
-            '*Nombre:* ' + encodeURIComponent(name) + '%0A' +
-            '*Correo:* ' + encodeURIComponent(email) + '%0A' +
-            '*Asunto:* ' + encodeURIComponent(subject) + '%0A' +
-            '*Mensaje:* ' + encodeURIComponent(msg);
-          window.open('https://wa.me/573152388315?text=' + text, '_blank', 'noopener');
-          cvFeedback.textContent = '✓ Abriendo WhatsApp con tu mensaje listo para enviar...';
-        });
-      }
-
-      if (cvForm) {
-        cvForm.addEventListener('submit', () => {
-          const { name, email, subject, msg } = getCvValues();
-          if (name && email && msg) {
-            const mailtoSubject = encodeURIComponent('[CV Fredy Martinez] ' + subject + ' — ' + name);
-            const mailtoBody = encodeURIComponent(
-              'Hola Fredy,\n\n' +
-              'Nombre: ' + name + '\n' +
-              'Correo: ' + email + '\n' +
-              'Asunto: ' + subject + '\n\n' +
-              'Mensaje:\n' + msg + '\n'
-            );
-            window.location.href = 'mailto:fredymartinezquinto@hotmail.com?subject=' + mailtoSubject + '&body=' + mailtoBody;
-            cvFeedback.textContent = '✓ Se abrió tu aplicación de correo hacia fredymartinezquinto@hotmail.com.';
-            cvForm.reset();
-          }
-        });
-      }
-    </script>
-  </body>
+  </div>
+</body>
 </html>

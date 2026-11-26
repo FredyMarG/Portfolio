@@ -652,17 +652,7 @@ const btnHeroCv = document.getElementById("btnHeroCv");
 [btnNavCv, btnHeroCv].forEach((btn) => {
   if (btn) {
     btn.addEventListener("click", () => {
-      window.openPreviewModal("CV Interactivo Web — Fredy Martinez", "My CV/index.html");
-    });
-  }
-});
-
-const btnNavCvExec = document.getElementById("btnNavCvExec");
-const btnHeroCvExec = document.getElementById("btnHeroCvExec");
-[btnNavCvExec, btnHeroCvExec].forEach((btn) => {
-  if (btn) {
-    btn.addEventListener("click", () => {
-      window.openPreviewModal("CV Ejecutivo (Formato A4 / PDF) — Fredy Martinez", "CV_Ejecutivo/index.html");
+      window.openPreviewModal("Hoja de Vida / CV — Fredy Leonardo Martinez Galeano", "My CV/index.html");
     });
   }
 });
