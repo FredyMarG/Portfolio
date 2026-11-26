@@ -38,7 +38,7 @@
   <!-- Bootstrap 5.3 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Estilos del Portafolio Maestro -->
-  <link rel="stylesheet" href="portfolio-styles.css">
+  <link rel="stylesheet" href="portfolio-styles.css?v=20261126-2">
 </head>
 <body>
 
@@ -62,7 +62,7 @@
             <a class="nav-link text-light" href="https://github.com/FredyMarG" target="_blank" rel="noopener">GitHub ↗</a>
           </li>
           <li class="nav-item">
-            <button type="button" id="btnNavCv" class="btn btn-info btn-sm text-dark rounded-pill px-3 fw-bold">
+            <button type="button" id="btnNavCv" data-action="preview" data-title="Hoja de Vida / CV — Fredy Leonardo Martinez Galeano" data-url="My CV/index.html" class="btn btn-info btn-sm text-dark rounded-pill px-3 fw-bold">
               📄 Ver Mi CV / PDF
             </button>
           </li>
@@ -108,7 +108,7 @@
             <a href="#catalogo" class="btn btn-info fw-bold text-dark px-4 py-2 rounded-pill shadow-sm">
               Explorar Proyectos Seleccionados ↓
             </a>
-            <button type="button" id="btnHeroCv" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
+            <button type="button" id="btnHeroCv" data-action="preview" data-title="Hoja de Vida / CV — Fredy Leonardo Martinez Galeano" data-url="My CV/index.html" class="btn btn-outline-info px-4 py-2 rounded-pill fw-semibold">
               📄 Ver Mi CV / Imprimir PDF
             </button>
             <a href="https://github.com/FredyMarG" target="_blank" rel="noopener" class="btn btn-outline-light px-4 py-2 rounded-pill">
@@ -343,7 +343,7 @@
         <div class="modal-body p-3">
           <div id="iframeContainer" class="position-relative">
             <div id="iframeLoader" class="iframe-loader">Cargando aplicación interactiva...</div>
-            <iframe id="previewIframe" class="preview-iframe" src="about:blank" loading="lazy"></iframe>
+            <iframe id="previewIframe" class="preview-iframe" src="about:blank"></iframe>
           </div>
           <div id="codeInspectorContainer" class="d-none">
             <div class="alert alert-info bg-opacity-10 border-info text-light mb-3">
@@ -358,7 +358,7 @@
 
   <!-- Bootstrap 5.3 Bundle JS (Carga Diferida) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
-  <!-- Script del Portafolio Maestro (Carga Diferida) -->
-  <script src="portfolio-app.js" defer></script>
+  <!-- Script del Portafolio Maestro (Carga Diferida + Cache Busting) -->
+  <script src="portfolio-app.js?v=20261126-2" defer></script>
 </body>
 </html>

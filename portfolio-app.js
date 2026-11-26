@@ -584,17 +584,33 @@ window.openPreviewModal = function (title, url) {
   const iframeContainer = document.getElementById("iframeContainer");
   const safeUrl = encodeURI(url);
 
-  modalTitle.textContent = title;
-  externalLink.href = safeUrl;
-  externalLink.classList.remove("d-none");
+  if (!modalEl || !previewIframeEl) {
+    window.open(safeUrl, "_blank", "noopener");
+    return;
+  }
+
+  if (modalTitle) modalTitle.textContent = title;
+  if (externalLink) {
+    externalLink.href = safeUrl;
+    externalLink.classList.remove("d-none");
+  }
   if (copyCodeBtnEl) copyCodeBtnEl.classList.add("d-none");
-  codeContainer.classList.add("d-none");
-  iframeContainer.classList.remove("d-none");
-  if (iframeLoaderEl) iframeLoaderEl.classList.remove("loaded");
+  if (codeContainer) codeContainer.classList.add("d-none");
+  if (iframeContainer) iframeContainer.classList.remove("d-none");
+  if (iframeLoaderEl) {
+    iframeLoaderEl.classList.remove("loaded");
+    setTimeout(() => {
+      iframeLoaderEl.classList.add("loaded");
+    }, 1000);
+  }
   previewIframeEl.src = safeUrl;
 
-  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-  modal.show();
+  if (window.bootstrap && window.bootstrap.Modal) {
+    const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
+    modal.show();
+  } else {
+    window.open(safeUrl, "_blank", "noopener");
+  }
 };
 
 window.openCodeModal = function (projectId) {
@@ -629,31 +645,18 @@ window.openCodeModal = function (projectId) {
   modal.show();
 };
 
-// Delegación de eventos segura en la grilla (sin handlers inline)
-if (gridContainer) {
-  gridContainer.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-action]");
-    if (!button) return;
+// Delegación global de eventos para todos los botones con [data-action] (navbar, hero y grilla)
+document.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
 
-    const action = button.dataset.action;
-    if (action === "preview") {
-      openPreviewModal(button.dataset.title || "Vista Previa", button.dataset.url || "");
-    } else if (action === "code") {
-      openCodeModal(button.dataset.id || "");
-    } else if (action === "reset") {
-      window.resetPortfolioFilters();
-    }
-  });
-}
-
-// Botones de apertura de CV en navbar y hero
-const btnNavCv = document.getElementById("btnNavCv");
-const btnHeroCv = document.getElementById("btnHeroCv");
-[btnNavCv, btnHeroCv].forEach((btn) => {
-  if (btn) {
-    btn.addEventListener("click", () => {
-      window.openPreviewModal("Hoja de Vida / CV — Fredy Leonardo Martinez Galeano", "My CV/index.html");
-    });
+  const action = button.dataset.action;
+  if (action === "preview") {
+    window.openPreviewModal(button.dataset.title || "Vista Previa", button.dataset.url || "");
+  } else if (action === "code") {
+    window.openCodeModal(button.dataset.id || "");
+  } else if (action === "reset") {
+    window.resetPortfolioFilters();
   }
 });
 
