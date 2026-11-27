@@ -82,11 +82,6 @@ __pycache__/
 *.db
 
 ############################
-# 📦 CARPETA DE REPOSITORIOS SEPARADOS PARA SUBIR A GITHUB
-############################
-Repositorios_GitHub_Independientes/
-
-############################
 # 🔥 LOGS
 ############################
 logs/

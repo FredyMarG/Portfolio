@@ -3,18 +3,18 @@
  * MOTOR DEL PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL (portfolio-app.js)
  * ============================================================================
  * Propósito:
- *   Gestionar el catálogo curado de 17 aplicaciones 100% funcionales e
- *   interactivas de Fredy Martinez, conectadas a Base de Datos Real
- *   (SQL / MongoDB vía `/api/*`) y sincronización híbrida en el navegador.
- *   - Sin vistas estáticas de código: cada tarjeta lanza la aplicación real.
- *   - Incluye verificador en vivo de conexión a la Base de Datos (`/api/db/status`).
- *   - Incluye envío real del formulario de contacto vía WhatsApp y Correo.
+ *   Gestionar el catálogo curado y sin duplicados de 15 aplicaciones 100%
+ *   funcionales e interactivas de Fredy Martinez, conectadas a Base de Datos
+ *   Real (SQL / MongoDB vía `/api/*`) y sincronización híbrida en navegador.
+ *   - Proyectos unificados (Procrastination Nightmare Suite + FullCalendar v6,
+ *     y BIT Shop Storefront + REST API JWT/RBAC).
+ *   - Enlaces directos a los repositorios oficiales en GitHub (`@FredyMarG`).
  *
  * Comentado detalladamente en español bloque por bloque y línea por línea.
  * ============================================================================
  */
 
-// Catálogo maestro con las 17 aplicaciones Full-Stack, Backend y Web APIs 100% funcionales
+// Catálogo maestro con las 15 aplicaciones únicas 100% funcionales
 const PORTFOLIO_PROJECTS = [
   // ==========================================================================
   // 1. APLICACIONES FULL-STACK & PRODUCTOS INTEGRADORES
@@ -22,13 +22,14 @@ const PORTFOLIO_PROJECTS = [
   {
     id: "turismo-mean", // Identificador único del proyecto
     title: "Turismo MEAN — Plataforma Full-Stack (MongoDB + Express + Angular 16)", // Título comercial
-    folder: "Turismo_MEAN/", // Carpeta raíz del proyecto en el repositorio
+    folder: "Turismo_MEAN/", // Carpeta raíz del proyecto
     category: "fullstack", // Categoría para el filtro superior ('fullstack', 'backend', 'js')
-    categoryLabel: "Full-Stack MEAN + BD", // Etiqueta visual de la insignia de categoría
-    stack: ["Base de Datos SQL/Mongo", "Express.js REST API", "Angular 16 SPA", "Node.js", "CRUD & Métricas"], // Tecnologías empleadas
+    categoryLabel: "Full-Stack MEAN + BD", // Etiqueta visual de categoría
+    stack: ["Base de Datos SQL/Mongo", "Express.js REST API", "Angular 16 SPA", "Node.js", "CRUD & Métricas"],
     description: "Plataforma Full-Stack para gestión de destinos turísticos de Colombia con operaciones CRUD en tiempo real contra la Base de Datos, filtros por ciudad, ordenamiento por precio/calificación y métricas agregadas.",
     review: "Conectada a la tabla/colección `turismo_destinos` mediante `/api/destinos` con sincronización automática y cálculo reactivo de tarifas y calificaciones.",
-    previewUrl: "Turismo_MEAN/public/index.html" // Ruta de la aplicación interactiva funcional
+    previewUrl: "Turismo_MEAN/public/index.html",
+    githubUrl: "https://github.com/FredyMarG/Turismo_App"
   },
   {
     id: "app-de-citas",
@@ -39,7 +40,8 @@ const PORTFOLIO_PROJECTS = [
     stack: ["Base de Datos SQL", "Node.js & SQLite3", "MySQL Compatible", "REST API", "Álbum 10 Fotos"],
     description: "Aplicativo web Full-Stack para descubrir planes sugeridos, diseñar planes personalizados, agendar citas con fecha y hora exacta, calificar experiencias y conservar un álbum interactivo de fotografías.",
     review: "Persistencia relacional real en las tablas `planes_sugeridos` y `citas_programadas` a través de `/api/planes` y `/api/citas` con sincronización híbrida.",
-    previewUrl: "App de citas/public/index.html"
+    previewUrl: "App de citas/public/index.html",
+    githubUrl: "https://github.com/FredyMarG/Dates_App"
   },
   {
     id: "gestor-tareas-node",
@@ -50,24 +52,26 @@ const PORTFOLIO_PROJECTS = [
     stack: ["Base de Datos SQL", "Node.js (node:http)", "REST API Nativa", "Auditoría de Eventos", "Sincronización Real"],
     description: "Aplicación Full-Stack con API REST CRUD conectada a base de datos relacional para gestión de tareas y bitácora de eventos de auditoría en tiempo real.",
     review: "Conectada a las tablas `gestor_tareas` y `gestor_eventos` mediante los endpoints `/api/tareas` y `/api/eventos` con actualización instantánea.",
-    previewUrl: "Gestor-Tareas-Node/public/index.html"
+    previewUrl: "Gestor-Tareas-Node/public/index.html",
+    githubUrl: "https://github.com/FredyMarG/Gestor-Tareas"
   },
   {
     id: "proyecto-bit",
-    title: "Procrastination Nightmare — Suite SaaS de Productividad (7 Módulos + BD)",
+    title: "Procrastination Nightmare — Suite SaaS (7 Módulos + FullCalendar v6 + BD)",
     folder: "proyectoBit/",
     category: "fullstack",
-    categoryLabel: "Producto SaaS + BD Real",
-    stack: ["Base de Datos SQL/Mongo", "7 Módulos Conectados", "Bootstrap 5", "JavaScript POO", "Pomodoro & Hábitos"],
-    description: "Plataforma integral de gestión del tiempo y productividad colaborativa con 7 módulos interactivos (Pomodoro, To-Do, Calendario, Hábitos, Notas, Roadmap POO y Landing SaaS) sincronizados con la Base de Datos.",
-    review: "Sincroniza automáticamente el estado de los 7 módulos con la tabla `portfolio_kv_store` (`/api/db/kv/proyectobit_suite_state`) además de permitir exportación/importación JSON.",
+    categoryLabel: "Producto SaaS + FullCalendar",
+    stack: ["Base de Datos SQL/Mongo", "FullCalendar v6 SPA", "7 Módulos Conectados", "Bootstrap 5", "JavaScript POO"],
+    description: "Plataforma integral unificada de gestión del tiempo y productividad: incluye el planificador interactivo de sprints con FullCalendar v6, Pomodoro Focus, To-Do List, Hábitos, Notas, Roadmap POO y Landing Page SaaS.",
+    review: "Unifica la suite colaborativa y el calendario interactivo FullCalendar v6 sincronizando eventos y módulos en `/api/agenda/eventos` y `/api/db/kv/proyectobit_suite_state`.",
     previewUrl: "proyectoBit/index.html",
-    // Accesos directos a cada uno de los módulos interactivos que componen la suite SaaS
+    githubUrl: "https://github.com/FredyMarG/Procastination-Nigtmare",
     extraLinks: [
+      { label: "📅 Sprint Planner (FullCalendar v6)", url: "proyectoBit/fullcalendar-spa.html" },
       { label: "Landing Page SaaS", url: "proyectoBit/landing-full-bootstrap/index.html" },
       { label: "Roadmap Tareas POO", url: "proyectoBit/roadMapTareas.html" },
       { label: "Tracker Hábitos", url: "proyectoBit/habitos.html" },
-      { label: "Calendario", url: "proyectoBit/calendario.html" },
+      { label: "Calendario Mensual", url: "proyectoBit/calendario.html" },
       { label: "Notas", url: "proyectoBit/notas.html" },
       { label: "To-Do List", url: "proyectoBit/to-do-list.html" }
     ]
@@ -105,31 +109,25 @@ const PORTFOLIO_PROJECTS = [
     review: "Interfaz interactiva con búsqueda en vivo, sugerencias por franquicia y ventana modal nativa con sinopsis, director y calificación IMDb.",
     previewUrl: "Buscador de Peliculas/index.html"
   },
-  {
-    id: "tienda-online",
-    title: "BIT Shop — E-Commerce Tecnológico con Carrito & Pedidos en Base de Datos",
-    folder: "Tienda_Online/",
-    category: "fullstack",
-    categoryLabel: "E-Commerce + BD Pedidos",
-    stack: ["Base de Datos SQL", "JavaScript ES6+", "Bootstrap 5 Offcanvas", "Carrito Sincronizado", "Checkout Real"],
-    description: "Tienda virtual de equipamiento tecnológico para desarrolladores con filtrado dinámico por categorías en Mega-Menú, buscador instantáneo, carrito persistente y registro real de órdenes de compra en Base de Datos.",
-    review: "Sincroniza el carrito activo en `/api/db/kv/tienda_online_cart` y procesa el checkout creando órdenes reales en la tabla `tienda_pedidos` (`/api/tienda/pedidos`).",
-    previewUrl: "Tienda_Online/index.html"
-  },
 
   // ==========================================================================
-  // 2. BACKEND REST APIS (NODE.JS, TYPESCRIPT, MONGODB, JWT) & ANGULAR 16
+  // 2. BACKEND REST APIS (NODE.JS, TYPESCRIPT, MONGODB, JWT & E-COMMERCE)
   // ==========================================================================
   {
     id: "bitshop-api",
-    title: "BitShop REST API Studio — Login JWT, RBAC & Catálogo en Base de Datos",
+    title: "BIT Shop E-Commerce & REST API — Storefront, Login JWT, RBAC & Base de Datos",
     folder: "BitShop_API/",
     category: "backend",
-    categoryLabel: "Backend JWT + BD SQL",
-    stack: ["Base de Datos SQL", "JWT Authentication", "RBAC (Admin/Cliente)", "CRUD Productos & Usuarios", "Consola JSON Viva"],
-    description: "Consola y aplicación interactiva Login-first conectada a la API REST de comercio electrónico: autenticación JWT, registro de usuarios, catálogo CRUD de productos en Base de Datos y visor de respuestas HTTP/JSON en vivo.",
-    review: "Opera sobre las tablas reales `bitshop_users` y `bitshop_products` mediante `/api/user/login`, `/api/user/create-user` y `/api/products/*`.",
-    previewUrl: "BitShop_API/public/index.html"
+    categoryLabel: "E-Commerce + JWT & BD SQL",
+    stack: ["Base de Datos SQL", "Storefront + Carrito", "JWT Authentication", "RBAC (Admin/Cliente)", "CRUD Productos & Pedidos"],
+    description: "Plataforma unificada de comercio electrónico tecnológico: incluye tanto la Tienda Online con Mega-Menú y carrito Offcanvas como el Panel API Studio con Login JWT, roles RBAC y administración de inventario en Base de Datos.",
+    review: "Unifica el Storefront (`public/tienda/`) y el Studio JWT (`public/index.html`) sobre las tablas reales `bitshop_users`, `bitshop_products` y `tienda_pedidos`.",
+    previewUrl: "BitShop_API/public/index.html",
+    githubUrl: "https://github.com/FredyMarG/E-comerce",
+    extraLinks: [
+      { label: "🛒 Abrir Tienda Online (Storefront & Carrito)", url: "BitShop_API/public/tienda/index.html" },
+      { label: "🔐 Abrir Panel Admin & API Studio (JWT)", url: "BitShop_API/public/index.html" }
+    ]
   },
   {
     id: "ts-api",
@@ -152,17 +150,6 @@ const PORTFOLIO_PROJECTS = [
     description: "Laboratorio interactivo que ejecuta operaciones reales `find`, `insertOne`, `updateOne` y `deleteOne` con filtros `$eq` y `$gte` sobre la colección de guerreros DBZ-V2 persistida en Base de Datos.",
     review: "Conectado a la tabla/colección `mongo_characters` mediante `/api/characters` y `/api/reset`, generando en vivo la consulta equivalente en sintaxis `mongosh`.",
     previewUrl: "Mongo/public/index.html"
-  },
-  {
-    id: "procrastination-nightmare-angular",
-    title: "Procrastination Nightmare SPA (Angular 16 + FullCalendar v6 + BD SQL)",
-    folder: "procrastination-nightmare/",
-    category: "backend",
-    categoryLabel: "Angular 16 + FullCalendar",
-    stack: ["Angular 16 Architecture", "FullCalendar v6", "Base de Datos SQL", "Sprint Planner", "JWT Session"],
-    description: "Single Page Application con calendario interactivo FullCalendar v6 para planificar sprints, reuniones Scrum y despliegues haciendo clic directamente sobre cualquier día del calendario con persistencia en Base de Datos.",
-    review: "Conectada en tiempo real a la tabla `agenda_eventos` (`/api/agenda/eventos`) para crear, listar y eliminar eventos de calendario con sincronización híbrida.",
-    previewUrl: "procrastination-nightmare/public/index.html"
   },
 
   // ==========================================================================
@@ -247,13 +234,13 @@ function escapeHtml(value) {
 // LÓGICA DE RENDERIZADO Y FILTRADO DEL PORTAFOLIO (100% FUNCIONAL, SIN CÓDIGO)
 // ============================================================================
 
-const gridContainer = document.getElementById("projectsGrid"); // Contenedor de la grilla de tarjetas de proyectos
-const filterButtons = document.querySelectorAll(".filter-btn"); // Botones de filtrado por categoría
-const searchInput = document.getElementById("projectSearch"); // Campo de búsqueda en tiempo real
-const countBadge = document.getElementById("projectCountBadge"); // Contador de aplicaciones mostradas
+const gridContainer = document.getElementById("projectsGrid");
+const filterButtons = document.querySelectorAll(".filter-btn");
+const searchInput = document.getElementById("projectSearch");
+const countBadge = document.getElementById("projectCountBadge");
 
-let currentCategory = "all"; // Categoría activa ('all', 'fullstack', 'backend', 'js')
-let currentSearch = ""; // Término de búsqueda actual
+let currentCategory = "all";
+let currentSearch = "";
 
 /**
  * Calcula y actualiza los contadores de proyectos en las tarjetas del Hero y en los botones de filtro.
@@ -266,7 +253,6 @@ function updatePortfolioMetrics() {
   const filterBackendEl = document.getElementById("filterBackendBtn");
   const filterJsEl = document.getElementById("filterJsBtn");
 
-  // Cuenta cuántas aplicaciones tienen URL interactiva (las 17 del portafolio)
   const liveCount = PORTFOLIO_PROJECTS.filter((p) => Boolean(p.previewUrl)).length;
   const fullstackCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "fullstack").length;
   const backendCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "backend").length;
@@ -276,7 +262,7 @@ function updatePortfolioMetrics() {
   if (liveEl) liveEl.textContent = String(liveCount);
   if (filterAllEl) filterAllEl.textContent = `Todos (${PORTFOLIO_PROJECTS.length})`;
   if (filterFullstackEl) filterFullstackEl.textContent = `🌟 Full-Stack & Productos (${fullstackCount})`;
-  if (filterBackendEl) filterBackendEl.textContent = `⚙️ Backend APIs & Angular (${backendCount})`;
+  if (filterBackendEl) filterBackendEl.textContent = `⚙️ Backend APIs & E-Commerce (${backendCount})`;
   if (filterJsEl) filterJsEl.textContent = `⚡ Web APIs, JS & CSS Motion (${jsCount})`;
 }
 
@@ -286,7 +272,6 @@ function updatePortfolioMetrics() {
 function renderPortfolio() {
   if (!gridContainer) return;
 
-  // Filtra proyectos por categoría activa y coincidencia de texto en título, carpeta, descripción o stack
   const filtered = PORTFOLIO_PROJECTS.filter((proj) => {
     const matchesCategory = currentCategory === "all" || proj.category === currentCategory;
     const query = currentSearch.toLowerCase();
@@ -304,7 +289,6 @@ function renderPortfolio() {
     countBadge.textContent = `${filtered.length} aplicaciones funcionales`;
   }
 
-  // Estado vacío cuando ningún proyecto coincide con la búsqueda
   if (filtered.length === 0) {
     gridContainer.innerHTML = `
       <div class="col-12 text-center py-5">
@@ -317,7 +301,6 @@ function renderPortfolio() {
     return;
   }
 
-  // Construye el HTML de cada tarjeta mostrando únicamente los controles de ejecución de la aplicación real
   gridContainer.innerHTML = filtered
     .map((proj) => {
       const safeTitle = escapeHtml(proj.title);
@@ -337,6 +320,10 @@ function renderPortfolio() {
             `<button type="button" class="btn btn-sm btn-outline-info py-1 px-2" data-action="preview" data-title="${safeTitle} — ${escapeHtml(lnk.label)}" data-url="${escapeHtml(lnk.url)}">${escapeHtml(lnk.label)}</button>`
         )
         .join("");
+
+      const githubBtnHtml = proj.githubUrl
+        ? `<a href="${escapeHtml(proj.githubUrl)}" target="_blank" rel="noopener" class="btn btn-outline-secondary btn-sm text-light" title="Ver repositorio en GitHub">GitHub ↗</a>`
+        : "";
 
       return `
       <div class="col-lg-4 col-md-6">
@@ -367,6 +354,7 @@ function renderPortfolio() {
             <a href="${encodedPreviewUrl}" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm" title="Abrir aplicación en pestaña nueva">
               ↗ Abrir
             </a>
+            ${githubBtnHtml}
           </div>
         </article>
       </div>
@@ -387,29 +375,22 @@ window.resetPortfolioFilters = function () {
 // ============================================================================
 // CONTROL DEL MODAL INTERACTIVO DE APLICACIONES Y HOJA DE VIDA (CV)
 // ============================================================================
-const modalEl = document.getElementById("portfolioModal"); // Elemento DOM del modal Bootstrap
-const previewIframeEl = document.getElementById("previewIframe"); // Iframe donde corre la aplicación o el CV
-const iframeLoaderEl = document.getElementById("iframeLoader"); // Indicador de carga sobre el iframe
+const modalEl = document.getElementById("portfolioModal");
+const previewIframeEl = document.getElementById("previewIframe");
+const iframeLoaderEl = document.getElementById("iframeLoader");
 
-// Oculta el indicador de carga tan pronto como el iframe termina de cargar su documento
 if (previewIframeEl && iframeLoaderEl) {
   previewIframeEl.addEventListener("load", () => {
     iframeLoaderEl.classList.add("loaded");
   });
 }
 
-/**
- * Abre cualquier aplicación del portafolio o la Hoja de Vida dentro del modal interactivo.
- * @param {string} title - Título a mostrar en la cabecera del modal.
- * @param {string} url - Ruta relativa de la aplicación a cargar en el iframe.
- */
 window.openPreviewModal = function (title, url) {
   const modalTitle = document.getElementById("previewModalTitle");
   const externalLink = document.getElementById("previewExternalLink");
   const iframeContainer = document.getElementById("iframeContainer");
-  const safeUrl = encodeURI(url); // Codifica espacios en nombres de carpeta como `My CV/index.html` o `App de citas/...`
+  const safeUrl = encodeURI(url);
 
-  // Si no existen los nodos del modal, abre directamente en una pestaña nueva como respaldo
   if (!modalEl || !previewIframeEl) {
     window.open(safeUrl, "_blank", "noopener");
     return;
@@ -423,14 +404,12 @@ window.openPreviewModal = function (title, url) {
   if (iframeContainer) iframeContainer.classList.remove("d-none");
   if (iframeLoaderEl) {
     iframeLoaderEl.classList.remove("loaded");
-    // Temporizador de seguridad para ocultar el loader incluso si un recurso externo tarda más
     setTimeout(() => {
       iframeLoaderEl.classList.add("loaded");
     }, 900);
   }
-  previewIframeEl.src = safeUrl; // Inicia la carga inmediata de la aplicación en el iframe
+  previewIframeEl.src = safeUrl;
 
-  // Muestra el modal usando la API oficial de Bootstrap 5 o abre en pestaña nueva si el CDN aún no cargó
   if (window.bootstrap && window.bootstrap.Modal) {
     const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
     modal.show();
@@ -439,7 +418,6 @@ window.openPreviewModal = function (title, url) {
   }
 };
 
-// Delegación global de eventos para todos los botones con `[data-action]` (Navbar CV, Hero CV y tarjetas)
 document.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
@@ -452,7 +430,6 @@ document.addEventListener("click", (event) => {
   }
 });
 
-// Limpia el `src` del iframe al cerrar el modal para detener audios o temporizadores en segundo plano
 if (modalEl) {
   modalEl.addEventListener("hidden.bs.modal", () => {
     if (previewIframeEl) previewIframeEl.src = "about:blank";
@@ -465,11 +442,6 @@ if (modalEl) {
 const btnTestDbConnection = document.getElementById("btnTestDbConnection");
 const dbConnectionAlert = document.getElementById("dbConnectionAlert");
 
-/**
- * Consulta el endpoint `/api/db/status` para verificar la conexión con el motor SQL/Mongo
- * y mostrar el conteo de registros de las 12 tablas de la Base de Datos.
- * @param {boolean} showAlert - Si es `true`, despliega el panel con el resumen detallado por tabla.
- */
 async function checkDatabaseStatus(showAlert = false) {
   try {
     if (location.protocol === "file:") throw new Error("Modo archivo local");
@@ -491,7 +463,6 @@ async function checkDatabaseStatus(showAlert = false) {
     }
   } catch {}
 
-  // Si se abre sin servidor local (`file://`), informa que el modo híbrido está activo
   if (btnTestDbConnection) {
     btnTestDbConnection.className = "btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold";
     btnTestDbConnection.textContent = "⚡ Persistencia Híbrida Activa (SQL + LocalStorage)";
@@ -545,14 +516,13 @@ if (searchInput) {
 // ============================================================================
 // ENVÍO REAL DEL FORMULARIO DE CONTACTO POR WHATSAPP Y CORREO ELECTRÓNICO
 // ============================================================================
-const CONTACT_PHONE = "573152388315"; // Número oficial de WhatsApp de Fredy Martinez
-const CONTACT_EMAIL = "fredymartinezquinto@hotmail.com"; // Correo oficial de contacto
+const CONTACT_PHONE = "573152388315";
+const CONTACT_EMAIL = "fredymartinezquinto@hotmail.com";
 
 const portfolioContactForm = document.getElementById("portfolioContactForm");
 const pContactFeedback = document.getElementById("pContactFeedback");
 const btnSendWhatsApp = document.getElementById("btnSendWhatsApp");
 
-/** Extrae y limpia los valores ingresados en el formulario de contacto. */
 function getPortfolioFormValues() {
   const name = (document.getElementById("pContactName")?.value || "").trim();
   const email = (document.getElementById("pContactEmail")?.value || "").trim();
@@ -561,7 +531,6 @@ function getPortfolioFormValues() {
   return { name, email, subject, msg };
 }
 
-// Envío directo a WhatsApp Web / App móvil con mensaje pre-formateado
 if (btnSendWhatsApp) {
   btnSendWhatsApp.addEventListener("click", () => {
     if (portfolioContactForm && !portfolioContactForm.reportValidity()) return;
@@ -579,7 +548,6 @@ if (btnSendWhatsApp) {
   });
 }
 
-// Envío por cliente de correo electrónico predeterminado (`mailto:`)
 if (portfolioContactForm && pContactFeedback) {
   portfolioContactForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -603,7 +571,6 @@ if (portfolioContactForm && pContactFeedback) {
   });
 }
 
-// Inicialización automática al cargar el portafolio
 updatePortfolioMetrics();
 renderPortfolio();
 checkDatabaseStatus(false);

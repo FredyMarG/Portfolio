@@ -71,9 +71,9 @@ test('index.html y portfolio-app.js no muestran código de proyectos ni usan onc
 });
 
 // ============================================================================
-// PRUEBA 3: VERIFICACIÓN DE LAS 17 APLICACIONES INTERACTIVAS 100% FUNCIONALES
+// PRUEBA 3: VERIFICACIÓN DE LAS 15 APLICACIONES ÚNICAS 100% FUNCIONALES
 // ============================================================================
-test('todos los 17 proyectos en portfolio-app.js tienen vista interactiva 100% funcional en disco', () => {
+test('todos los 15 proyectos únicos en portfolio-app.js tienen vista interactiva 100% funcional en disco', () => {
   const src = readFileSync(resolve(ROOT, 'portfolio-app.js'), 'utf8'); // Lee la definición del catálogo en `portfolio-app.js`
 
   // Extrae todas las carpetas declaradas en `folder: "..."`
@@ -81,9 +81,9 @@ test('todos los 17 proyectos en portfolio-app.js tienen vista interactiva 100% f
   // Extrae todas las rutas de aplicaciones interactivas declaradas en `previewUrl: "..."`
   const previewMatches = [...src.matchAll(/previewUrl:\s*"([^"]+)"/g)].map((m) => m[1]);
 
-  // Valida que existan exactamente los 17 proyectos curados y que todos tengan su `previewUrl`
-  assert.equal(folderMatches.length, 17, `Se esperaban 17 proyectos, encontrados: ${folderMatches.length}`);
-  assert.equal(previewMatches.length, 17, `Todos los 17 proyectos deben tener previewUrl funcional`);
+  // Valida que existan exactamente los 15 proyectos únicos (sin duplicados) y que todos tengan su `previewUrl`
+  assert.equal(folderMatches.length, 15, `Se esperaban 15 proyectos únicos, encontrados: ${folderMatches.length}`);
+  assert.equal(previewMatches.length, 15, `Todos los 15 proyectos deben tener previewUrl funcional`);
 
   // Verifica que cada carpeta de proyecto exista en el disco
   for (const folder of folderMatches) {
