@@ -2,25 +2,33 @@
  * ============================================================================
  * MOTOR DEL PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL (portfolio-app.js)
  * ============================================================================
- * 17 aplicaciones 100% funcionales e interactivas conectadas a Base de Datos
- * Real (SQL / MongoDB via `/api/*`) + sincronización híbrida en navegador.
- * Sin vistas estáticas de código: cada tarjeta ejecuta la aplicación real.
+ * Propósito:
+ *   Gestionar el catálogo curado de 17 aplicaciones 100% funcionales e
+ *   interactivas de Fredy Martinez, conectadas a Base de Datos Real
+ *   (SQL / MongoDB vía `/api/*`) y sincronización híbrida en el navegador.
+ *   - Sin vistas estáticas de código: cada tarjeta lanza la aplicación real.
+ *   - Incluye verificador en vivo de conexión a la Base de Datos (`/api/db/status`).
+ *   - Incluye envío real del formulario de contacto vía WhatsApp y Correo.
+ *
+ * Comentado detalladamente en español bloque por bloque y línea por línea.
+ * ============================================================================
  */
 
+// Catálogo maestro con las 17 aplicaciones Full-Stack, Backend y Web APIs 100% funcionales
 const PORTFOLIO_PROJECTS = [
   // ==========================================================================
   // 1. APLICACIONES FULL-STACK & PRODUCTOS INTEGRADORES
   // ==========================================================================
   {
-    id: "turismo-mean",
-    title: "Turismo MEAN — Plataforma Full-Stack (MongoDB + Express + Angular 16)",
-    folder: "Turismo_MEAN/",
-    category: "fullstack",
-    categoryLabel: "Full-Stack MEAN + BD",
-    stack: ["Base de Datos SQL/Mongo", "Express.js REST API", "Angular 16 SPA", "Node.js", "CRUD & Métricas"],
+    id: "turismo-mean", // Identificador único del proyecto
+    title: "Turismo MEAN — Plataforma Full-Stack (MongoDB + Express + Angular 16)", // Título comercial
+    folder: "Turismo_MEAN/", // Carpeta raíz del proyecto en el repositorio
+    category: "fullstack", // Categoría para el filtro superior ('fullstack', 'backend', 'js')
+    categoryLabel: "Full-Stack MEAN + BD", // Etiqueta visual de la insignia de categoría
+    stack: ["Base de Datos SQL/Mongo", "Express.js REST API", "Angular 16 SPA", "Node.js", "CRUD & Métricas"], // Tecnologías empleadas
     description: "Plataforma Full-Stack para gestión de destinos turísticos de Colombia con operaciones CRUD en tiempo real contra la Base de Datos, filtros por ciudad, ordenamiento por precio/calificación y métricas agregadas.",
     review: "Conectada a la tabla/colección `turismo_destinos` mediante `/api/destinos` con sincronización automática y cálculo reactivo de tarifas y calificaciones.",
-    previewUrl: "Turismo_MEAN/public/index.html"
+    previewUrl: "Turismo_MEAN/public/index.html" // Ruta de la aplicación interactiva funcional
   },
   {
     id: "app-de-citas",
@@ -54,6 +62,7 @@ const PORTFOLIO_PROJECTS = [
     description: "Plataforma integral de gestión del tiempo y productividad colaborativa con 7 módulos interactivos (Pomodoro, To-Do, Calendario, Hábitos, Notas, Roadmap POO y Landing SaaS) sincronizados con la Base de Datos.",
     review: "Sincroniza automáticamente el estado de los 7 módulos con la tabla `portfolio_kv_store` (`/api/db/kv/proyectobit_suite_state`) además de permitir exportación/importación JSON.",
     previewUrl: "proyectoBit/index.html",
+    // Accesos directos a cada uno de los módulos interactivos que componen la suite SaaS
     extraLinks: [
       { label: "Landing Page SaaS", url: "proyectoBit/landing-full-bootstrap/index.html" },
       { label: "Roadmap Tareas POO", url: "proyectoBit/roadMapTareas.html" },
@@ -217,9 +226,14 @@ const PORTFOLIO_PROJECTS = [
 ];
 
 // ============================================================================
-// UTILIDADES DE SEGURIDAD Y RENDERIZADO
+// UTILIDADES DE SEGURIDAD Y RENDERIZADO ANTI-XSS
 // ============================================================================
 
+/**
+ * Escapa caracteres HTML especiales para prevenir vulnerabilidades XSS al construir plantillas.
+ * @param {string} value - Cadena de entrada.
+ * @returns {string} Cadena con entidades HTML escapadas.
+ */
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -233,14 +247,17 @@ function escapeHtml(value) {
 // LÓGICA DE RENDERIZADO Y FILTRADO DEL PORTAFOLIO (100% FUNCIONAL, SIN CÓDIGO)
 // ============================================================================
 
-const gridContainer = document.getElementById("projectsGrid");
-const filterButtons = document.querySelectorAll(".filter-btn");
-const searchInput = document.getElementById("projectSearch");
-const countBadge = document.getElementById("projectCountBadge");
+const gridContainer = document.getElementById("projectsGrid"); // Contenedor de la grilla de tarjetas de proyectos
+const filterButtons = document.querySelectorAll(".filter-btn"); // Botones de filtrado por categoría
+const searchInput = document.getElementById("projectSearch"); // Campo de búsqueda en tiempo real
+const countBadge = document.getElementById("projectCountBadge"); // Contador de aplicaciones mostradas
 
-let currentCategory = "all";
-let currentSearch = "";
+let currentCategory = "all"; // Categoría activa ('all', 'fullstack', 'backend', 'js')
+let currentSearch = ""; // Término de búsqueda actual
 
+/**
+ * Calcula y actualiza los contadores de proyectos en las tarjetas del Hero y en los botones de filtro.
+ */
 function updatePortfolioMetrics() {
   const totalEl = document.getElementById("statTotalProjects");
   const liveEl = document.getElementById("statLiveDemos");
@@ -249,6 +266,7 @@ function updatePortfolioMetrics() {
   const filterBackendEl = document.getElementById("filterBackendBtn");
   const filterJsEl = document.getElementById("filterJsBtn");
 
+  // Cuenta cuántas aplicaciones tienen URL interactiva (las 17 del portafolio)
   const liveCount = PORTFOLIO_PROJECTS.filter((p) => Boolean(p.previewUrl)).length;
   const fullstackCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "fullstack").length;
   const backendCount = PORTFOLIO_PROJECTS.filter((p) => p.category === "backend").length;
@@ -262,9 +280,13 @@ function updatePortfolioMetrics() {
   if (filterJsEl) filterJsEl.textContent = `⚡ Web APIs, JS & CSS Motion (${jsCount})`;
 }
 
+/**
+ * Filtra y dibuja las tarjetas del catálogo de aplicaciones funcionales en `#projectsGrid`.
+ */
 function renderPortfolio() {
   if (!gridContainer) return;
 
+  // Filtra proyectos por categoría activa y coincidencia de texto en título, carpeta, descripción o stack
   const filtered = PORTFOLIO_PROJECTS.filter((proj) => {
     const matchesCategory = currentCategory === "all" || proj.category === currentCategory;
     const query = currentSearch.toLowerCase();
@@ -282,6 +304,7 @@ function renderPortfolio() {
     countBadge.textContent = `${filtered.length} aplicaciones funcionales`;
   }
 
+  // Estado vacío cuando ningún proyecto coincide con la búsqueda
   if (filtered.length === 0) {
     gridContainer.innerHTML = `
       <div class="col-12 text-center py-5">
@@ -294,10 +317,10 @@ function renderPortfolio() {
     return;
   }
 
+  // Construye el HTML de cada tarjeta mostrando únicamente los controles de ejecución de la aplicación real
   gridContainer.innerHTML = filtered
     .map((proj) => {
       const safeTitle = escapeHtml(proj.title);
-      const safeFolder = escapeHtml(proj.folder);
       const safeCategory = escapeHtml(proj.category);
       const safeCategoryLabel = escapeHtml(proj.categoryLabel);
       const safeDesc = escapeHtml(proj.description);
@@ -352,6 +375,7 @@ function renderPortfolio() {
     .join("");
 }
 
+/** Restablece la categoría a 'all' y limpia el campo de búsqueda. */
 window.resetPortfolioFilters = function () {
   currentCategory = "all";
   currentSearch = "";
@@ -360,22 +384,32 @@ window.resetPortfolioFilters = function () {
   renderPortfolio();
 };
 
-const modalEl = document.getElementById("portfolioModal");
-const previewIframeEl = document.getElementById("previewIframe");
-const iframeLoaderEl = document.getElementById("iframeLoader");
+// ============================================================================
+// CONTROL DEL MODAL INTERACTIVO DE APLICACIONES Y HOJA DE VIDA (CV)
+// ============================================================================
+const modalEl = document.getElementById("portfolioModal"); // Elemento DOM del modal Bootstrap
+const previewIframeEl = document.getElementById("previewIframe"); // Iframe donde corre la aplicación o el CV
+const iframeLoaderEl = document.getElementById("iframeLoader"); // Indicador de carga sobre el iframe
 
+// Oculta el indicador de carga tan pronto como el iframe termina de cargar su documento
 if (previewIframeEl && iframeLoaderEl) {
   previewIframeEl.addEventListener("load", () => {
     iframeLoaderEl.classList.add("loaded");
   });
 }
 
+/**
+ * Abre cualquier aplicación del portafolio o la Hoja de Vida dentro del modal interactivo.
+ * @param {string} title - Título a mostrar en la cabecera del modal.
+ * @param {string} url - Ruta relativa de la aplicación a cargar en el iframe.
+ */
 window.openPreviewModal = function (title, url) {
   const modalTitle = document.getElementById("previewModalTitle");
   const externalLink = document.getElementById("previewExternalLink");
   const iframeContainer = document.getElementById("iframeContainer");
-  const safeUrl = encodeURI(url);
+  const safeUrl = encodeURI(url); // Codifica espacios en nombres de carpeta como `My CV/index.html` o `App de citas/...`
 
+  // Si no existen los nodos del modal, abre directamente en una pestaña nueva como respaldo
   if (!modalEl || !previewIframeEl) {
     window.open(safeUrl, "_blank", "noopener");
     return;
@@ -389,12 +423,14 @@ window.openPreviewModal = function (title, url) {
   if (iframeContainer) iframeContainer.classList.remove("d-none");
   if (iframeLoaderEl) {
     iframeLoaderEl.classList.remove("loaded");
+    // Temporizador de seguridad para ocultar el loader incluso si un recurso externo tarda más
     setTimeout(() => {
       iframeLoaderEl.classList.add("loaded");
     }, 900);
   }
-  previewIframeEl.src = safeUrl;
+  previewIframeEl.src = safeUrl; // Inicia la carga inmediata de la aplicación en el iframe
 
+  // Muestra el modal usando la API oficial de Bootstrap 5 o abre en pestaña nueva si el CDN aún no cargó
   if (window.bootstrap && window.bootstrap.Modal) {
     const modal = window.bootstrap.Modal.getOrCreateInstance(modalEl);
     modal.show();
@@ -403,7 +439,7 @@ window.openPreviewModal = function (title, url) {
   }
 };
 
-// Delegación global de eventos para todos los botones con [data-action] (navbar, hero y grilla)
+// Delegación global de eventos para todos los botones con `[data-action]` (Navbar CV, Hero CV y tarjetas)
 document.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
@@ -416,16 +452,24 @@ document.addEventListener("click", (event) => {
   }
 });
 
+// Limpia el `src` del iframe al cerrar el modal para detener audios o temporizadores en segundo plano
 if (modalEl) {
   modalEl.addEventListener("hidden.bs.modal", () => {
     if (previewIframeEl) previewIframeEl.src = "about:blank";
   });
 }
 
-// Verificador en vivo de conexión a la Base de Datos Real (/api/db/status)
+// ============================================================================
+// VERIFICADOR EN VIVO DE CONEXIÓN A LA BASE DE DATOS REAL (/api/db/status)
+// ============================================================================
 const btnTestDbConnection = document.getElementById("btnTestDbConnection");
 const dbConnectionAlert = document.getElementById("dbConnectionAlert");
 
+/**
+ * Consulta el endpoint `/api/db/status` para verificar la conexión con el motor SQL/Mongo
+ * y mostrar el conteo de registros de las 12 tablas de la Base de Datos.
+ * @param {boolean} showAlert - Si es `true`, despliega el panel con el resumen detallado por tabla.
+ */
 async function checkDatabaseStatus(showAlert = false) {
   try {
     if (location.protocol === "file:") throw new Error("Modo archivo local");
@@ -447,6 +491,7 @@ async function checkDatabaseStatus(showAlert = false) {
     }
   } catch {}
 
+  // Si se abre sin servidor local (`file://`), informa que el modo híbrido está activo
   if (btnTestDbConnection) {
     btnTestDbConnection.className = "btn btn-outline-info btn-sm rounded-pill px-3 fw-semibold";
     btnTestDbConnection.textContent = "⚡ Persistencia Híbrida Activa (SQL + LocalStorage)";
@@ -462,7 +507,9 @@ if (btnTestDbConnection) {
   btnTestDbConnection.addEventListener("click", () => checkDatabaseStatus(true));
 }
 
-// Botón flotante Volver Arriba
+// ============================================================================
+// NAVEGACIÓN, BÚSQUEDA Y BOTÓN FLOTANTE VOLVER ARRIBA
+// ============================================================================
 const backToTopBtn = document.getElementById("backToTopBtn");
 if (backToTopBtn) {
   window.addEventListener(
@@ -498,13 +545,14 @@ if (searchInput) {
 // ============================================================================
 // ENVÍO REAL DEL FORMULARIO DE CONTACTO POR WHATSAPP Y CORREO ELECTRÓNICO
 // ============================================================================
-const CONTACT_PHONE = "573152388315";
-const CONTACT_EMAIL = "fredymartinezquinto@hotmail.com";
+const CONTACT_PHONE = "573152388315"; // Número oficial de WhatsApp de Fredy Martinez
+const CONTACT_EMAIL = "fredymartinezquinto@hotmail.com"; // Correo oficial de contacto
 
 const portfolioContactForm = document.getElementById("portfolioContactForm");
 const pContactFeedback = document.getElementById("pContactFeedback");
 const btnSendWhatsApp = document.getElementById("btnSendWhatsApp");
 
+/** Extrae y limpia los valores ingresados en el formulario de contacto. */
 function getPortfolioFormValues() {
   const name = (document.getElementById("pContactName")?.value || "").trim();
   const email = (document.getElementById("pContactEmail")?.value || "").trim();
@@ -513,6 +561,7 @@ function getPortfolioFormValues() {
   return { name, email, subject, msg };
 }
 
+// Envío directo a WhatsApp Web / App móvil con mensaje pre-formateado
 if (btnSendWhatsApp) {
   btnSendWhatsApp.addEventListener("click", () => {
     if (portfolioContactForm && !portfolioContactForm.reportValidity()) return;
@@ -530,6 +579,7 @@ if (btnSendWhatsApp) {
   });
 }
 
+// Envío por cliente de correo electrónico predeterminado (`mailto:`)
 if (portfolioContactForm && pContactFeedback) {
   portfolioContactForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -553,6 +603,7 @@ if (portfolioContactForm && pContactFeedback) {
   });
 }
 
+// Inicialización automática al cargar el portafolio
 updatePortfolioMetrics();
 renderPortfolio();
 checkDatabaseStatus(false);

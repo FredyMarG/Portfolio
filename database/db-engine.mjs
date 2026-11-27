@@ -3,67 +3,70 @@
  * MOTOR DE BASE DE DATOS REAL UNIFICADO — PORTAFOLIO FREDY MARTINEZ
  * (database/db-engine.mjs)
  * ============================================================================
- * Soporta:
- * 1. SQLite3 Nativo (`node:sqlite` -> `database/portfolio_real.sqlite` o `/tmp/portfolio_real.sqlite` en Netlify)
- * 2. PostgreSQL / Netlify Database (`process.env.NETLIFY_DB_URL` o `process.env.DATABASE_URL`)
- * 3. MongoDB Atlas (`process.env.MONGODB_URI`)
+ * Propósito:
+ *   Gestionar la persistencia relacional y documental en tiempo real para
+ *   todos los proyectos del portafolio mediante `node:sqlite` (`DatabaseSync`)
+ *   sobre `database/portfolio_real.sqlite` (o `/tmp/portfolio_real.sqlite` en
+ *   entornos serverless como Netlify Functions), además de detectar conexiones
+ *   externas configuradas mediante `MONGODB_URI` o `NETLIFY_DB_URL`/`DATABASE_URL`.
  *
- * Provee persistencia real SQL/NoSQL para TODOS los proyectos del portafolio:
- * - Turismo MEAN (`/api/destinos`, `/api/destinos/stats/resumen`)
- * - App de Citas (`/api/planes`, `/api/citas`)
- * - Gestor de Tareas Node (`/api/tareas`, `/api/eventos`)
- * - Finanzas APP (`/api/finanzas/transacciones`)
- * - Tablero Kanban (`/api/kanban/tareas`)
- * - BitShop REST API (`/api/user/*`, `/api/products/*`)
- * - ts_api TypeScript (`/api/login`, `/api/operaciones/*`, `/api/saludo/*`, `/api/math/*`, `/api/health`)
- * - MongoDB DBZ-V2 Playground (`/api/characters`, `/api/reset`)
- * - Tienda Online BIT Shop (`/api/tienda/pedidos`, `/api/tienda/carrito`)
- * - NotesDB IndexedDB + Server Sync (`/api/notesdb/notas`)
- * - Procrastination Nightmare Angular 16 + Suite 7 Módulos (`/api/agenda/eventos`, `/api/proyectobit/state`)
- * - CineSearch, Rick&Morty, SketchPad y FileDrop (`/api/db/kv/:clave`)
- * - Diagnóstico y Prueba de Conexión (`/api/db/status`, `/api/db/test`)
+ * Comentado detalladamente en español bloque por bloque y línea por línea.
+ * ============================================================================
  */
 
-import { existsSync, mkdirSync, copyFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
-import crypto from "node:crypto";
-import { DatabaseSync } from "node:sqlite";
+import { existsSync, mkdirSync, copyFileSync } from "node:fs"; // Funciones del sistema de archivos para verificar, crear carpetas y copiar la BD en serverless
+import { resolve, dirname } from "node:path"; // Utilidades para construir rutas absolutas compatibles con Windows y Linux
+import { fileURLToPath } from "node:url"; // Convierte la URL del módulo ES actual en una ruta física de archivo
+import crypto from "node:crypto"; // Módulo criptográfico nativo para generar UUIDs e identificadores hexadecimales
+import { DatabaseSync } from "node:sqlite"; // Motor SQLite3 nativo integrado en Node.js sin dependencias binarias externas
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const LOCAL_DB_PATH = resolve(__dirname, "portfolio_real.sqlite");
+const __dirname = dirname(fileURLToPath(import.meta.url)); // Obtiene la ruta absoluta del directorio `database/`
+const LOCAL_DB_PATH = resolve(__dirname, "portfolio_real.sqlite"); // Define la ubicación del archivo físico SQLite3 en el repositorio
 
-let sqliteDb = null;
-let activeDbPath = LOCAL_DB_PATH;
+let sqliteDb = null; // Caché singleton de la conexión abierta a la base de datos SQLite
+let activeDbPath = LOCAL_DB_PATH; // Guarda la ruta activa donde está operando la base de datos para reportarla en `/api/db/status`
 
+/**
+ * Obtiene o inicializa la instancia singleton de la base de datos SQLite3.
+ * Si el directorio raíz es de solo lectura (como ocurre en AWS Lambda / Netlify Functions),
+ * copia automáticamente el archivo pre-poblado a `/tmp/portfolio_real.sqlite` para permitir escrituras SQL.
+ * @returns {DatabaseSync} Instancia activa y sembrada de la base de datos SQLite.
+ */
 function getSqliteInstance() {
-  if (sqliteDb) return sqliteDb;
+  if (sqliteDb) return sqliteDb; // Si la conexión ya está abierta en memoria, la reutiliza inmediatamente
 
   try {
-    mkdirSync(dirname(LOCAL_DB_PATH), { recursive: true });
-    sqliteDb = new DatabaseSync(LOCAL_DB_PATH);
-    activeDbPath = LOCAL_DB_PATH;
+    mkdirSync(dirname(LOCAL_DB_PATH), { recursive: true }); // Asegura que la carpeta `database/` exista en disco
+    sqliteDb = new DatabaseSync(LOCAL_DB_PATH); // Abre (o crea) el archivo `database/portfolio_real.sqlite`
+    activeDbPath = LOCAL_DB_PATH; // Registra que estamos operando sobre el archivo principal del proyecto
   } catch {
-    // En entornos serverless (Netlify Functions) el sistema de archivos raíz es solo lectura y /tmp es escribible
-    const tmpPath = "/tmp/portfolio_real.sqlite";
+    // En entornos serverless (Netlify Functions) el sistema de archivos raíz es de solo lectura y `/tmp` es escribible
+    const tmpPath = "/tmp/portfolio_real.sqlite"; // Ruta temporal escribible dentro del contenedor serverless
     try {
-      if (!existsSync(tmpPath) && existsSync(LOCAL_DB_PATH)) {
-        copyFileSync(LOCAL_DB_PATH, tmpPath);
+      if (!existsSync(tmpPath) && existsSync(LOCAL_DB_PATH)) { // Si aún no existe la copia en `/tmp` pero sí el archivo semilla del deploy
+        copyFileSync(LOCAL_DB_PATH, tmpPath); // Copia la base de datos pre-poblada hacia `/tmp`
       }
-      sqliteDb = new DatabaseSync(tmpPath);
-      activeDbPath = tmpPath;
+      sqliteDb = new DatabaseSync(tmpPath); // Abre la base de datos SQLite desde `/tmp` con permisos de lectura y escritura
+      activeDbPath = tmpPath; // Registra `/tmp/portfolio_real.sqlite` como archivo activo
     } catch {
-      sqliteDb = new DatabaseSync(":memory:");
-      activeDbPath = ":memory:";
+      sqliteDb = new DatabaseSync(":memory:"); // Respaldo extremo en memoria RAM si el entorno restringe `/tmp`
+      activeDbPath = ":memory:"; // Registra que opera en modo memoria transaccional
     }
   }
 
-  initializeSchemaAndSeed(sqliteDb);
-  return sqliteDb;
+  initializeSchemaAndSeed(sqliteDb); // Ejecuta la creación de las 14 tablas y carga los datos semilla iniciales si están vacías
+  return sqliteDb; // Retorna la instancia lista para ejecutar consultas SQL preparadas
 }
 
+/**
+ * Crea todas las tablas relacionales (`CREATE TABLE IF NOT EXISTS`) y carga
+ * los registros iniciales (seed) cuando las tablas se encuentran vacías.
+ * @param {DatabaseSync} db - Instancia activa de SQLite.
+ */
 function initializeSchemaAndSeed(db) {
+  // Ejecuta el bloque DDL con las 14 tablas que respaldan todos los proyectos del portafolio
   db.exec(`
+    -- 1. Tabla para Turismo MEAN (Destinos Turísticos de Colombia)
     CREATE TABLE IF NOT EXISTS turismo_destinos (
       _id TEXT PRIMARY KEY,
       nombre TEXT NOT NULL,
@@ -74,6 +77,7 @@ function initializeSchemaAndSeed(db) {
       fechaCreacion TEXT NOT NULL
     );
 
+    -- 2. Tabla de planes sugeridos para App de Citas (Amour & Planes)
     CREATE TABLE IF NOT EXISTS planes_sugeridos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       titulo TEXT NOT NULL,
@@ -87,6 +91,7 @@ function initializeSchemaAndSeed(db) {
       color_acento TEXT NOT NULL DEFAULT '#f43f5e'
     );
 
+    -- 3. Tabla de citas agendadas y álbum fotográfico para App de Citas
     CREATE TABLE IF NOT EXISTS citas_programadas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       plan_id INTEGER NOT NULL DEFAULT 1,
@@ -101,6 +106,7 @@ function initializeSchemaAndSeed(db) {
       creado_en TEXT NOT NULL
     );
 
+    -- 4. Tabla de tareas para Gestor de Tareas en Node.js Nativo
     CREATE TABLE IF NOT EXISTS gestor_tareas (
       id TEXT PRIMARY KEY,
       descripcion TEXT NOT NULL,
@@ -108,6 +114,7 @@ function initializeSchemaAndSeed(db) {
       creadoEn TEXT NOT NULL
     );
 
+    -- 5. Tabla de bitácora de eventos de auditoría para Gestor de Tareas en Node.js
     CREATE TABLE IF NOT EXISTS gestor_eventos (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       ts TEXT NOT NULL,
@@ -116,6 +123,7 @@ function initializeSchemaAndSeed(db) {
       descripcion TEXT DEFAULT ''
     );
 
+    -- 6. Tabla de movimientos contables para Finanzas APP
     CREATE TABLE IF NOT EXISTS finanzas_transacciones (
       id INTEGER PRIMARY KEY,
       concepto TEXT NOT NULL,
@@ -124,6 +132,7 @@ function initializeSchemaAndSeed(db) {
       creado_en TEXT NOT NULL
     );
 
+    -- 7. Tabla de historias de usuario para Tablero Kanban Scrum
     CREATE TABLE IF NOT EXISTS kanban_tareas (
       id TEXT PRIMARY KEY,
       texto TEXT NOT NULL,
@@ -131,6 +140,7 @@ function initializeSchemaAndSeed(db) {
       orden INTEGER NOT NULL DEFAULT 0
     );
 
+    -- 8. Tabla de usuarios con roles RBAC para BitShop REST API
     CREATE TABLE IF NOT EXISTS bitshop_users (
       _id TEXT PRIMARY KEY,
       username TEXT NOT NULL,
@@ -140,6 +150,7 @@ function initializeSchemaAndSeed(db) {
       role TEXT NOT NULL DEFAULT 'client'
     );
 
+    -- 9. Tabla de catálogo de productos tecnológicos para BitShop REST API
     CREATE TABLE IF NOT EXISTS bitshop_products (
       _id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -148,6 +159,7 @@ function initializeSchemaAndSeed(db) {
       description TEXT DEFAULT ''
     );
 
+    -- 10. Tabla de guerreros para MongoDB DBZ-V2 Playground
     CREATE TABLE IF NOT EXISTS mongo_characters (
       _id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
@@ -156,6 +168,7 @@ function initializeSchemaAndSeed(db) {
       powerLevel INTEGER NOT NULL
     );
 
+    -- 11. Tabla de órdenes de compra confirmadas para BIT Shop Tienda Online
     CREATE TABLE IF NOT EXISTS tienda_pedidos (
       id TEXT PRIMARY KEY,
       cliente TEXT NOT NULL,
@@ -164,6 +177,7 @@ function initializeSchemaAndSeed(db) {
       creado_en TEXT NOT NULL
     );
 
+    -- 12. Tabla de notas técnicas para NotesDB (IndexedDB + Réplica SQL)
     CREATE TABLE IF NOT EXISTS notesdb_notas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT NOT NULL,
@@ -171,6 +185,7 @@ function initializeSchemaAndSeed(db) {
       createdAt TEXT NOT NULL
     );
 
+    -- 13. Tabla de eventos de calendario para Procrastination Nightmare Angular 16 + FullCalendar v6
     CREATE TABLE IF NOT EXISTS agenda_eventos (
       id TEXT PRIMARY KEY,
       title TEXT NOT NULL,
@@ -179,6 +194,7 @@ function initializeSchemaAndSeed(db) {
       color TEXT NOT NULL DEFAULT '#38bdf8'
     );
 
+    -- 14. Tabla de auditoría de operaciones para ts_api TypeScript Studio
     CREATE TABLE IF NOT EXISTS ts_api_logs (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       endpoint TEXT NOT NULL,
@@ -187,6 +203,7 @@ function initializeSchemaAndSeed(db) {
       fecha TEXT NOT NULL
     );
 
+    -- 15. Almacén Clave-Valor SQL para sincronización de módulos (Suite proyectoBit, Carrito, SketchPad)
     CREATE TABLE IF NOT EXISTS portfolio_kv_store (
       clave TEXT PRIMARY KEY,
       valor_json TEXT NOT NULL,
@@ -194,7 +211,7 @@ function initializeSchemaAndSeed(db) {
     );
   `);
 
-  // 1. Seed Turismo MEAN
+  // 1. Semilla inicial para Turismo MEAN (5 destinos emblemáticos de Colombia)
   const countTurismo = db.prepare("SELECT COUNT(*) as c FROM turismo_destinos").get().c;
   if (countTurismo === 0) {
     const ins = db.prepare(
@@ -208,7 +225,7 @@ function initializeSchemaAndSeed(db) {
     ins.run("65f1a1000000000000000005", "Piedra del Peñol & Embalse de Guatapé", "Guatapé", "Ascenso de 740 escalones con vista panorámica 360° de la represa y zócalos coloridos.", 620000, 4.8, now);
   }
 
-  // 2. Seed App de Citas (Planes sugeridos)
+  // 2. Semilla inicial para App de Citas (10 planes sugeridos)
   const countPlanes = db.prepare("SELECT COUNT(*) as c FROM planes_sugeridos").get().c;
   if (countPlanes === 0) {
     const ins = db.prepare(
@@ -229,7 +246,7 @@ function initializeSchemaAndSeed(db) {
     for (const p of seedPlanes) ins.run(...p);
   }
 
-  // 3. Seed Gestor de Tareas Node
+  // 3. Semilla inicial para Gestor de Tareas en Node.js
   const countTareas = db.prepare("SELECT COUNT(*) as c FROM gestor_tareas").get().c;
   if (countTareas === 0) {
     const now = new Date().toISOString();
@@ -243,7 +260,7 @@ function initializeSchemaAndSeed(db) {
     insE.run(now, "tarea:creada", "t-sql-003", "Validar conexión en vivo desde todos los proyectos del portafolio");
   }
 
-  // 4. Seed Finanzas APP
+  // 4. Semilla inicial para Finanzas APP (Ingresos y Gastos en COP)
   const countFin = db.prepare("SELECT COUNT(*) as c FROM finanzas_transacciones").get().c;
   if (countFin === 0) {
     const now = new Date().toISOString();
@@ -254,7 +271,7 @@ function initializeSchemaAndSeed(db) {
     ins.run(104, "Licencias JetBrains, Copilot & Herramientas Dev", 220000, "gasto", now);
   }
 
-  // 5. Seed Tablero Kanban
+  // 5. Semilla inicial para Tablero Kanban Scrum
   const countKanban = db.prepare("SELECT COUNT(*) as c FROM kanban_tareas").get().c;
   if (countKanban === 0) {
     const ins = db.prepare("INSERT INTO kanban_tareas (id, texto, columna, orden) VALUES (?, ?, ?, ?)");
@@ -264,7 +281,7 @@ function initializeSchemaAndSeed(db) {
     ins.run("4", "Sincronizar tableros ágiles Scrum con motor SQL en tiempo real", "pendiente", 1);
   }
 
-  // 6. Seed BitShop REST API
+  // 6. Semilla inicial para BitShop REST API (Usuarios JWT y Productos)
   const countUsers = db.prepare("SELECT COUNT(*) as c FROM bitshop_users").get().c;
   if (countUsers === 0) {
     const insU = db.prepare("INSERT INTO bitshop_users (_id, username, email, password, phone, role) VALUES (?, ?, ?, ?, ?, ?)");
@@ -281,10 +298,10 @@ function initializeSchemaAndSeed(db) {
     insP.run("prod-bit-04", "Silla Ergonómica Herman Miller Aeron Remastered", 5400000, 5, "Soporte lumbar PostureFit SL diseñado para jornadas intensivas de desarrollo.");
   }
 
-  // 7. Seed MongoDB DBZ-V2 Playground
+  // 7. Semilla inicial para MongoDB DBZ-V2 Playground
   seedMongoCharactersIfEmpty(db);
 
-  // 8. Seed NotesDB
+  // 8. Semilla inicial para NotesDB
   const countNotes = db.prepare("SELECT COUNT(*) as c FROM notesdb_notas").get().c;
   if (countNotes === 0) {
     const now = new Date().toLocaleString("es-CO");
@@ -294,11 +311,11 @@ function initializeSchemaAndSeed(db) {
     insN.run("Diseño de componentes reactivos y calendario FullCalendar v6 en Angular 16 SPA", "Idea", now);
   }
 
-  // 9. Seed Agenda Eventos (Procrastination Nightmare Angular 16 + FullCalendar)
+  // 9. Semilla inicial para Agenda Eventos (Procrastination Nightmare Angular 16 + FullCalendar v6)
   const countAgenda = db.prepare("SELECT COUNT(*) as c FROM agenda_eventos").get().c;
   if (countAgenda === 0) {
     const insA = db.prepare("INSERT INTO agenda_eventos (id, title, start, category, color) VALUES (?, ?, ?, ?, ?)");
-    const ym = new Date().toISOString().slice(0, 7);
+    const ym = new Date().toISOString().slice(0, 7); // Usa el año y mes actual para que los eventos aparezcan siempre en la vista activa del calendario
     insA.run("ev-101", "Sprint Planning & Arquitectura Base de Datos SQL", `${ym}-05`, "Scrum", "#38bdf8");
     insA.run("ev-102", "Despliegue Continuo (CI/CD) en Netlify Functions", `${ym}-12`, "DevOps", "#10b981");
     insA.run("ev-103", "Code Review & Auditoría de Seguridad JWT / RBAC", `${ym}-18`, "Backend", "#a855f7");
@@ -306,9 +323,14 @@ function initializeSchemaAndSeed(db) {
   }
 }
 
+/**
+ * Restaura o inicializa los 5 personajes de la colección DBZ-V2 en `mongo_characters`.
+ * @param {DatabaseSync} db - Instancia activa de SQLite.
+ * @param {boolean} forceReset - Si es `true`, vacía la tabla antes de reinsertar los documentos semilla.
+ */
 function seedMongoCharactersIfEmpty(db, forceReset = false) {
   if (forceReset) {
-    db.exec("DELETE FROM mongo_characters");
+    db.exec("DELETE FROM mongo_characters"); // Limpia todos los documentos cuando el usuario pulsa "Reiniciar DBZ-V2"
   }
   const count = db.prepare("SELECT COUNT(*) as c FROM mongo_characters").get().c;
   if (count === 0) {
@@ -322,16 +344,22 @@ function seedMongoCharactersIfEmpty(db, forceReset = false) {
 }
 
 /**
- * Procesa cualquier petición HTTP hacia `/api/*` y retorna `{ status, body }`.
+ * Controlador principal que enruta y ejecuta cualquier petición HTTP hacia `/api/*`.
+ * @param {string} method - Verbo HTTP en mayúsculas (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`).
+ * @param {string} pathname - Ruta solicitada (ej. `/api/destinos`).
+ * @param {URLSearchParams} searchParams - Parámetros de consulta en la URL (`?q=...`).
+ * @param {object} body - Objeto JSON recibido en el cuerpo de la petición.
+ * @returns {Promise<{ status: number, body: any }>} Código HTTP y respuesta JSON.
  */
 export async function handleApiRequest(method, pathname, searchParams, body = {}) {
-  const db = getSqliteInstance();
-  const cleanPath = pathname.replace(/\/+$/, "") || "/";
+  const db = getSqliteInstance(); // Obtiene la instancia activa de la base de datos SQLite
+  const cleanPath = pathname.replace(/\/+$/, "") || "/"; // Elimina barras diagonales finales sobrantes para normalizar las rutas
 
   // ==========================================================================
-  // 0. ESTADO Y PRUEBA DE CONEXIÓN DE LA BASE DE DATOS REAL
+  // 0. ESTADO Y PRUEBA DE CONEXIÓN DE LA BASE DE DATOS REAL (`/api/db/status`)
   // ==========================================================================
   if (cleanPath === "/api/db/status" || cleanPath === "/api/db/test") {
+    // Consulta en tiempo real el conteo de filas de las 12 tablas principales
     const tables = {
       turismo_destinos: db.prepare("SELECT COUNT(*) as c FROM turismo_destinos").get().c,
       planes_sugeridos: db.prepare("SELECT COUNT(*) as c FROM planes_sugeridos").get().c,
@@ -367,20 +395,20 @@ export async function handleApiRequest(method, pathname, searchParams, body = {}
   // 1. TURISMO MEAN (`/api/destinos` y `/api/destinos/stats/resumen`)
   // ==========================================================================
   if (cleanPath === "/api/destinos/stats/resumen" && method === "GET") {
-    const rows = db.prepare("SELECT * FROM turismo_destinos").all();
-    const total = rows.length;
-    const precioPromedio = total ? Math.round(rows.reduce((a, r) => a + Number(r.precio || 0), 0) / total) : 0;
+    const rows = db.prepare("SELECT * FROM turismo_destinos").all(); // Obtiene todos los destinos registrados
+    const total = rows.length; // Total de destinos activos
+    const precioPromedio = total ? Math.round(rows.reduce((a, r) => a + Number(r.precio || 0), 0) / total) : 0; // Calcula tarifa promedio
     const calificacionPromedio = total
       ? Number((rows.reduce((a, r) => a + Number(r.calificacion || 0), 0) / total).toFixed(2))
-      : 0;
+      : 0; // Calcula estrellas promedio
     return { status: 200, body: { ok: true, stats: { totalDestinos: total, precioPromedio, calificacionPromedio } } };
   }
 
   if (cleanPath === "/api/destinos") {
     if (method === "GET") {
-      let rows = db.prepare("SELECT * FROM turismo_destinos ORDER BY fechaCreacion DESC").all();
-      const q = (searchParams.get("q") || "").trim().toLowerCase();
-      const ciudad = (searchParams.get("ciudad") || "").trim().toLowerCase();
+      let rows = db.prepare("SELECT * FROM turismo_destinos ORDER BY fechaCreacion DESC").all(); // Lista destinos ordenados por fecha
+      const q = (searchParams.get("q") || "").trim().toLowerCase(); // Lee filtro de búsqueda por texto libre
+      const ciudad = (searchParams.get("ciudad") || "").trim().toLowerCase(); // Lee filtro por ciudad
       if (q) {
         rows = rows.filter(
           (d) =>
@@ -395,12 +423,12 @@ export async function handleApiRequest(method, pathname, searchParams, body = {}
       return { status: 200, body: { ok: true, total: rows.length, destinos: rows } };
     }
     if (method === "POST") {
-      const nombre = String(body.nombre || "").trim();
-      const ciudad = String(body.ciudad || "").trim();
+      const nombre = String(body.nombre || "").trim(); // Sanitiza nombre del destino
+      const ciudad = String(body.ciudad || "").trim(); // Sanitiza ciudad o región
       if (!nombre || !ciudad) {
         return { status: 400, body: { ok: false, msg: "El nombre y la ciudad son obligatorios" } };
       }
-      const _id = crypto.randomBytes(12).toString("hex");
+      const _id = crypto.randomBytes(12).toString("hex"); // Genera ID hexadecimal de 24 caracteres compatible con ObjectId
       const descripcion = String(body.descripcion || "").trim() || "Destino turístico destacado en Colombia";
       const precio = Math.max(0, Number(body.precio ?? 850000));
       const calificacion = Math.min(5, Math.max(1, Number(body.calificacion ?? 5)));
@@ -413,6 +441,7 @@ export async function handleApiRequest(method, pathname, searchParams, body = {}
     }
   }
 
+  // Operaciones PUT y DELETE por ID sobre `/api/destinos/:id`
   const matchTurismoId = cleanPath.match(/^\/api\/destinos\/([^/]+)$/);
   if (matchTurismoId) {
     const id = decodeURIComponent(matchTurismoId[1]);
@@ -615,7 +644,7 @@ export async function handleApiRequest(method, pathname, searchParams, body = {}
       return { status: 200, body: { ok: true, estado } };
     }
     if (method === "PUT" || method === "POST") {
-      // Sincroniza el estado completo de las 3 columnas en la tabla relacional kanban_tareas
+      // Sincroniza el estado completo de las 3 columnas en la tabla relacional `kanban_tareas`
       const estado = body.estado || body;
       if (estado && typeof estado === "object") {
         db.exec("DELETE FROM kanban_tareas");
@@ -975,7 +1004,7 @@ export async function handleApiRequest(method, pathname, searchParams, body = {}
   }
 
   // ==========================================================================
-  // 12. ALMACÉN CLAVE-VALOR SQL PARA SINCRONIZACIÓN DE TODOS LOS MÓDULOS (`/api/db/kv/:clave`)
+  // 12. ALMACÉN CLAVE-VALOR SQL PARA SINCRONIZACIÓN DE MÓDULOS (`/api/db/kv/:clave`)
   // ==========================================================================
   const matchKv = cleanPath.match(/^\/api\/db\/kv\/([^/]+)$/);
   if (matchKv) {
@@ -1005,5 +1034,6 @@ export async function handleApiRequest(method, pathname, searchParams, body = {}
     }
   }
 
+  // Si ninguna ruta coincide, retorna estado HTTP 404 Not Found
   return { status: 404, body: { ok: false, error: `Endpoint no encontrado: ${method} ${cleanPath}` } };
 }

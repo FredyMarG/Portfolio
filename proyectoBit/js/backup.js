@@ -126,21 +126,22 @@
 
   refreshDashboardMetrics();
 
-  // Sincronización automática con la Base de Datos Real SQL/Mongo (/api/db/kv/proyectobit_suite_state)
+  // Sincronización automática de los 7 módulos con la Base de Datos Real SQL/Mongo (/api/db/kv/proyectobit_suite_state)
   async function syncSuiteWithDatabase() {
-    if (location.protocol === "file:") return;
+    if (location.protocol === "file:") return; // En modo archivo local conserva la persistencia en localStorage
     try {
-      const localData = {};
-      let hasLocal = false;
+      const localData = {}; // Objeto para recolectar el estado actual de los 7 módulos de la suite
+      let hasLocal = false; // Bandera que indica si el navegador ya tiene progreso registrado
       SUITE_KEYS.forEach((key) => {
-        const val = localStorage.getItem(key);
+        const val = localStorage.getItem(key); // Lee cada clave de módulo (Pomodoro, To-Do, Notas, Hábitos, Calendario, Roadmap)
         if (val !== null) {
-          localData[key] = val;
+          localData[key] = val; // Agrega el valor al payload de sincronización
           hasLocal = true;
         }
       });
 
       if (hasLocal) {
+        // Si hay datos locales, los respalda automáticamente en la tabla `portfolio_kv_store` de la Base de Datos
         await fetch("/api/db/kv/proyectobit_suite_state", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -148,15 +149,16 @@
         });
         showStatus("🟢 Suite sincronizada en tiempo real con Base de Datos SQL.");
       } else {
+        // Si el navegador está limpio, descarga el estado guardado desde la Base de Datos Real
         const res = await fetch("/api/db/kv/proyectobit_suite_state");
         const json = await res.json();
         if (res.ok && json.exists && json.data && typeof json.data === "object") {
           SUITE_KEYS.forEach((key) => {
             if (typeof json.data[key] === "string") {
-              localStorage.setItem(key, json.data[key]);
+              localStorage.setItem(key, json.data[key]); // Restaura cada módulo desde la Base de Datos
             }
           });
-          refreshDashboardMetrics();
+          refreshDashboardMetrics(); // Actualiza los contadores del Dashboard principal
           showStatus("🟢 Datos cargados desde la Base de Datos SQL.");
         }
       }

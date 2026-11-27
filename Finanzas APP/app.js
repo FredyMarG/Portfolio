@@ -203,29 +203,32 @@ function borrar(idTransaccion) {
 }
 
 // 9. SINCRONIZACIÓN CON BASE DE DATOS REAL SQL / MONGODB (/api/finanzas/transacciones)
+// Consulta las transacciones almacenadas en la tabla relacional `finanzas_transacciones` al iniciar la app.
 async function cargarTransaccionesDesdeBD() {
-  if (location.protocol === 'file:') return;
+  if (location.protocol === 'file:') return; // Si se abre sin servidor HTTP, conserva el respaldo de localStorage
   try {
-    const res = await fetch('/api/finanzas/transacciones');
-    const data = await res.json();
+    const res = await fetch('/api/finanzas/transacciones'); // Solicita la lista de movimientos al motor SQL
+    const data = await res.json(); // Convierte la respuesta JSON en un objeto JavaScript
     if (res.ok && data.ok && Array.isArray(data.transacciones) && data.transacciones.length > 0) {
-      transacciones = data.transacciones;
-      renderizarTransacciones();
+      transacciones = data.transacciones; // Actualiza el estado con los registros reales de la Base de Datos
+      renderizarTransacciones(); // Redibuja la lista, el balance y el gráfico de dona en Canvas 2D
     }
   } catch {}
 }
 
+// Envía cada nuevo ingreso o gasto hacia la tabla `finanzas_transacciones` mediante POST.
 async function guardarTransaccionEnBD(tx) {
   if (location.protocol === 'file:') return;
   try {
     await fetch('/api/finanzas/transacciones', {
-      method: 'POST',
+      method: 'POST', // Verbo HTTP para insertar un nuevo registro en la BD
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(tx)
+      body: JSON.stringify(tx) // Serializa el objeto `{ id, concepto, monto, tipo }`
     });
   } catch {}
 }
 
+// Elimina un movimiento contable de la tabla `finanzas_transacciones` por su ID único mediante DELETE.
 async function eliminarTransaccionEnBD(id) {
   if (location.protocol === 'file:') return;
   try {

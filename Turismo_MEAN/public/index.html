@@ -3,8 +3,13 @@
   TURISMO MEAN — PLATAFORMA FULL-STACK DE DESTINOS TURÍSTICOS
   (Turismo_MEAN/public/index.html)
   ============================================================================
-  Conectada en tiempo real a la Base de Datos SQL/MongoDB (/api/destinos)
-  con respaldo híbrido automático en localStorage.
+  Propósito:
+    Interfaz web interactiva conectada en tiempo real a la Base de Datos
+    SQL / MongoDB (`/api/destinos`) con respaldo híbrido en `localStorage`.
+    Incluye operaciones CRUD completas (Crear, Leer, Actualizar y Eliminar),
+    cálculo de métricas agregadas, búsqueda en tiempo real y píldoras de ciudad.
+  Comentado línea por línea en español.
+  ============================================================================
 -->
 <!DOCTYPE html>
 <html lang="es">
@@ -12,14 +17,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Turismo MEAN — Plataforma Full-Stack de Destinos de Colombia</title>
+  <!-- Framework CSS Bootstrap 5.3 para grilla responsiva y componentes UI -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
+    /* Fondo oscuro radial consistente con la identidad visual del portafolio */
     body {
       background: radial-gradient(circle at top, #0f172a 0%, #0b1120 70%);
       color: #f8fafc;
       font-family: system-ui, -apple-system, sans-serif;
       min-height: 100vh;
     }
+    /* Contenedor principal tipo tarjeta con borde cian translúcido */
     .turismo-card {
       background: #111827;
       border: 1px solid rgba(56, 189, 248, 0.22);
@@ -27,9 +35,11 @@
       box-shadow: 0 16px 36px rgba(2, 6, 23, 0.45);
       transition: transform 0.2s ease, border-color 0.2s ease;
     }
+    /* Efecto de realce al pasar el cursor sobre las tarjetas */
     .turismo-card:hover {
       border-color: rgba(56, 189, 248, 0.5);
     }
+    /* Tarjeta individual de cada destino turístico en la grilla */
     .dest-item-card {
       background: #1e293b;
       border: 1px solid rgba(148, 163, 184, 0.2);
@@ -39,7 +49,9 @@
 </head>
 <body class="py-4">
   <div class="container">
-    <!-- Cabecera principal -->
+    <!-- ======================================================================
+         CABECERA PRINCIPAL Y ESTADO DE CONEXIÓN A LA BASE DE DATOS
+         ====================================================================== -->
     <header class="d-flex flex-wrap justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary gap-2">
       <div>
         <span class="badge bg-info text-dark fw-bold mb-1">Full-Stack MEAN + Base de Datos Real</span>
@@ -47,12 +59,16 @@
         <small class="text-secondary">Gestión CRUD en tiempo real con persistencia en Base de Datos SQL / MongoDB y métricas agregadas</small>
       </div>
       <div class="d-flex align-items-center gap-2">
+        <!-- Indicador dinámico del estado de la Base de Datos -->
         <span id="dbStatusBadge" class="badge bg-success px-3 py-2">🟢 Conectando a Base de Datos...</span>
+        <!-- Contador total de destinos visibles -->
         <span id="totalBadge" class="badge bg-primary fs-6">0 Destinos</span>
       </div>
     </header>
 
-    <!-- Tarjetas de Métricas Agregadas -->
+    <!-- ======================================================================
+         TARJETAS DE MÉTRICAS AGREGADAS EN TIEMPO REAL
+         ====================================================================== -->
     <div class="row g-3 mb-4">
       <div class="col-md-4">
         <div class="turismo-card p-3">
@@ -74,10 +90,13 @@
       </div>
     </div>
 
+    <!-- Caja de notificaciones de operaciones CRUD -->
     <div id="alertBox" class="alert d-none py-2 small mb-3"></div>
 
     <div class="row g-4">
-      <!-- Columna izquierda: Formulario Crear / Editar -->
+      <!-- ====================================================================
+           COLUMNA IZQUIERDA: FORMULARIO CREAR / EDITAR DESTINO TURÍSTICO
+           ==================================================================== -->
       <div class="col-lg-4">
         <div class="turismo-card p-3">
           <h5 id="formTitle" class="fw-bold mb-3 text-info">➕ Registrar Nuevo Destino</h5>
@@ -112,7 +131,9 @@
         </div>
       </div>
 
-      <!-- Columna derecha: Buscador, Filtros por Ciudad y Tarjetas -->
+      <!-- ====================================================================
+           COLUMNA DERECHA: BUSCADOR, PÍLDORAS DE CIUDAD Y GRILLA DE DESTINOS
+           ==================================================================== -->
       <div class="col-lg-8">
         <div class="turismo-card p-3">
           <div class="row g-2 mb-3">
@@ -129,7 +150,9 @@
             </div>
           </div>
 
+          <!-- Píldoras dinámicas para filtrar por ciudad -->
           <div id="cityPills" class="d-flex flex-wrap gap-1 mb-3"></div>
+          <!-- Contenedor donde se renderizan las tarjetas de destinos -->
           <div id="destinosGrid" class="row g-3"></div>
         </div>
       </div>
@@ -137,7 +160,12 @@
   </div>
 
   <script>
-    const LS_KEY = "turismo_mean_destinos_db_v1";
+    // =========================================================================
+    // 1. CONSTANTES, DATOS SEMILLA Y ESTADO REACTIVO DE LA APLICACIÓN
+    // =========================================================================
+    const LS_KEY = "turismo_mean_destinos_db_v1"; // Clave utilizada para el respaldo local en localStorage
+
+    // Catálogo inicial de destinos turísticos de Colombia
     const INITIAL_DESTINOS = [
       { _id: "65f1a1000000000000000001", nombre: "Parque Nacional Natural Tayrona", ciudad: "Santa Marta", descripcion: "Playas cristalinas rodeadas de selva tropical y senderos ancestrales en la Sierra Nevada.", precio: 980000, calificacion: 4.9 },
       { _id: "65f1a1000000000000000002", nombre: "Ciudad Amurallada & Islas del Rosario", ciudad: "Cartagena", descripcion: "Recorrido histórico colonial, gastronomía caribeña y pasadía en aguas turquesas.", precio: 1250000, calificacion: 4.8 },
@@ -146,44 +174,59 @@
       { _id: "65f1a1000000000000000005", nombre: "Piedra del Peñol & Embalse de Guatapé", ciudad: "Guatapé", descripcion: "Ascenso de 740 escalones con vista panorámica 360° de la represa y zócalos coloridos.", precio: 620000, calificacion: 4.8 }
     ];
 
-    let destinos = [];
-    let editingId = null;
-    let activeCity = "";
-    let useServerDb = false;
+    let destinos = []; // Lista activa de destinos turísticos en memoria
+    let editingId = null; // Guarda el `_id` del destino que se está editando (`null` cuando se está creando uno nuevo)
+    let activeCity = ""; // Ciudad seleccionada actualmente en las píldoras de filtro (`""` = todas)
+    let useServerDb = false; // Indica si el backend `/api/destinos` respondió con conexión activa a la BD
 
-    const dbStatusBadge = document.getElementById("dbStatusBadge");
-    const alertBox = document.getElementById("alertBox");
+    const dbStatusBadge = document.getElementById("dbStatusBadge"); // Referencia al badge de estado de conexión
+    const alertBox = document.getElementById("alertBox"); // Referencia a la alerta de confirmación
 
+    /**
+     * Escapa caracteres especiales HTML para prevenir ataques de inyección XSS.
+     * @param {string} v - Valor de entrada a sanitizar.
+     * @returns {string} Cadena segura para insertar en el DOM.
+     */
     function escapeHtml(v) {
       return String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
     }
 
+    /**
+     * Muestra una notificación visual temporal tras crear, actualizar o eliminar un destino.
+     * @param {string} msg - Mensaje a mostrar al usuario.
+     * @param {string} type - Clase de color Bootstrap ('success', 'warning', 'danger').
+     */
     function showNotice(msg, type = "success") {
       alertBox.className = `alert alert-${type} py-2 small mb-3`;
       alertBox.textContent = msg;
       setTimeout(() => alertBox.classList.add("d-none"), 3200);
     }
 
+    /** Sincroniza una copia del catálogo actual en `localStorage` como caché de alta disponibilidad. */
     function syncLocalCache() {
       localStorage.setItem(LS_KEY, JSON.stringify(destinos));
     }
 
+    // =========================================================================
+    // 2. CONSULTA A LA BASE DE DATOS REAL (/api/destinos) Y RESPALDO HÍBRIDO
+    // =========================================================================
     async function loadDestinos() {
       try {
-        if (location.protocol === "file:") throw new Error("file");
-        const res = await fetch("/api/destinos");
-        const data = await res.json();
+        if (location.protocol === "file:") throw new Error("file"); // Si se abre vía file:// usa la caché local directamente
+        const res = await fetch("/api/destinos"); // Consulta el endpoint de la Base de Datos Real
+        const data = await res.json(); // Parsea la respuesta JSON del servidor
         if (res.ok && Array.isArray(data.destinos)) {
-          destinos = data.destinos;
-          useServerDb = true;
+          destinos = data.destinos; // Actualiza los destinos con los registros provenientes de la tabla `turismo_destinos`
+          useServerDb = true; // Marca que la conexión con el motor SQL/Mongo está activa
           dbStatusBadge.className = "badge bg-success px-3 py-2";
           dbStatusBadge.textContent = "🟢 Base de Datos SQL/Mongo Conectada";
-          syncLocalCache();
-          render();
+          syncLocalCache(); // Actualiza la copia local en `localStorage`
+          render(); // Dibuja las métricas, filtros y tarjetas
           return;
         }
       } catch {}
 
+      // Respaldo híbrido automático si no hay servidor HTTP activo
       useServerDb = false;
       const saved = localStorage.getItem(LS_KEY);
       destinos = saved ? JSON.parse(saved) : [...INITIAL_DESTINOS];
@@ -193,35 +236,44 @@
       render();
     }
 
+    // =========================================================================
+    // 3. RENDERIZADO DE PÍLDORAS, MÉTRICAS AGREGADAS Y GRILLA DE DESTINOS
+    // =========================================================================
     function render() {
-      const q = document.getElementById("searchInput").value.trim().toLowerCase();
-      const sort = document.getElementById("sortSelect").value;
+      const q = document.getElementById("searchInput").value.trim().toLowerCase(); // Texto buscado en vivo
+      const sort = document.getElementById("sortSelect").value; // Criterio de ordenamiento elegido
 
+      // Extrae la lista única de ciudades para construir las píldoras de filtro rápido
       const cities = Array.from(new Set(destinos.map((d) => d.ciudad.trim()).filter(Boolean)));
       document.getElementById("cityPills").innerHTML = [
         `<button type="button" class="btn btn-sm rounded-pill ${activeCity === "" ? "btn-info text-dark fw-bold" : "btn-outline-secondary text-light"}" data-city="">Todas (${destinos.length})</button>`,
         ...cities.map((c) => `<button type="button" class="btn btn-sm rounded-pill ${activeCity === c ? "btn-info text-dark fw-bold" : "btn-outline-secondary text-light"}" data-city="${escapeHtml(c)}">${escapeHtml(c)}</button>`)
       ].join("");
 
+      // Filtra por ciudad seleccionada y por coincidencia de texto en nombre, ciudad o descripción
       let filtered = destinos.filter((d) => {
         const matchCity = !activeCity || d.ciudad.trim() === activeCity;
         const matchQ = !q || d.nombre.toLowerCase().includes(q) || d.ciudad.toLowerCase().includes(q) || (d.descripcion || "").toLowerCase().includes(q);
         return matchCity && matchQ;
       });
 
+      // Aplica ordenamiento según precio o calificación
       if (sort === "precio_asc") filtered.sort((a, b) => a.precio - b.precio);
       if (sort === "precio_desc") filtered.sort((a, b) => b.precio - a.precio);
       if (sort === "calificacion") filtered.sort((a, b) => b.calificacion - a.calificacion);
 
+      // Calcula métricas agregadas sobre el conjunto filtrado
       const total = filtered.length;
       const avgPrice = total ? Math.round(filtered.reduce((a, d) => a + Number(d.precio || 0), 0) / total) : 0;
       const avgRating = total ? (filtered.reduce((a, d) => a + Number(d.calificacion || 5), 0) / total).toFixed(1) : "0.0";
 
+      // Actualiza indicadores numéricos en el DOM
       document.getElementById("totalBadge").textContent = `${total} Destinos`;
       document.getElementById("statTotal").textContent = String(total);
       document.getElementById("statAvgPrice").textContent = `$${avgPrice.toLocaleString("es-CO")} COP`;
       document.getElementById("statAvgRating").textContent = `★ ${avgRating}`;
 
+      // Renderiza las tarjetas de destinos turísticos
       document.getElementById("destinosGrid").innerHTML = filtered.length
         ? filtered.map((d) => {
             const stars = "★".repeat(Math.round(d.calificacion || 5));
@@ -248,6 +300,7 @@
         : `<div class="col-12 text-center text-secondary py-4">No se encontraron destinos con ese criterio.</div>`;
     }
 
+    /** Restablece el formulario al modo de creación de nuevo destino. */
     function resetForm() {
       editingId = null;
       document.getElementById("destinoForm").reset();
@@ -258,8 +311,11 @@
       document.getElementById("btnCancel").classList.add("d-none");
     }
 
+    // =========================================================================
+    // 4. EVENTOS CRUD (CREAR, EDITAR, ELIMINAR) Y FILTROS
+    // =========================================================================
     document.getElementById("destinoForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
+      e.preventDefault(); // Evita recarga de página
       const payload = {
         nombre: document.getElementById("destNombre").value.trim(),
         ciudad: document.getElementById("destCiudad").value.trim(),
@@ -268,6 +324,7 @@
         descripcion: document.getElementById("destDesc").value.trim() || "Destino turístico destacado en Colombia"
       };
 
+      // Si el servidor de Base de Datos está activo, envía POST o PUT a `/api/destinos`
       if (useServerDb) {
         const url = editingId ? `/api/destinos/${encodeURIComponent(editingId)}` : "/api/destinos";
         const method = editingId ? "PUT" : "POST";
@@ -284,6 +341,7 @@
         }
       }
 
+      // Persistencia híbrida local cuando opera sin servidor
       if (editingId) {
         destinos = destinos.map((d) => (d._id === editingId ? { ...d, ...payload } : d));
         showNotice("✓ Destino actualizado correctamente");
@@ -298,6 +356,7 @@
 
     document.getElementById("btnCancel").addEventListener("click", resetForm);
 
+    // Delegación de eventos para las píldoras de ciudad
     document.getElementById("cityPills").addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-city]");
       if (!btn) return;
@@ -305,6 +364,7 @@
       render();
     });
 
+    // Delegación de eventos para botones Editar y Eliminar en cada tarjeta
     document.getElementById("destinosGrid").addEventListener("click", async (e) => {
       const editBtn = e.target.closest(".edit-btn");
       if (editBtn) {
@@ -338,9 +398,11 @@
       }
     });
 
+    // Filtros reactivos de búsqueda y ordenamiento
     document.getElementById("searchInput").addEventListener("input", render);
     document.getElementById("sortSelect").addEventListener("change", render);
 
+    // Carga inicial desde la Base de Datos Real
     loadDestinos();
   </script>
 </body>

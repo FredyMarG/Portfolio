@@ -22,25 +22,26 @@ let estadoKanban = JSON.parse(localStorage.getItem('kanban_estado')) || {
 
 // Guarda el objeto "estadoKanban" en localStorage y sincroniza con la Base de Datos Real SQL/Mongo (/api/kanban/tareas).
 function guardarEstado() {
-  localStorage.setItem('kanban_estado', JSON.stringify(estadoKanban)); // Persiste los datos entre recargas
-  if (location.protocol !== 'file:') {
+  localStorage.setItem('kanban_estado', JSON.stringify(estadoKanban)); // Persiste los datos entre recargas en el navegador
+  if (location.protocol !== 'file:') { // Si se ejecuta sobre el servidor Full-Stack o Netlify Functions
     fetch('/api/kanban/tareas', {
-      method: 'PUT',
+      method: 'PUT', // Actualiza las 3 columnas en la tabla relacional `kanban_tareas`
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ estado: estadoKanban })
+      body: JSON.stringify({ estado: estadoKanban }) // Envía el estado completo de tarjetas por columna
     }).catch(() => {});
   }
 }
 
+// Recupera las tarjetas Scrum almacenadas en la tabla `kanban_tareas` al iniciar el tablero.
 async function cargarKanbanDesdeBD() {
-  if (location.protocol === 'file:') return;
+  if (location.protocol === 'file:') return; // Si se abre como archivo local, mantiene el estado de localStorage
   try {
-    const res = await fetch('/api/kanban/tareas');
+    const res = await fetch('/api/kanban/tareas'); // Consulta las tareas agrupadas por columna desde la BD
     const data = await res.json();
     if (res.ok && data.ok && data.estado) {
-      estadoKanban = data.estado;
-      localStorage.setItem('kanban_estado', JSON.stringify(estadoKanban));
-      renderizarTablero();
+      estadoKanban = data.estado; // Reemplaza el estado en memoria con los registros reales de la BD
+      localStorage.setItem('kanban_estado', JSON.stringify(estadoKanban)); // Actualiza la caché local
+      renderizarTablero(); // Dibuja las tarjetas en las columnas Por Hacer, En Progreso y Completado
     }
   } catch {}
 }
