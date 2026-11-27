@@ -1,3 +1,16 @@
+<!--
+  ============================================================================
+  HOJA DE VIDA / CV EJECUTIVO (WEB + IMPRESIÓN A4) — FREDY MARTINEZ
+  (My CV/index.html)
+  ============================================================================
+  Propósito:
+    Presentar el Currículum Vitae profesional de Fredy Leonardo Martinez Galeano
+    en formato A4 de dos columnas, optimizado tanto para visualización web
+    dentro del modal del portafolio como para exportación directa a PDF / papel
+    mediante `window.print()`.
+  Comentado sección por sección en español.
+  ============================================================================
+-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,16 +20,22 @@
   <!-- Favicon Flaticon: Portafolio de Desarrollo Web (< />) -->
   <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" />
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1006/1006363.png" />
+  <!-- Hoja de estilos con diseño A4 y reglas @media print -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Barra superior de acción rápida (se oculta automáticamente al imprimir en papel/PDF gracias a .no-print) -->
   <div class="print-bar no-print">
     <button type="button" class="print-btn" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
   </div>
 
+  <!-- Contenedor principal con proporciones exactas de hoja A4 (210mm x 297mm) -->
   <div class="page">
-    <!-- Barra lateral azul -->
+    <!-- ======================================================================
+         COLUMNA IZQUIERDA (SIDEBAR AZUL EJECUTIVO): FOTO, CONTACTO E IDIOMAS
+         ====================================================================== -->
     <aside class="sidebar">
+      <!-- Fotografía profesional y etiqueta del documento -->
       <div>
         <div class="photo-placeholder">
           <img src="assets/img/my-image.jpg" alt="Fredy Leonardo Martinez Galeano" />
@@ -24,6 +43,7 @@
         <div class="doc-label">Hoja de Vida</div>
       </div>
 
+      <!-- Datos de contacto directo y enlaces profesionales -->
       <div>
         <h2>Datos personales</h2>
         <ul class="info-list">
@@ -58,6 +78,7 @@
         </ul>
       </div>
 
+      <!-- Nivel de dominio de idiomas con indicadores visuales -->
       <div>
         <h2>Idiomas</h2>
         <div class="lang-item">
@@ -82,6 +103,7 @@
         </div>
       </div>
 
+      <!-- Intereses personales y disciplina deportiva -->
       <div>
         <h2>Pasatiempos e intereses</h2>
         <ul class="hobby-list">
@@ -93,20 +115,25 @@
       </div>
     </aside>
 
-    <!-- Columna principal -->
+    <!-- ======================================================================
+         COLUMNA PRINCIPAL: PERFIL, STACK, FORMACIÓN Y PROYECTOS FULL-STACK
+         ====================================================================== -->
     <main class="main">
+      <!-- Encabezado con nombre completo y rol principal -->
       <header class="header-title">
         <h1>Fredy Leonardo Martinez Galeano</h1>
         <div class="role">Full-Stack Software Developer &amp; Certified Scrum Master</div>
       </header>
 
+      <!-- Resumen ejecutivo del perfil profesional -->
       <section class="section">
         <h2>Perfil</h2>
         <p class="profile-text">
-          Ingeniero de Software y Desarrollador Full-Stack especializado en aplicaciones web escalables, APIs RESTful seguras con autenticación JWT, hashing <code>scrypt</code> y RBAC en Node.js, Express, TypeScript 5 y PHP, junto con modelado de bases de datos relacionales (MySQL, SQLite3) y NoSQL (MongoDB Atlas, Mongoose 7). Experiencia en Angular 16 (RxJS, PrimeNG), JavaScript ES6+, HTML5 Web APIs avanzadas (Canvas 2D, IndexedDB, Drag &amp; Drop) y pruebas automatizadas (<code>node:test</code> + GitHub Actions CI), bajo metodologías ágiles (Scrum).
+          Ingeniero de Software y Desarrollador Full-Stack especializado en aplicaciones web escalables, APIs RESTful seguras con autenticación JWT, hashing <code>scrypt</code> y RBAC en Node.js, Express, TypeScript 5 y PHP, junto con modelado de bases de datos relacionales (MySQL, PostgreSQL, SQLite3) y NoSQL (MongoDB Atlas, Mongoose 7). Experiencia en Angular 16 (RxJS, PrimeNG, FullCalendar v6), JavaScript ES6+, HTML5 Web APIs avanzadas (Canvas 2D, IndexedDB, Drag &amp; Drop) y pruebas automatizadas (<code>node:test</code> + GitHub Actions CI), bajo metodologías ágiles (Scrum).
         </p>
       </section>
 
+      <!-- Etiquetas de competencias técnicas clave -->
       <section class="section">
         <h2>Competencias Técnicas</h2>
         <div class="skills-grid">
@@ -115,7 +142,7 @@
           <span class="skill-tag">JavaScript (ES6+)</span>
           <span class="skill-tag">Node.js / Express.js</span>
           <span class="skill-tag">PHP</span>
-          <span class="skill-tag">MySQL / SQLite3</span>
+          <span class="skill-tag">MySQL / PostgreSQL / SQLite3</span>
           <span class="skill-tag">MongoDB / Mongoose 7</span>
           <span class="skill-tag">JWT, scrypt &amp; RBAC</span>
           <span class="skill-tag">Testing (node:test) &amp; CI</span>
@@ -127,6 +154,7 @@
         </div>
       </section>
 
+      <!-- Historial académico y certificaciones técnicas -->
       <section class="section">
         <h2>Formación</h2>
 
@@ -167,6 +195,7 @@
         </div>
       </section>
 
+      <!-- Síntesis de los proyectos de ingeniería del portafolio -->
       <section class="section">
         <h2>Proyectos Destacados</h2>
 
@@ -176,7 +205,7 @@
             <div class="entry-title">Amour &amp; Planes — App de Citas y Álbum de Recuerdos</div>
             <div class="entry-subtitle">Full-Stack SQL &amp; SPA • Node.js, SQLite3, PHP/MySQL, Vanilla JS</div>
             <p class="entry-desc">
-              Arquitectura híbrida con servidor HTTP REST en Node.js y SQLite3, soporte alternativo en PHP/MySQL y cliente SPA con catálogo de planes, agendamiento, bitácora y álbum fotográfico con respaldo offline en <code>localStorage</code>.
+              Arquitectura híbrida con servidor HTTP REST en Node.js y SQLite3, soporte alternativo en PHP/MySQL y cliente SPA con catálogo de planes, agendamiento, bitácora y álbum fotográfico con persistencia en base de datos real y respaldo en <code>localStorage</code>.
             </p>
           </div>
         </div>
@@ -187,7 +216,7 @@
             <div class="entry-title">BitShop REST API &amp; Enterprise TypeScript API</div>
             <div class="entry-subtitle">Backend &amp; Seguridad • TypeScript 5, Express.js, JWT, scrypt, RBAC, node:test</div>
             <p class="entry-desc">
-              APIs RESTful desacopladas bajo arquitectura MVC: <em>BitShop_API</em> con autenticación JWT, hashing criptográfico <code>scrypt</code>, control RBAC (admin/client) y documentación en <code>/docs</code>; junto a <em>ts_api</em> en TypeScript 5 estricto, panel Login-first y suites automatizadas en <code>node:test</code>.
+              APIs RESTful desacopladas bajo arquitectura MVC conectadas a base de datos: <em>BitShop_API</em> con autenticación JWT, hashing criptográfico <code>scrypt</code>, control RBAC (admin/client) y Studio interactivo; junto a <em>ts_api</em> en TypeScript 5 estricto con auditoría de operaciones en BD y suites en <code>node:test</code>.
             </p>
           </div>
         </div>
@@ -198,7 +227,7 @@
             <div class="entry-title">Turismo MEAN &amp; Procrastination Nightmare (Angular 16)</div>
             <div class="entry-subtitle">Full-Stack MEAN • Angular 16, MongoDB, Express.js, PrimeNG, FullCalendar v6</div>
             <p class="entry-desc">
-              Plataforma <em>Turismo_MEAN</em> con API Express/Mongoose 7, almacenamiento dual MongoDB/JSON, 4 tests en <code>node:test</code> y SPA en Angular 16; además de <em>Procrastination Nightmare</em> (SPA Angular 16 + FullCalendar v6 + RxJS y suite colaborativa de 7 módulos en JS POO).
+              Plataforma <em>Turismo_MEAN</em> con API Express/Mongoose 7, persistencia en base de datos SQL/NoSQL y pruebas automatizadas; además de <em>Procrastination Nightmare</em> (SPA con calendario interactivo FullCalendar v6 conectado a BD y suite colaborativa de 7 módulos sincronizados).
             </p>
           </div>
         </div>
@@ -206,10 +235,10 @@
         <div class="entry">
           <div class="entry-date">2023 - 2026</div>
           <div class="entry-content">
-            <div class="entry-title">Node.js Nativo &amp; Aplicaciones con HTML5 Web APIs</div>
-            <div class="entry-subtitle">node:http, NDJSON, Canvas 2D, IndexedDB, Drag &amp; Drop, FileReader, OMDb API</div>
+            <div class="entry-title">Node.js Nativo &amp; Aplicaciones con HTML5 Web APIs + Base de Datos</div>
+            <div class="entry-subtitle">node:http, SQLite3, Canvas 2D, IndexedDB, Drag &amp; Drop, FileReader, OMDb API</div>
             <p class="entry-desc">
-              <em>Gestor-Tareas-Node</em> (servidor <code>node:http</code> sin dependencias, auditoría NDJSON, <code>EventEmitter</code>, protección Path Traversal y <code>node:test</code>) y apps interactivas: <em>NotesDB</em> (IndexedDB), <em>Finanzas APP</em> y <em>SketchPad 2D</em> (Canvas 2D), <em>FileDrop Inspector</em>, <em>Tablero Kanban</em> y <em>CineSearch</em>.
+              <em>Gestor-Tareas-Node</em> (servidor <code>node:http</code> con persistencia SQL y auditoría de eventos) y aplicaciones interactivas conectadas a base de datos: <em>NotesDB</em> (IndexedDB + réplica SQL), <em>Finanzas APP</em> y <em>SketchPad 2D</em> (Canvas 2D), <em>FileDrop Inspector</em>, <em>Tablero Kanban Scrum</em> y <em>CineSearch</em>.
             </p>
           </div>
         </div>

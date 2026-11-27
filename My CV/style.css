@@ -2,57 +2,73 @@
  * ============================================================================
  * HOJA DE ESTILOS DEL CV (WEB + IMPRESIÓN A4) — FREDY MARTINEZ (My CV/style.css)
  * ============================================================================
+ * Propósito:
+ *   Maquetar la Hoja de Vida en proporción A4 (210mm x 297mm) con barra lateral
+ *   azul ejecutiva, tipografía limpia y reglas `@media print` para que al
+ *   pulsar "Imprimir / Guardar PDF" se genere un documento PDF de 1 página
+ *   exacta sin bordes de navegador ni botones flotantes.
+ *
+ * Comentado regla por regla en español.
+ * ============================================================================
  */
+
+/* Configuración de página física para el motor de impresión del navegador */
 @page {
-  size: A4;
-  margin: 0;
+  size: A4;                                     /* Formato estándar internacional A4 */
+  margin: 0;                                    /* Elimina encabezados y pies de página automáticos del navegador */
 }
 
+/* Reset general de márgenes y modelo de cajas */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* Estilo del fondo exterior cuando se visualiza en navegador o dentro del modal */
 body {
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #0f172a;
-  color: #1e293b;
-  line-height: 1.45;
-  padding: 16px 12px 32px;
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
+  background-color: #0f172a;                    /* Fondo oscuro que contrasta la hoja A4 blanca */
+  color: #1e293b;                               /* Texto gris pizarra oscuro de alta legibilidad */
+  line-height: 1.45;                            /* Interlineado compacto para encajar en 1 página A4 */
+  padding: 16px 12px 32px;                      /* Margen exterior en vista de pantalla */
+  -webkit-print-color-adjust: exact;            /* Fuerza al navegador a conservar los colores de fondo al imprimir */
+  print-color-adjust: exact;                    /* Estándar W3C para impresión exacta de fondos y etiquetas */
 }
 
+/* Hoja A4 de dos columnas (33% barra lateral izquierda + 67% contenido principal) */
 .page {
   width: 100%;
-  max-width: 210mm;
-  min-height: 297mm;
-  margin: 0 auto;
-  background-color: #ffffff;
-  display: flex;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  max-width: 210mm;                             /* Ancho físico exacto de una hoja A4 */
+  min-height: 297mm;                            /* Altura física estándar A4 */
+  margin: 0 auto;                               /* Centra la hoja horizontalmente en la pantalla */
+  background-color: #ffffff;                    /* Papel blanco */
+  display: flex;                                /* Divide la página en dos columnas paralelas */
+  border-radius: 8px;                           /* Esquinas suaves en vista web */
+  overflow: hidden;                             /* Recorta el fondo azul de la barra lateral en las esquinas */
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);  /* Sombra de elevación sobre el fondo oscuro */
 }
 
-/* Columna izquierda - Tonos azules ejecutivos */
+/* ==========================================================================
+   COLUMNA IZQUIERDA (SIDEBAR AZUL EJECUTIVO)
+   ========================================================================== */
 .sidebar {
-  width: 33%;
-  background-color: #1b365d;
-  color: #ffffff;
-  padding: 24px 20px;
+  width: 33%;                                   /* Ocupa un tercio del ancho del documento */
+  background-color: #1b365d;                    /* Azul marino corporativo */
+  color: #ffffff;                               /* Texto blanco sobre fondo azul */
+  padding: 24px 20px;                           /* Espaciado interno */
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 16px;                                    /* Separación vertical entre bloques de la barra lateral */
 }
 
+/* Marco circular de la fotografía de perfil */
 .photo-placeholder {
   width: 128px;
   height: 128px;
   border-radius: 50%;
   background-color: #2c5282;
-  border: 3px solid #90cdf4;
+  border: 3px solid #90cdf4;                    /* Anillo celeste claro */
   margin: 0 auto 6px auto;
   display: flex;
   align-items: center;
@@ -60,6 +76,7 @@ body {
   overflow: hidden;
 }
 
+/* Ajuste de escala y encuadre del retrato dentro del círculo */
 .photo-placeholder img {
   width: 100%;
   height: 100%;
@@ -70,6 +87,7 @@ body {
   display: block;
 }
 
+/* Subtítulo "Hoja de Vida" debajo de la fotografía */
 .doc-label {
   text-align: center;
   font-size: 16px;
@@ -79,6 +97,7 @@ body {
   margin-bottom: 4px;
 }
 
+/* Títulos de sección dentro de la barra lateral */
 .sidebar h2 {
   font-size: 14px;
   text-transform: uppercase;
@@ -89,6 +108,7 @@ body {
   color: #ffffff;
 }
 
+/* Lista de datos personales y enlaces de contacto */
 .info-list {
   list-style: none;
   font-size: 12px;
@@ -98,13 +118,13 @@ body {
 }
 
 .info-list li {
-  word-break: break-word;
+  word-break: break-word;                       /* Evita que correos o URLs largas desborden la columna */
 }
 
 .info-label {
   display: block;
   font-size: 10.5px;
-  color: #90cdf4;
+  color: #90cdf4;                               /* Etiqueta celeste superior para cada dato */
   font-weight: 600;
 }
 
@@ -118,6 +138,7 @@ body {
   color: #90cdf4;
 }
 
+/* Indicadores de nivel de idioma por puntos */
 .lang-item {
   display: flex;
   justify-content: space-between;
@@ -135,13 +156,14 @@ body {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background-color: #4a5568;
+  background-color: #4a5568;                    /* Punto inactivo */
 }
 
 .dot.active {
-  background-color: #63b3ed;
+  background-color: #63b3ed;                    /* Punto activo en azul claro */
 }
 
+/* Lista de pasatiempos con viñeta cuadrada personalizada */
 .hobby-list {
   list-style: none;
   font-size: 12.5px;
@@ -156,15 +178,18 @@ body {
   margin-right: 8px;
 }
 
-/* Columna derecha - Contenido principal */
+/* ==========================================================================
+   COLUMNA DERECHA (CONTENIDO PRINCIPAL DEL CV)
+   ========================================================================== */
 .main {
-  width: 67%;
+  width: 67%;                                   /* Ocupa dos tercios del ancho de la página */
   padding: 24px 26px;
   display: flex;
   flex-direction: column;
   gap: 14px;
 }
 
+/* Encabezado con el nombre del candidato y su especialidad */
 .header-title {
   border-bottom: 2px solid #1b365d;
   padding-bottom: 10px;
@@ -183,6 +208,7 @@ body {
   margin-top: 3px;
 }
 
+/* Títulos de cada sección principal (Perfil, Competencias, Formación, Proyectos) */
 .section h2 {
   font-size: 15px;
   color: #1b365d;
@@ -193,6 +219,7 @@ body {
   letter-spacing: 0.5px;
 }
 
+/* Párrafo descriptivo del perfil profesional */
 .profile-text {
   font-size: 12px;
   color: #334155;
@@ -200,18 +227,20 @@ body {
   line-height: 1.42;
 }
 
-.profile-text code {
+.profile-text code,
+.entry-desc code {
   font-size: 11px;
   background-color: #f1f5f9;
   padding: 1px 4px;
   border-radius: 3px;
 }
 
+/* Bloques cronológicos de Formación y Proyectos Destacados */
 .entry {
   display: flex;
   gap: 12px;
   margin-bottom: 10px;
-  break-inside: avoid;
+  break-inside: avoid;                          /* Evita que un bloque se parta a la mitad al imprimir */
 }
 
 .entry:last-child {
@@ -259,13 +288,7 @@ body {
   line-height: 1.4;
 }
 
-.entry-desc code {
-  font-size: 11px;
-  background-color: #f1f5f9;
-  padding: 1px 4px;
-  border-radius: 3px;
-}
-
+/* Grilla de etiquetas de competencias técnicas */
 .skills-grid {
   display: flex;
   flex-wrap: wrap;
@@ -282,6 +305,7 @@ body {
   border-radius: 4px;
 }
 
+/* Barra superior con el botón de impresión (solo visible en pantalla) */
 .print-bar {
   width: 100%;
   max-width: 210mm;
@@ -298,21 +322,24 @@ body {
   padding: 8px 18px;
   border-radius: 999px;
   cursor: pointer;
-  border: 1px solid #38bdf8;
-  background-color: #38bdf8;
-  color: #0f172a;
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
-  transition: transform 0.15s ease, background-color 0.2s ease;
+  border: none;
+  background: linear-gradient(135deg, #38bdf8, #2563eb);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+  transition: transform 0.15s ease;
 }
 
 .print-btn:hover {
-  background-color: #0ea5e9;
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-@media (max-width: 720px) {
+/* ==========================================================================
+   ADAPTACIÓN RESPONSIVA PARA DISPOSITIVOS MÓVILES
+   ========================================================================== */
+@media screen and (max-width: 720px) {
   .page {
-    flex-direction: column;
+    flex-direction: column;                     /* Apila la barra lateral arriba y el contenido abajo en pantallas pequeñas */
+    min-height: auto;
   }
   .sidebar,
   .main {
@@ -320,7 +347,7 @@ body {
   }
   .entry {
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
   }
   .entry-date,
   .entry-content {
@@ -328,20 +355,33 @@ body {
   }
 }
 
+/* ==========================================================================
+   REGLAS DE IMPRESIÓN / EXPORTACIÓN A PDF (@media print)
+   ========================================================================== */
 @media print {
+  html,
   body {
-    background: none;
-    padding: 0;
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
-
   .no-print {
-    display: none !important;
+    display: none !important;                   /* Oculta la barra superior del botón Imprimir en el PDF */
   }
-
   .page {
-    width: 210mm;
-    border-radius: 0;
-    box-shadow: none;
-    margin: 0;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    flex-direction: row !important;             /* Mantiene siempre las 2 columnas en el PDF impreso */
+  }
+  .sidebar {
+    width: 33% !important;
+  }
+  .main {
+    width: 67% !important;
   }
 }
