@@ -78,7 +78,13 @@ __pycache__/
 # 🐘 BASE DE DATOS
 ############################
 *.sqlite
+!database/portfolio_real.sqlite
 *.db
+
+############################
+# 📦 CARPETA DE REPOSITORIOS SEPARADOS PARA SUBIR A GITHUB
+############################
+Repositorios_GitHub_Independientes/
 
 ############################
 # 🔥 LOGS
