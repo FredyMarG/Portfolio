@@ -1,0 +1,6 @@
+// Punto de entrada principal Sass
+@import "variables";
+@import "../../node_modules/bootstrap/scss/bootstrap";
+@import "layout";
+@import "components";
+@import "print";

@@ -1,0 +1,16 @@
+# ==============================================================================
+# Enrutador raíz para Apache / XAMPP (htdocs)
+# Permite acceder al proyecto directamente desde:
+#   http://localhost/sistema-inventario/
+# redirigiendo internamente todas las peticiones hacia la carpeta /public,
+# manteniendo protegidos los archivos de /app, /config y /database.
+# ==============================================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si la petición apunta a la raíz del proyecto, enviarla a public/
+    RewriteRule ^$ public/ [L]
+
+    # Redirigir cualquier otra ruta hacia public/ manteniendo la URL limpia
+    RewriteRule (.*) public/$1 [L]
+</IfModule>

@@ -10,14 +10,15 @@ Repositorio oficial de proyectos de ingeniería de software de **Fredy Martinez*
 
 ---
 
-## 🌟 Selección Curada de Proyectos Profesionales (17 Proyectos)
+## 🌟 Selección Curada de Proyectos Profesionales (18 Proyectos)
 
-El repositorio reúne los **17 proyectos más completos y relevantes a nivel empresarial**, cubriendo Full-Stack MEAN, SQL (SQLite/MySQL), seguridad JWT + `scrypt` + RBAC, TypeScript estricto, Angular 16, HTML5 Web APIs, pruebas automatizadas y CI/CD con GitHub Actions.
+El repositorio reúne los **18 proyectos más completos y relevantes a nivel empresarial**, cubriendo Full-Stack MEAN, PHP 8 MVC + MySQL, SQL (SQLite/MySQL), seguridad JWT + `scrypt` + RBAC, TypeScript estricto, Angular 16, HTML5 Web APIs, pruebas automatizadas y CI/CD con GitHub Actions.
 
 ### 1. 🌟 Aplicaciones Full-Stack & Productos Integradores
 
 | Proyecto | Stack Principal | Arquitectura y Funcionalidades Clave |
 | :--- | :--- | :--- |
+| **[`Sistema-Inventario/`](./Sistema-Inventario/index.html)**<br>*StockFlow Pro — Inventario, Kardex & POS* | PHP 8 MVC, MySQL (PDO), RBAC, Bootstrap 5, Sass | • Arquitectura PHP MVC sin frameworks con PDO Singleton, bloqueo `FOR UPDATE`, 3 roles RBAC (`admin`, `vendedor`, `almacen`), Kardex y facturación POS transaccional.<br>• Demo interactiva en vivo conectada a `/api/db/kv/stockflow_inventario_state`. |
 | **[`Turismo_MEAN/`](./Turismo_MEAN/TurismoBack/index.js)**<br>*Plataforma de Turismo Full-Stack MEAN* | MongoDB, Mongoose 7, Express.js, Angular 16, `node:test` | • `TurismoBack/`: API RESTful CRUD + filtros + `/stats/resumen`, respaldo JSON local y 4 tests automatizados.<br>• `TurismoFront/`: Cliente SPA en Angular 16 con modo offline. |
 | **[`App de citas/`](./App%20de%20citas/public/index.html)**<br>*Amour & Planes — App de Citas y Álbum SQL* | Node.js, SQLite3, PHP/MySQL, REST API, Vanilla JS SPA | • Servidor HTTP REST en [`server.js`](./App%20de%20citas/server.js) con SQLite3 ([`database/schema.sql`](./App%20de%20citas/database/schema.sql)) y soporte alternativo PHP/MySQL.<br>• Catálogo de planes, agendamiento, bitácora y álbum de hasta 10 fotos por cita con respaldo `localStorage`. |
 | **[`Gestor-Tareas-Node/`](./Gestor-Tareas-Node/public/index.html)**<br>*Gestor de Tareas Full-Stack en Node.js Nativo* | Node.js (`node:http`), JSON/NDJSON, `EventEmitter`, `node:test` | • Servidor HTTP nativo sin dependencias externas, bitácora NDJSON, protección contra Path Traversal, pruebas unitarias y SPA con respaldo local. |

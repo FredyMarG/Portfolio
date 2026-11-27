@@ -1,0 +1,126 @@
+// Estructura principal: Sidebar + Topbar + Contenido
+
+.app-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.app-sidebar {
+  width: $sidebar-width;
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+  color: #e2e8f0;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease-in-out;
+  z-index: 1040;
+
+  .sidebar-brand {
+    height: $topbar-height;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+
+    i {
+      font-size: 1.4rem;
+      color: #60a5fa;
+    }
+  }
+
+  .sidebar-nav {
+    padding: 1rem 0.75rem;
+    flex: 1;
+    overflow-y: auto;
+
+    .nav-section-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #94a3b8;
+      padding: 0.75rem 0.75rem 0.35rem;
+      font-weight: 600;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: $border-radius;
+      color: #cbd5e1;
+      font-weight: 500;
+      font-size: 0.92rem;
+      margin-bottom: 0.2rem;
+      transition: all 0.15s ease;
+
+      i {
+        font-size: 1.1rem;
+        width: 1.25rem;
+        text-align: center;
+      }
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.08);
+        color: #ffffff;
+      }
+
+      &.active {
+        background-color: $primary;
+        color: #ffffff;
+        box-shadow: 0 2px 6px rgba($primary, 0.4);
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 0.9rem 1.25rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.82rem;
+    color: #94a3b8;
+  }
+}
+
+.app-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-topbar {
+  height: $topbar-height;
+  background-color: #ffffff;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+.app-content {
+  padding: 1.5rem;
+  flex: 1;
+}
+
+@media (max-width: 991.98px) {
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+
+    &.show {
+      transform: translateX(0);
+    }
+  }
+}

@@ -71,9 +71,9 @@ test('index.html y portfolio-app.js no muestran código de proyectos ni usan onc
 });
 
 // ============================================================================
-// PRUEBA 3: VERIFICACIÓN DE LAS 15 APLICACIONES ÚNICAS 100% FUNCIONALES
+// PRUEBA 3: VERIFICACIÓN DE LAS 16 APLICACIONES ÚNICAS 100% FUNCIONALES
 // ============================================================================
-test('todos los 15 proyectos únicos en portfolio-app.js tienen vista interactiva 100% funcional en disco', () => {
+test('todos los 16 proyectos únicos en portfolio-app.js tienen vista interactiva 100% funcional en disco', () => {
   const src = readFileSync(resolve(ROOT, 'portfolio-app.js'), 'utf8'); // Lee la definición del catálogo en `portfolio-app.js`
 
   // Extrae todas las carpetas declaradas en `folder: "..."`
@@ -81,9 +81,9 @@ test('todos los 15 proyectos únicos en portfolio-app.js tienen vista interactiv
   // Extrae todas las rutas de aplicaciones interactivas declaradas en `previewUrl: "..."`
   const previewMatches = [...src.matchAll(/previewUrl:\s*"([^"]+)"/g)].map((m) => m[1]);
 
-  // Valida que existan exactamente los 15 proyectos únicos (sin duplicados) y que todos tengan su `previewUrl`
-  assert.equal(folderMatches.length, 15, `Se esperaban 15 proyectos únicos, encontrados: ${folderMatches.length}`);
-  assert.equal(previewMatches.length, 15, `Todos los 15 proyectos deben tener previewUrl funcional`);
+  // Valida que existan exactamente los 16 proyectos únicos (sin duplicados) y que todos tengan su `previewUrl`
+  assert.equal(folderMatches.length, 16, `Se esperaban 16 proyectos únicos, encontrados: ${folderMatches.length}`);
+  assert.equal(previewMatches.length, 16, `Todos los 16 proyectos deben tener previewUrl funcional`);
 
   // Verifica que cada carpeta de proyecto exista en el disco
   for (const folder of folderMatches) {
@@ -144,4 +144,9 @@ test('motor de base de datos real SQL/Mongo responde en todos los endpoints de l
   const agRes = await handleApiRequest('GET', '/api/agenda/eventos', emptyParams);
   assert.equal(agRes.status, 200);
   assert.ok(agRes.body.eventos.length >= 4); // Debe devolver los eventos agendados en el calendario
+
+  // 9. Verifica endpoint KV de StockFlow Pro (`/api/db/kv/stockflow_inventario_state`)
+  const kvRes = await handleApiRequest('GET', '/api/db/kv/stockflow_inventario_state', emptyParams);
+  assert.equal(kvRes.status, 200);
+  assert.equal(kvRes.body.ok, true);
 });

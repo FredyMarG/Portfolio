@@ -1,0 +1,97 @@
+// Componentes reutilizables y estilos de módulos
+
+.card {
+  box-shadow: $card-box-shadow;
+  border-color: $card-border-color;
+}
+
+.stat-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  }
+
+  .stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+  }
+}
+
+.table {
+  th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #64748b;
+    font-weight: 600;
+    border-bottom-width: 1px;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+}
+
+.badge-stock-ok {
+  background-color: rgba($success, 0.12);
+  color: darken($success, 8%);
+}
+
+.badge-stock-low {
+  background-color: rgba($warning, 0.16);
+  color: darken($warning, 10%);
+}
+
+.badge-stock-out {
+  background-color: rgba($danger, 0.14);
+  color: darken($danger, 6%);
+}
+
+// Pantalla de Login
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top right, #1e3a8a 0%, #0f172a 65%);
+  padding: 1.5rem;
+
+  .auth-card {
+    width: 100%;
+    max-width: 420px;
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  }
+}
+
+// Punto de Venta / Facturación
+.pos-product-list {
+  max-height: 460px;
+  overflow-y: auto;
+}
+
+.pos-product-item {
+  cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+
+  &:hover {
+    background-color: rgba($primary, 0.04);
+    border-color: rgba($primary, 0.35) !important;
+  }
+}
+
+// Comprobante de factura
+.invoice-box {
+  background: #ffffff;
+  border-radius: $border-radius-lg;
+  padding: 2rem;
+  border: 1px solid $card-border-color;
+}

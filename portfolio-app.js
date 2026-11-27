@@ -3,7 +3,7 @@
  * MOTOR DEL PORTAFOLIO PROFESIONAL FULL-STACK MEAN & SQL (portfolio-app.js)
  * ============================================================================
  * Propósito:
- *   Gestionar el catálogo curado y sin duplicados de 15 aplicaciones 100%
+ *   Gestionar el catálogo curado y sin duplicados de 16 aplicaciones 100%
  *   funcionales e interactivas de Fredy Martinez, conectadas a Base de Datos
  *   Real (SQL / MongoDB vía `/api/*`) y sincronización híbrida en navegador.
  *   - Proyectos unificados (Procrastination Nightmare Suite + FullCalendar v6,
@@ -14,7 +14,7 @@
  * ============================================================================
  */
 
-// Catálogo maestro con las 15 aplicaciones únicas 100% funcionales
+// Catálogo maestro con las 16 aplicaciones únicas 100% funcionales
 const PORTFOLIO_PROJECTS = [
   // ==========================================================================
   // 1. APLICACIONES FULL-STACK & PRODUCTOS INTEGRADORES
@@ -42,6 +42,18 @@ const PORTFOLIO_PROJECTS = [
     review: "Persistencia relacional real en las tablas `planes_sugeridos` y `citas_programadas` a través de `/api/planes` y `/api/citas` con sincronización híbrida.",
     previewUrl: "App de citas/public/index.html",
     githubUrl: "https://github.com/FredyMarG/Dates_App"
+  },
+  {
+    id: "stockflow-inventario",
+    title: "StockFlow Pro — Sistema de Inventario, Kardex y Facturación POS (PHP MVC + MySQL)",
+    folder: "Sistema-Inventario/",
+    category: "fullstack",
+    categoryLabel: "PHP 8 MVC + MySQL + POS",
+    stack: ["PHP 8 MVC", "MySQL / PDO", "RBAC (3 Roles)", "Facturación POS", "Bootstrap 5 & Sass"],
+    description: "Sistema empresarial de inventario y facturación con arquitectura PHP MVC sin frameworks, PDO Singleton, bloqueo pesimista FOR UPDATE, control de roles RBAC (admin, vendedor, almacén), alertas de stock bajo, Kardex y POS transaccional.",
+    review: "Código fuente PHP 8 MVC + MySQL (`database/bd.sql` con 10 tablas) y demo interactiva en vivo sincronizada con `/api/db/kv/stockflow_inventario_state` y `localStorage`.",
+    previewUrl: "Sistema-Inventario/index.html",
+    githubUrl: "https://github.com/FredyMarG/Sistema_Inventarios"
   },
   {
     id: "gestor-tareas-node",

@@ -49,3 +49,9 @@
 {"ts":"2026-11-26T18:47:21.041Z","tipo":"tarea:creada","id":"2d6f3ee9-fb53-4c8a-a95a-17730c615e3a","descripcion":"Tarea de prueba automatizada"}
 {"ts":"2026-11-26T18:47:21.045Z","tipo":"tarea:completada","id":"2d6f3ee9-fb53-4c8a-a95a-17730c615e3a"}
 {"ts":"2026-11-26T18:47:21.047Z","tipo":"tarea:eliminada","id":"2d6f3ee9-fb53-4c8a-a95a-17730c615e3a"}
+{"ts":"2026-11-27T18:55:22.292Z","tipo":"tarea:creada","id":"c8463d4c-9a32-48a1-8134-dfce76cc93f0","descripcion":"Tarea de prueba automatizada"}
+{"ts":"2026-11-27T18:55:22.295Z","tipo":"tarea:completada","id":"c8463d4c-9a32-48a1-8134-dfce76cc93f0"}
+{"ts":"2026-11-27T18:55:22.296Z","tipo":"tarea:eliminada","id":"c8463d4c-9a32-48a1-8134-dfce76cc93f0"}
+{"ts":"2026-11-27T18:57:06.750Z","tipo":"tarea:creada","id":"68dfeb3c-f0e7-46fc-84c9-4d689a6a59de","descripcion":"Tarea de prueba automatizada"}
+{"ts":"2026-11-27T18:57:06.753Z","tipo":"tarea:completada","id":"68dfeb3c-f0e7-46fc-84c9-4d689a6a59de"}
+{"ts":"2026-11-27T18:57:06.755Z","tipo":"tarea:eliminada","id":"68dfeb3c-f0e7-46fc-84c9-4d689a6a59de"}

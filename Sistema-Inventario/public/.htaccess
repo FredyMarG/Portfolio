@@ -1,0 +1,12 @@
+# ==============================================================================
+# Front Controller Rewrite para Apache (public/.htaccess)
+# Envía todas las rutas que no correspondan a un archivo o carpeta real
+# (como CSS, JS o imágenes) hacia public/index.php para que el Router MVC
+# procese la URL solicitada.
+# ==============================================================================
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>

@@ -1,0 +1,25 @@
+// Estilos optimizados para impresión de facturas
+
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+
+  .app-sidebar,
+  .app-topbar,
+  .no-print {
+    display: none !important;
+  }
+
+  .app-main,
+  .app-content {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .invoice-box {
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+}

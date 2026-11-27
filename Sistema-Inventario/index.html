@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StockFlow Pro — Sistema de Inventario y Facturación (PHP MVC + MySQL / Live Demo)</title>
+  <link rel="stylesheet" href="public/assets/vendor/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="public/assets/css/app.css">
+  <style>
+    .demo-banner {
+      background: linear-gradient(90deg, #0f172a, #1e293b);
+      color: #e2e8f0;
+      font-size: 0.82rem;
+      padding: 0.45rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .kpi-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 1.15rem;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+    }
+    .kpi-value { font-size: 1.6rem; font-weight: 700; color: #0f172a; }
+    .kpi-label { font-size: 0.8rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.4px; }
+    .view-section { display: none; }
+    .view-section.active { display: block; }
+    @media print { .no-print, .app-sidebar, .demo-banner { display: none !important; } .app-main { margin-left: 0 !important; } }
+  </style>
+</head>
+<body>
+  <div class="demo-banner no-print">
+    <div>
+      <span class="badge bg-info text-dark me-2">PHP 8 MVC + MySQL</span>
+      <strong>StockFlow Pro</strong> — Demo interactiva conectada a BD SQL (<code>/api/db/kv/stockflow_inventario_state</code>) + respaldo local.
+      <span class="text-info ms-2" id="syncBadge">⏳ Sincronizando...</span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <label for="roleSelect" class="mb-0 text-secondary">Rol RBAC:</label>
+      <select id="roleSelect" class="form-select form-select-sm bg-dark text-light border-secondary" style="width:auto;">
+        <option value="admin">Administrador (admin@inventario.local)</option>
+        <option value="vendedor">Vendedor / POS (vendedor@inventario.local)</option>
+        <option value="almacen">Almacén (almacen@inventario.local)</option>
+      </select>
+      <button type="button" id="btnResetDemo" class="btn btn-outline-warning btn-sm py-0 px-2">↺ Restaurar Datos</button>
+    </div>
+  </div>
+
+  <div class="app-wrapper">
+    <aside class="app-sidebar no-print" id="appSidebar">
+      <a href="#dashboard" class="sidebar-brand" data-view="dashboard">
+        <i class="bi bi-box-seam-fill"></i>
+        <span>StockFlow Pro</span>
+      </a>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Principal</div>
+        <a href="#dashboard" class="nav-link active" data-view="dashboard">
+          <i class="bi bi-speedometer2"></i><span>Dashboard</span>
+        </a>
+
+        <div class="nav-section-title">Inventario</div>
+        <a href="#productos" class="nav-link" data-view="productos" data-perm="productos.view">
+          <i class="bi bi-grid-fill"></i><span>Productos</span>
+        </a>
+        <a href="#kardex" class="nav-link" data-view="kardex" data-perm="inventario.movimientos">
+          <i class="bi bi-arrow-left-right"></i><span>Ingresos y Kardex</span>
+        </a>
+
+        <div class="nav-section-title">Ventas</div>
+        <a href="#pos" class="nav-link" data-view="pos" data-perm="facturas.create">
+          <i class="bi bi-cart-plus-fill"></i><span>Nueva Factura (POS)</span>
+        </a>
+        <a href="#facturas" class="nav-link" data-view="facturas" data-perm="facturas.view">
+          <i class="bi bi-receipt-cutoff"></i><span>Facturas Emitidas</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="app-main flex-grow-1 p-4" style="background:#f8fafc; min-height:calc(100vh - 42px);">
+      <div id="alertBox" class="alert d-none mb-3" role="alert"></div>
+
+      <!-- 1. DASHBOARD -->
+      <section id="view-dashboard" class="view-section active">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2 class="fw-bold mb-0">Dashboard General</h2>
+            <p class="text-muted small mb-0">Resumen operativo de inventario, alertas de stock y facturación</p>
+          </div>
+          <span class="badge bg-primary-subtle text-primary px-3 py-2" id="activeRoleBadge">Rol: Administrador</span>
+        </div>
+
+        <div class="row g-3 mb-4" id="kpiGrid"></div>
+
+        <div class="row g-4">
+          <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-header bg-white fw-bold d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>Alertas de Stock Bajo</span>
+                <span class="badge bg-warning text-dark" id="lowStockCount">0</span>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover mb-0">
+                    <thead class="table-light"><tr><th>Código</th><th>Producto</th><th>Stock</th><th>Mínimo</th></tr></thead>
+                    <tbody id="lowStockTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-6">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-header bg-white fw-bold">
+                <i class="bi bi-clock-history text-primary me-2"></i>Últimos Movimientos (Kardex)
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table table-sm table-hover mb-0">
+                    <thead class="table-light"><tr><th>Tipo</th><th>Producto</th><th>Cant.</th><th>Stock Nuevo</th></tr></thead>
+                    <tbody id="recentMovementsTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. PRODUCTOS -->
+      <section id="view-productos" class="view-section">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+          <h2 class="fw-bold mb-0">Catálogo de Productos</h2>
+          <div class="d-flex gap-2">
+            <input type="search" id="prodSearch" class="form-control form-control-sm" placeholder="Buscar código o nombre...">
+            <select id="prodCatFilter" class="form-select form-select-sm" style="width:auto;">
+              <option value="all">Todas las categorías</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mb-4" id="prodFormCard">
+          <div class="card-header bg-white fw-bold">Agregar Nuevo Producto</div>
+          <div class="card-body">
+            <form id="productForm" class="row g-2">
+              <div class="col-md-2"><input type="text" id="pCodigo" class="form-control form-control-sm" placeholder="Código (PROD-006)" required></div>
+              <div class="col-md-3"><input type="text" id="pNombre" class="form-control form-control-sm" placeholder="Nombre del producto" required></div>
+              <div class="col-md-2">
+                <select id="pCategoria" class="form-select form-select-sm"></select>
+              </div>
+              <div class="col-md-2"><input type="number" id="pPrecioVenta" class="form-control form-control-sm" placeholder="Precio Venta COP" min="100" required></div>
+              <div class="col-md-1"><input type="number" id="pStock" class="form-control form-control-sm" placeholder="Stock" min="0" value="10" required></div>
+              <div class="col-md-2"><button type="submit" class="btn btn-primary btn-sm w-100"><i class="bi bi-plus-lg"></i> Guardar</button></div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr><th>Código</th><th>Producto</th><th>Categoría</th><th>Compra</th><th>Venta</th><th>Stock</th><th>Estado</th></tr>
+              </thead>
+              <tbody id="productosTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. INGRESOS Y KARDEX -->
+      <section id="view-kardex" class="view-section">
+        <h2 class="fw-bold mb-3">Ingresos de Stock y Kardex</h2>
+        <div class="card border-0 shadow-sm mb-4" id="stockEntryCard">
+          <div class="card-header bg-white fw-bold">Registrar Movimiento de Inventario</div>
+          <div class="card-body">
+            <form id="stockForm" class="row g-2">
+              <div class="col-md-4">
+                <select id="mProducto" class="form-select form-select-sm" required></select>
+              </div>
+              <div class="col-md-3">
+                <select id="mTipo" class="form-select form-select-sm">
+                  <option value="entrada">Entrada (Compra)</option>
+                  <option value="ajuste_positivo">Ajuste Positivo (+)</option>
+                  <option value="ajuste_negativo">Ajuste Negativo (-)</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <input type="number" id="mCantidad" class="form-control form-control-sm" min="1" value="5" required>
+              </div>
+              <div class="col-md-3">
+                <button type="submit" class="btn btn-success btn-sm w-100"><i class="bi bi-check2-circle"></i> Aplicar Movimiento</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+          <div class="table-responsive">
+            <table class="table table-sm table-hover mb-0">
+              <thead class="table-light">
+                <tr><th>Fecha</th><th>Tipo</th><th>Producto</th><th>Cantidad</th><th>Anterior</th><th>Nuevo</th><th>Motivo</th></tr>
+              </thead>
+              <tbody id="kardexTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. FACTURACIÓN POS -->
+      <section id="view-pos" class="view-section">
+        <h2 class="fw-bold mb-3">Nueva Factura (POS)</h2>
+        <div class="row g-4">
+          <div class="col-lg-7">
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white fw-bold">Agregar Productos a la Factura</div>
+              <div class="card-body">
+                <div class="row g-2 mb-3">
+                  <div class="col-md-7">
+                    <select id="posProductSelect" class="form-select form-select-sm"></select>
+                  </div>
+                  <div class="col-md-2">
+                    <input type="number" id="posQty" class="form-control form-control-sm" min="1" value="1">
+                  </div>
+                  <div class="col-md-3">
+                    <button type="button" id="btnAddPosItem" class="btn btn-primary btn-sm w-100">
+                      <i class="bi bi-cart-plus"></i> Agregar
+                    </button>
+                  </div>
+                </div>
+                <div class="table-responsive">
+                  <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light"><tr><th>Producto</th><th>Cant.</th><th>Precio</th><th>Subtotal</th><th></th></tr></thead>
+                    <tbody id="posCartTable"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="card border-0 shadow-sm">
+              <div class="card-header bg-white fw-bold">Resumen de Factura</div>
+              <div class="card-body">
+                <div class="mb-2">
+                  <label class="form-label small mb-1">Cliente</label>
+                  <input type="text" id="posCliente" class="form-control form-control-sm" value="Consumidor Final">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small mb-1">Método de Pago</label>
+                  <select id="posMetodo" class="form-select form-select-sm">
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="transferencia">Transferencia</option>
+                  </select>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between small mb-1"><span>Subtotal:</span><strong id="posSubtotal">$0</strong></div>
+                <div class="d-flex justify-content-between small mb-1"><span>IVA (19%):</span><strong id="posIva">$0</strong></div>
+                <div class="d-flex justify-content-between fs-5 fw-bold text-primary mb-3"><span>Total:</span><span id="posTotal">$0</span></div>
+                <button type="button" id="btnEmitInvoice" class="btn btn-success w-100 fw-bold">
+                  <i class="bi bi-receipt"></i> Emitir Factura y Descontar Stock
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. FACTURAS EMITIDAS -->
+      <section id="view-facturas" class="view-section">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="fw-bold mb-0">Historial de Facturas</h2>
+          <button type="button" class="btn btn-outline-secondary btn-sm no-print" id="btnPrintInvoices">
+            <i class="bi bi-printer"></i> Imprimir
+          </button>
+        </div>
+        <div class="card border-0 shadow-sm">
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="table-light">
+                <tr><th>Número</th><th>Fecha</th><th>Cliente</th><th>Método</th><th>Total</th><th>Estado</th><th class="no-print">Acción</th></tr>
+              </thead>
+              <tbody id="facturasTable"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const KV_ENDPOINT = "/api/db/kv/stockflow_inventario_state";
+    const LOCAL_KEY = "stockflow_pro_portfolio_state_v1";
+    const IVA_RATE = 0.19;
+
+    const ROLE_PERMISSIONS = {
+      admin: ["productos.view", "productos.edit", "inventario.entrada", "inventario.movimientos", "facturas.create", "facturas.view", "facturas.anular"],
+      vendedor: ["productos.view", "facturas.create", "facturas.view"],
+      almacen: ["productos.view", "productos.edit", "inventario.entrada", "inventario.movimientos"]
+    };
+
+    const INITIAL_STATE = {
+      categorias: ["Electrónica", "Oficina", "Hogar", "General"],
+      productos: [
+        { id: 1, codigo: "PROD-001", nombre: "Teclado Mecánico RGB", categoria: "Electrónica", precio_compra: 135000, precio_venta: 220000, stock: 25, stock_minimo: 5 },
+        { id: 2, codigo: "PROD-002", nombre: "Mouse Inalámbrico Ergonómico", categoria: "Electrónica", precio_compra: 48000, precio_venta: 89000, stock: 40, stock_minimo: 8 },
+        { id: 3, codigo: "PROD-003", nombre: 'Monitor LED 24" Full HD', categoria: "Electrónica", precio_compra: 450000, precio_venta: 680000, stock: 8, stock_minimo: 3 },
+        { id: 4, codigo: "PROD-004", nombre: "Resma Papel Carta 500h", categoria: "Oficina", precio_compra: 16500, precio_venta: 26000, stock: 60, stock_minimo: 10 },
+        { id: 5, codigo: "PROD-005", nombre: "Silla Ergonómica de Oficina", categoria: "Oficina", precio_compra: 340000, precio_venta: 549000, stock: 4, stock_minimo: 5 }
+      ],
+      movimientos: [
+        { id: 1, fecha: "2026-11-27 09:15", tipo: "entrada", producto: "Teclado Mecánico RGB", cantidad: 25, anterior: 0, nuevo: 25, motivo: "Inventario inicial" },
+        { id: 2, fecha: "2026-11-27 10:00", tipo: "entrada", producto: "Silla Ergonómica de Oficina", cantidad: 4, anterior: 0, nuevo: 4, motivo: "Stock inicial (bajo mínimo)" }
+      ],
+      facturas: [
+        { id: 1, numero: "FAC-0001", fecha: "2026-11-27 11:20", cliente: "Empresa Demo S.A.S.", metodo: "transferencia", subtotal: 309000, iva: 58710, total: 367710, estado: "emitida", items: [{ id: 1, nombre: "Teclado Mecánico RGB", cantidad: 1, precio: 220000 }, { id: 2, nombre: "Mouse Inalámbrico Ergonómico", cantidad: 1, precio: 89000 }] }
+      ]
+    };
+
+    let state = structuredClone(INITIAL_STATE);
+    let currentRole = "admin";
+    let posCart = [];
+
+    const fmtCOP = (val) => new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP", maximumFractionDigits: 0 }).format(Number(val || 0));
+    const can = (perm) => (ROLE_PERMISSIONS[currentRole] || []).includes(perm);
+
+    function showAlert(msg, type = "success") {
+      const box = document.getElementById("alertBox");
+      box.className = `alert alert-${type}`;
+      box.textContent = msg;
+      box.classList.remove("d-none");
+      setTimeout(() => box.classList.add("d-none"), 3500);
+    }
+
+    async function loadState() {
+      const badge = document.getElementById("syncBadge");
+      try {
+        if (location.protocol !== "file:") {
+          const res = await fetch(KV_ENDPOINT);
+          const json = await res.json();
+          if (res.ok && json.ok && json.exists && json.data) {
+            state = json.data;
+            localStorage.setItem(LOCAL_KEY, JSON.stringify(state));
+            badge.textContent = "🟢 Conectado a BD SQL Real";
+            renderAll();
+            return;
+          }
+        }
+      } catch {}
+      const cached = localStorage.getItem(LOCAL_KEY);
+      if (cached) {
+        try { state = JSON.parse(cached); } catch {}
+      }
+      badge.textContent = "⚡ Persistencia Local + SQL Ready";
+      renderAll();
+    }
+
+    async function saveState() {
+      localStorage.setItem(LOCAL_KEY, JSON.stringify(state));
+      const badge = document.getElementById("syncBadge");
+      try {
+        if (location.protocol !== "file:") {
+          const res = await fetch(KV_ENDPOINT, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data: state })
+          });
+          if (res.ok) badge.textContent = "🟢 Guardado en BD SQL Real";
+        }
+      } catch {
+        badge.textContent = "⚡ Guardado en LocalStorage";
+      }
+    }
+
+    function switchView(viewName) {
+      document.querySelectorAll(".view-section").forEach((s) => s.classList.remove("active"));
+      document.querySelectorAll(".sidebar-nav .nav-link").forEach((a) => a.classList.toggle("active", a.dataset.view === viewName));
+      const target = document.getElementById(`view-${viewName}`);
+      if (target) target.classList.add("active");
+    }
+
+    function applyRbacUI() {
+      document.getElementById("activeRoleBadge").textContent = `Rol: ${currentRole.toUpperCase()}`;
+      document.querySelectorAll(".sidebar-nav .nav-link[data-perm]").forEach((el) => {
+        el.style.display = can(el.dataset.perm) ? "flex" : "none";
+      });
+      document.getElementById("prodFormCard").style.display = can("productos.edit") ? "block" : "none";
+      document.getElementById("stockEntryCard").style.display = can("inventario.entrada") ? "block" : "none";
+    }
+
+    function renderAll() {
+      applyRbacUI();
+      const lowStock = state.productos.filter((p) => p.stock <= p.stock_minimo);
+      const totalVal = state.productos.reduce((acc, p) => acc + p.precio_venta * p.stock, 0);
+      const activeInvoices = state.facturas.filter((f) => f.estado === "emitida");
+      const totalSales = activeInvoices.reduce((acc, f) => acc + f.total, 0);
+
+      document.getElementById("kpiGrid").innerHTML = `
+        <div class="col-md-3 col-6"><div class="kpi-card"><div class="kpi-label">Productos Activos</div><div class="kpi-value">${state.productos.length}</div></div></div>
+        <div class="col-md-3 col-6"><div class="kpi-card"><div class="kpi-label">Alertas Stock Bajo</div><div class="kpi-value text-warning">${lowStock.length}</div></div></div>
+        <div class="col-md-3 col-6"><div class="kpi-card"><div class="kpi-label">Valor Inventario</div><div class="kpi-value text-primary">${fmtCOP(totalVal)}</div></div></div>
+        <div class="col-md-3 col-6"><div class="kpi-card"><div class="kpi-label">Ventas Emitidas (${activeInvoices.length})</div><div class="kpi-value text-success">${fmtCOP(totalSales)}</div></div></div>
+      `;
+
+      document.getElementById("lowStockCount").textContent = lowStock.length;
+      document.getElementById("lowStockTable").innerHTML = lowStock.length
+        ? lowStock.map((p) => `<tr><td><code>${p.codigo}</code></td><td>${p.nombre}</td><td><span class="badge bg-danger">${p.stock}</span></td><td>${p.stock_minimo}</td></tr>`).join("")
+        : `<tr><td colspan="4" class="text-center text-muted py-3">Sin alertas de stock bajo</td></tr>`;
+
+      document.getElementById("recentMovementsTable").innerHTML = state.movimientos.slice(0, 6).map((m) =>
+        `<tr><td><span class="badge bg-secondary">${m.tipo}</span></td><td>${m.producto}</td><td>${m.cantidad}</td><td><strong>${m.nuevo}</strong></td></tr>`
+      ).join("");
+
+      // Categorías
+      const catFilter = document.getElementById("prodCatFilter");
+      const currentCatVal = catFilter.value;
+      catFilter.innerHTML = `<option value="all">Todas las categorías</option>` + state.categorias.map((c) => `<option value="${c}">${c}</option>`).join("");
+      catFilter.value = currentCatVal || "all";
+      document.getElementById("pCategoria").innerHTML = state.categorias.map((c) => `<option value="${c}">${c}</option>`).join("");
+
+      // Productos table
+      const query = (document.getElementById("prodSearch").value || "").toLowerCase();
+      const catSel = catFilter.value;
+      const filteredProds = state.productos.filter((p) =>
+        (catSel === "all" || p.categoria === catSel) &&
+        (!query || p.nombre.toLowerCase().includes(query) || p.codigo.toLowerCase().includes(query))
+      );
+      document.getElementById("productosTable").innerHTML = filteredProds.map((p) => `
+        <tr>
+          <td><code>${p.codigo}</code></td>
+          <td class="fw-semibold">${p.nombre}</td>
+          <td>${p.categoria}</td>
+          <td>${fmtCOP(p.precio_compra)}</td>
+          <td>${fmtCOP(p.precio_venta)}</td>
+          <td><strong>${p.stock}</strong></td>
+          <td>${p.stock <= p.stock_minimo ? '<span class="badge bg-warning text-dark">Stock Bajo</span>' : '<span class="badge bg-success">Óptimo</span>'}</td>
+        </tr>
+      `).join("");
+
+      // Selects
+      const prodOptions = state.productos.map((p) => `<option value="${p.id}">${p.codigo} — ${p.nombre} (Stock: ${p.stock} | ${fmtCOP(p.precio_venta)})</option>`).join("");
+      document.getElementById("mProducto").innerHTML = prodOptions;
+      document.getElementById("posProductSelect").innerHTML = prodOptions;
+
+      // Kardex
+      document.getElementById("kardexTable").innerHTML = state.movimientos.map((m) => `
+        <tr><td>${m.fecha}</td><td><span class="badge bg-info text-dark">${m.tipo}</span></td><td>${m.producto}</td><td>${m.cantidad}</td><td>${m.anterior}</td><td><strong>${m.nuevo}</strong></td><td>${m.motivo}</td></tr>
+      `).join("");
+
+      // Facturas
+      document.getElementById("facturasTable").innerHTML = state.facturas.map((f) => `
+        <tr>
+          <td><strong>${f.numero}</strong></td>
+          <td>${f.fecha}</td>
+          <td>${f.cliente}</td>
+          <td class="text-capitalize">${f.metodo}</td>
+          <td><strong>${fmtCOP(f.total)}</strong></td>
+          <td><span class="badge ${f.estado === "emitida" ? "bg-success" : "bg-danger"}">${f.estado}</span></td>
+          <td class="no-print">
+            ${f.estado === "emitida" && can("facturas.anular") ? `<button class="btn btn-outline-danger btn-sm py-0" data-anular="${f.id}">Anular</button>` : "—"}
+          </td>
+        </tr>
+      `).join("");
+
+      renderCart();
+    }
+
+    function renderCart() {
+      const tbody = document.getElementById("posCartTable");
+      if (!posCart.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-3">Agrega productos para facturar</td></tr>`;
+      } else {
+        tbody.innerHTML = posCart.map((item, idx) => `
+          <tr>
+            <td>${item.nombre}</td>
+            <td>${item.cantidad}</td>
+            <td>${fmtCOP(item.precio)}</td>
+            <td><strong>${fmtCOP(item.cantidad * item.precio)}</strong></td>
+            <td><button class="btn btn-sm btn-outline-danger py-0" data-remove-cart="${idx}">×</button></td>
+          </tr>
+        `).join("");
+      }
+      const subtotal = posCart.reduce((acc, i) => acc + i.cantidad * i.precio, 0);
+      const iva = Math.round(subtotal * IVA_RATE);
+      document.getElementById("posSubtotal").textContent = fmtCOP(subtotal);
+      document.getElementById("posIva").textContent = fmtCOP(iva);
+      document.getElementById("posTotal").textContent = fmtCOP(subtotal + iva);
+    }
+
+    // Event Listeners
+    document.querySelectorAll(".sidebar-nav .nav-link[data-view]").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        switchView(link.dataset.view);
+      });
+    });
+
+    document.getElementById("roleSelect").addEventListener("change", (e) => {
+      currentRole = e.target.value;
+      switchView("dashboard");
+      renderAll();
+    });
+
+    document.getElementById("prodSearch").addEventListener("input", renderAll);
+    document.getElementById("prodCatFilter").addEventListener("change", renderAll);
+
+    document.getElementById("productForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const codigo = document.getElementById("pCodigo").value.trim().toUpperCase();
+      const nombre = document.getElementById("pNombre").value.trim();
+      const categoria = document.getElementById("pCategoria").value;
+      const precio_venta = Number(document.getElementById("pPrecioVenta").value);
+      const stock = Number(document.getElementById("pStock").value);
+      if (state.productos.some((p) => p.codigo === codigo)) return showAlert("El código de producto ya existe", "danger");
+      const id = (state.productos.reduce((m, p) => Math.max(m, p.id), 0)) + 1;
+      state.productos.push({ id, codigo, nombre, categoria, precio_compra: Math.round(precio_venta * 0.65), precio_venta, stock, stock_minimo: 5 });
+      state.movimientos.unshift({ id: Date.now(), fecha: new Date().toISOString().slice(0, 16).replace("T", " "), tipo: "entrada", producto: nombre, cantidad: stock, anterior: 0, nuevo: stock, motivo: "Creación de producto" });
+      await saveState();
+      e.target.reset();
+      showAlert(`Producto ${nombre} registrado en inventario.`);
+      renderAll();
+    });
+
+    document.getElementById("stockForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const prodId = Number(document.getElementById("mProducto").value);
+      const tipo = document.getElementById("mTipo").value;
+      const cant = Number(document.getElementById("mCantidad").value);
+      const prod = state.productos.find((p) => p.id === prodId);
+      if (!prod || cant <= 0) return;
+      const anterior = prod.stock;
+      const nuevo = tipo === "ajuste_negativo" ? Math.max(0, anterior - cant) : anterior + cant;
+      prod.stock = nuevo;
+      state.movimientos.unshift({ id: Date.now(), fecha: new Date().toISOString().slice(0, 16).replace("T", " "), tipo, producto: prod.nombre, cantidad: cant, anterior, nuevo, motivo: "Movimiento manual" });
+      await saveState();
+      showAlert(`Stock de ${prod.nombre} actualizado (${anterior} → ${nuevo}).`);
+      renderAll();
+    });
+
+    document.getElementById("btnAddPosItem").addEventListener("click", () => {
+      const prodId = Number(document.getElementById("posProductSelect").value);
+      const qty = Number(document.getElementById("posQty").value);
+      const prod = state.productos.find((p) => p.id === prodId);
+      if (!prod || qty <= 0) return;
+      const existing = posCart.find((i) => i.id === prod.id);
+      const totalRequested = qty + (existing ? existing.cantidad : 0);
+      if (totalRequested > prod.stock) return showAlert(`Stock insuficiente para ${prod.nombre} (disponible: ${prod.stock})`, "warning");
+      if (existing) existing.cantidad += qty;
+      else posCart.push({ id: prod.id, nombre: prod.nombre, cantidad: qty, precio: prod.precio_venta });
+      renderCart();
+    });
+
+    document.getElementById("posCartTable").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-remove-cart]");
+      if (!btn) return;
+      posCart.splice(Number(btn.dataset.removeCart), 1);
+      renderCart();
+    });
+
+    document.getElementById("btnEmitInvoice").addEventListener("click", async () => {
+      if (!posCart.length) return showAlert("Agrega al menos un producto al carrito", "warning");
+      const subtotal = posCart.reduce((acc, i) => acc + i.cantidad * i.precio, 0);
+      const iva = Math.round(subtotal * IVA_RATE);
+      const total = subtotal + iva;
+      const num = `FAC-${String(state.facturas.length + 1).padStart(4, "0")}`;
+      const fecha = new Date().toISOString().slice(0, 16).replace("T", " ");
+
+      for (const item of posCart) {
+        const prod = state.productos.find((p) => p.id === item.id);
+        if (!prod || prod.stock < item.cantidad) return showAlert(`Stock insuficiente para ${item.nombre}`, "danger");
+      }
+
+      for (const item of posCart) {
+        const prod = state.productos.find((p) => p.id === item.id);
+        const anterior = prod.stock;
+        prod.stock -= item.cantidad;
+        state.movimientos.unshift({ id: Date.now() + item.id, fecha, tipo: "venta", producto: prod.nombre, cantidad: item.cantidad, anterior, nuevo: prod.stock, motivo: `Factura ${num}` });
+      }
+
+      state.facturas.unshift({
+        id: Date.now(),
+        numero: num,
+        fecha,
+        cliente: document.getElementById("posCliente").value.trim() || "Consumidor Final",
+        metodo: document.getElementById("posMetodo").value,
+        subtotal,
+        iva,
+        total,
+        estado: "emitida",
+        items: structuredClone(posCart)
+      });
+      posCart = [];
+      await saveState();
+      showAlert(`Factura ${num} emitida por ${fmtCOP(total)} y stock descontado.`);
+      renderAll();
+    });
+
+    document.getElementById("facturasTable").addEventListener("click", async (e) => {
+      const btn = e.target.closest("[data-anular]");
+      if (!btn) return;
+      const fac = state.facturas.find((f) => f.id === Number(btn.dataset.anular));
+      if (!fac || fac.estado === "anulada") return;
+      fac.estado = "anulada";
+      const fecha = new Date().toISOString().slice(0, 16).replace("T", " ");
+      for (const item of fac.items || []) {
+        const prod = state.productos.find((p) => p.id === item.id);
+        if (prod) {
+          const anterior = prod.stock;
+          prod.stock += item.cantidad;
+          state.movimientos.unshift({ id: Date.now() + item.id, fecha, tipo: "anulacion", producto: prod.nombre, cantidad: item.cantidad, anterior, nuevo: prod.stock, motivo: `Anulación ${fac.numero}` });
+        }
+      }
+      await saveState();
+      showAlert(`Factura ${fac.numero} anulada y stock devuelto al inventario.`, "info");
+      renderAll();
+    });
+
+    document.getElementById("btnResetDemo").addEventListener("click", async () => {
+      state = structuredClone(INITIAL_STATE);
+      posCart = [];
+      await saveState();
+      showAlert("Datos de demostración restaurados.", "info");
+      renderAll();
+    });
+
+    document.getElementById("btnPrintInvoices").addEventListener("click", () => window.print());
+
+    loadState();
+  </script>
+</body>
+</html>
